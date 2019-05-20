@@ -2,6 +2,9 @@
 Navbar
  */
 
+body {
+    font-family: 'Montserrat', sans-serif;
+}
 .designed-font {
     font-family: 'Pacifico', cursive;
     padding-left: 8px;
@@ -13,3 +16,22 @@ Navbar
 /**
 End Navbar
  */
+
+/**
+Recherche :
+ */
+
+
+.recherche {
+    padding: 50px;
+    align-content: center;
+    width: 100%;
+}
+
+section {
+    margin-left: auto;
+    margin-right: auto;
+}
+select {
+    display: block
+}
