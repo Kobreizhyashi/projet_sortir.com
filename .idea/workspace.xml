@@ -12,6 +12,7 @@
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <splitter split-orientation="horizontal" split-proportion="0.6325301">
       <split-first>
         <leaf>
@@ -40,6 +41,46 @@
         </leaf>
       </split-second>
     </splitter>
+=======
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/layout.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" column="98" selection-start-line="9" selection-start-column="98" selection-end-line="9" selection-end-column="98" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/style/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="355">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/main/page_principale.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1139">
+              <caret line="67" selection-start-line="67" selection-end-line="67" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/inc/header.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+>>>>>>> developper
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,8 +91,12 @@
         <option value="$PROJECT_DIR$/templates/inc/header.html.twig" />
         <option value="$PROJECT_DIR$/templates/layout.html.twig" />
         <option value="$PROJECT_DIR$/public/style/style.css" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/templates/sortie/afficher_sortie.html.twig" />
         <option value="$PROJECT_DIR$/templates/sortie/modifier_sortie.html.twig" />
+=======
+        <option value="$PROJECT_DIR$/templates/main/page_principale.html.twig" />
+>>>>>>> developper
       </list>
     </option>
   </component>
@@ -156,8 +201,15 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+<<<<<<< HEAD
     <option name="width" value="800" />
     <option name="height" value="860" />
+=======
+    <option name="x" value="100" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="820" />
+>>>>>>> developper
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -174,24 +226,41 @@
             <path>
               <item name="projetSortir.com" type="b2602c69:ProjectViewProjectNode" />
               <item name="projetSortir.com" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+>>>>>>> developper
             </path>
             <path>
               <item name="projetSortir.com" type="b2602c69:ProjectViewProjectNode" />
               <item name="projetSortir.com" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="inc" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="style" type="462c0819:PsiDirectoryNode" />
+>>>>>>> developper
             </path>
             <path>
               <item name="projetSortir.com" type="b2602c69:ProjectViewProjectNode" />
               <item name="projetSortir.com" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="sortie" type="462c0819:PsiDirectoryNode" />
+=======
+>>>>>>> developper
             </path>
             <path>
               <item name="projetSortir.com" type="b2602c69:ProjectViewProjectNode" />
               <item name="projetSortir.com" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="tests" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="inc" type="462c0819:PsiDirectoryNode" />
+>>>>>>> developper
             </path>
           </expand>
           <select />
@@ -203,6 +272,10 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+<<<<<<< HEAD
+=======
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+>>>>>>> developper
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -216,6 +289,7 @@
       </list>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="RunManager">
     <configuration name="afficher_sortie.html.twig" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/projetSortir.com/templates/sortie/afficher_sortie.html.twig" useBuiltInWebServerPort="true">
       <method v="2" />
@@ -226,6 +300,8 @@
       </list>
     </recent_temporary>
   </component>
+=======
+>>>>>>> developper
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -236,23 +312,40 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1558354606107</updated>
+<<<<<<< HEAD
       <workItem from="1558354607295" duration="169000" />
+=======
+      <workItem from="1558354607295" duration="5536000" />
+>>>>>>> developper
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="6218000" />
+=======
+    <option name="totallyTimeSpent" value="5616000" />
+>>>>>>> developper
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
+<<<<<<< HEAD
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15488432" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.07133244" />
+=======
+      <window_info content_ui="combo" id="Project" order="0" weight="0.3958869" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.30417228" />
+      <window_info anchor="bottom" id="Run" order="2" />
+>>>>>>> developper
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -272,6 +365,7 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/public/style/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -286,12 +380,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="18" column="40" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="40" />
+=======
+    <entry file="file://$PROJECT_DIR$/templates/layout.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="98" selection-start-line="9" selection-start-column="98" selection-end-line="9" selection-end-column="98" />
+>>>>>>> developper
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/inc/header.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
+<<<<<<< HEAD
           <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
         </state>
       </provider>
@@ -307,6 +408,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
           <caret line="36" column="14" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="14" />
+=======
+          <caret line="11" column="6" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/style/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/main/page_principale.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1139">
+          <caret line="67" selection-start-line="67" selection-end-line="67" />
+>>>>>>> developper
         </state>
       </provider>
     </entry>
