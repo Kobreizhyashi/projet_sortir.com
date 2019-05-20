@@ -1,0 +1,61 @@
+{%  extends ('layout.html.twig') %}
+
+{% block main %}
+
+    {#
+    Cette page s'affiche si l'utilisateur n'est pas le créateur de la sortie
+
+    1ere partie --Cette page receptionne une instance de sortie(contenant une instance de lieu)
+    2eme partie --Elle a également besoin d'une liste de participant ayant un L'ID de la sortie
+
+    #}
+
+<section>
+
+    <h1>Modifier une sortie</h1>
+
+    <br>
+        <label>Nom de la sortie :</label><span>{{ sortie.nom }}</span>
+        <label>Ville organisatrice :</label><span>{{ sortie.lieux_no_lieu.nom_lieu }}</span>
+    <br>
+        <label>Date et heure de la sortie :</label><span>{{ sortie.datedebut }}</span>
+        <label>Lieu :</label><span>{{ sortie.lieux_no_lieu.nom_lieu }}</span>
+    <br>
+        <label>Date limite d'inscription :</label><span>{{ sortie.datecloture }}</span>
+        <label>Rue :</label><span>{{ sortie.lieux_no_lieu.nom_lieu.rue }}</span>
+    <br>
+        <label>Nombre de places :</label><span>{{ sortie.nbinscriptionsmax }}</span>
+        <label>Code postal :</label><span>{{ sortie.lieux_no_lieu.nom_lieu.villes_no_ville }}</span>
+    <br>
+        <label>Durée :</label><span>{{ sortie.duree }}</span>
+        <label>Latitude :</label><span>{{  sortie.lieux_no_lieu.nom_lieu.latitude }}</span>
+    <br>
+        <label>Description et infos :</label><span>{{ sortie.descriptioninfos }}</span>
+        <label>Longitude :</label><span>{{  sortie.lieux_no_lieu.nom_lieu.longitude }}</span>
+    <br>
+
+</section>
+
+<section>
+    <h2>Liste des participants inscrits :</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for participant in participants%}
+            <tr>
+                <td>{{ participant.pseudo}}</td>
+                <td>{{ participant.nom}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+</section>
+{% endblock %}
