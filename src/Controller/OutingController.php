@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Outing;
 use App\Form\OutingType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +28,7 @@ class OutingController extends Controller
     public function createOuting(EntityManagerInterface $em, Request $request) {
 
         $outing = new Outing();
-        $outing->setEtat("1");
+        $outing->setEtat($em->getRepository(Etat::class)->find(1));
         $outingForm = $this->createForm(OutingType::class,$outing);
 
         $outingForm->handleRequest($request);
