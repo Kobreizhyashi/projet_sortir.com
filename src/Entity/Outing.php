@@ -62,7 +62,7 @@ class Outing
     private $site;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participant", inversedBy="outings")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $organisateur;
@@ -84,77 +84,77 @@ class Outing
         $this->inscriptions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getDateHeureDebut(): ?\DateTimeInterface
+    public function getDateHeureDebut()
     {
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
+    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut)
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
     }
 
-    public function getDuree(): ?int
+    public function getDuree()
     {
         return $this->duree;
     }
 
-    public function setDuree(?int $duree): self
+    public function setDuree(?int $duree)
     {
         $this->duree = $duree;
 
         return $this;
     }
 
-    public function getDateLimiteInscription(): ?\DateTimeInterface
+    public function getDateLimiteInscription()
     {
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): self
+    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription)
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
         return $this;
     }
 
-    public function getNbInscriptionsMax(): ?int
+    public function getNbInscriptionsMax()
     {
         return $this->nbInscriptionsMax;
     }
 
-    public function setNbInscriptionsMax(int $nbInscriptionsMax): self
+    public function setNbInscriptionsMax(int $nbInscriptionsMax)
     {
         $this->nbInscriptionsMax = $nbInscriptionsMax;
 
         return $this;
     }
 
-    public function getInfosSortie(): ?string
+    public function getInfosSortie()
     {
         return $this->infosSortie;
     }
 
-    public function setInfosSortie(?string $infosSortie): self
+    public function setInfosSortie(?string $infosSortie)
     {
         $this->infosSortie = $infosSortie;
 
@@ -166,12 +166,12 @@ class Outing
     /**
      * @return Collection|Inscription[]
      */
-    public function getInscriptions(): Collection
+    public function getInscriptions()
     {
         return $this->inscriptions;
     }
 
-    public function addInscription(Inscription $inscription): self
+    public function addInscription(Inscription $inscription)
     {
         if (!$this->inscriptions->contains($inscription)) {
             $this->inscriptions[] = $inscription;
@@ -181,7 +181,7 @@ class Outing
         return $this;
     }
 
-    public function removeInscription(Inscription $inscription): self
+    public function removeInscription(Inscription $inscription)
     {
         if ($this->inscriptions->contains($inscription)) {
             $this->inscriptions->removeElement($inscription);
@@ -194,12 +194,12 @@ class Outing
         return $this;
     }
 
-    public function getSite(): ?Site
+    public function getSite()
     {
         return $this->site;
     }
 
-    public function setSite(?Site $site): self
+    public function setSite(?Site $site)
     {
         $this->site = $site;
 
@@ -211,31 +211,31 @@ class Outing
         return $this->participant;
     }
 
-    public function setOrganisateur(?Participant $organisateur): self
+    public function setOrganisateur(?User $organisateur)
     {
         $this->organisateur = $organisateur;
 
         return $this;
     }
 
-    public function getEtat(): ?Etat
+    public function getEtat()
     {
         return $this->etat;
     }
 
-    public function setEtat(?Etat $etat): self
+    public function setEtat(?Etat $etat)
     {
         $this->etat = $etat;
 
         return $this;
     }
 
-    public function getLieu(): ?Lieu
+    public function getLieu()
     {
         return $this->lieu;
     }
 
-    public function setLieu(?Lieu $lieu): self
+    public function setLieu(?Lieu $lieu)
     {
         $this->lieu = $lieu;
 

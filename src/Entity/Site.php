@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use App\Entity\User;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SiteRepository")
  */
@@ -24,9 +24,9 @@ class Site
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="site")
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="site")
      */
-    private $participants;
+    private $users;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Outing", mappedBy="site")
@@ -35,21 +35,21 @@ class Site
 
     public function __construct()
     {
-        $this->participants = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->outings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
@@ -57,30 +57,30 @@ class Site
     }
 
     /**
-     * @return Collection|Participant[]
+     * @return Collection|User[]
      */
-    public function getParticipants(): Collection
+    public function getUsers(): Collection
     {
-        return $this->participants;
+        return $this->users;
     }
 
-    public function addParticipant(Participant $participant): self
+    public function addUser(User $user)
     {
-        if (!$this->participants->contains($participant)) {
-            $this->participants[] = $participant;
-            $participant->setSite($this);
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setSite($this);
         }
 
         return $this;
     }
 
-    public function removeParticipant(Participant $participant): self
+    public function removeUser(User $user)
     {
-        if ($this->participants->contains($participant)) {
-            $this->participants->removeElement($participant);
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
             // set the owning side to null (unless already changed)
-            if ($participant->getSite() === $this) {
-                $participant->setSite(null);
+            if ($user->getSite() === $this) {
+                $user->setSite(null);
             }
         }
 
@@ -95,7 +95,7 @@ class Site
         return $this->outings;
     }
 
-    public function addOuting(Outing $outing): self
+    public function addOuting(Outing $outing)
     {
         if (!$this->outings->contains($outing)) {
             $this->outings[] = $outing;
@@ -105,7 +105,7 @@ class Site
         return $this;
     }
 
-    public function removeOuting(Outing $outing): self
+    public function removeOuting(Outing $outing)
     {
         if ($this->outings->contains($outing)) {
             $this->outings->removeElement($outing);

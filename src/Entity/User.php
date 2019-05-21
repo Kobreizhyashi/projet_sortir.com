@@ -5,11 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Inscription;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
  */
-class Participant
+class User
 {
     /**
      * @ORM\Id()
@@ -59,13 +60,13 @@ class Participant
     private $motDePasse;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="participants")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      */
     private $site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="participant")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="user")
      */
     private $inscriptions;
 
@@ -80,60 +81,60 @@ class Participant
         $this->outings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getPrenom()
     {
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(string $prenom)
     {
         $this->prenom = $prenom;
 
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getTelephone()
     {
         return $this->telephone;
     }
 
-    public function setTelephone(?string $telephone): self
+    public function setTelephone(?string $telephone)
     {
         $this->telephone = $telephone;
 
         return $this;
     }
 
-    public function getAdministrateur(): ?bool
+    public function getAdministrateur()
     {
         return $this->administrateur;
     }
 
-    public function setAdministrateur(bool $administrateur): self
+    public function setAdministrateur(bool $administrateur)
     {
         $this->administrateur = $administrateur;
 
         return $this;
     }
 
-    public function getActif(): ?bool
+    public function getActif()
     {
         return $this->actif;
     }
@@ -145,48 +146,48 @@ class Participant
         return $this;
     }
 
-    public function getPseudo(): ?string
+    public function getPseudo()
     {
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(string $pseudo)
     {
         $this->pseudo = $pseudo;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email)
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    public function getMotDePasse()
     {
         return $this->motDePasse;
     }
 
-    public function setMotDePasse(string $motDePasse): self
+    public function setMotDePasse(string $motDePasse)
     {
         $this->motDePasse = $motDePasse;
 
         return $this;
     }
 
-    public function getSite(): ?Site
+    public function getSite()
     {
         return $this->site;
     }
 
-    public function setSite(?Site $site): self
+    public function setSite(?Site $site)
     {
         $this->site = $site;
 
@@ -196,12 +197,12 @@ class Participant
     /**
      * @return Collection|Inscription[]
      */
-    public function getInscriptions(): Collection
+    public function getInscriptions()
     {
         return $this->inscriptions;
     }
 
-    public function addInscription(Inscription $inscription): self
+    public function addInscription(Inscription $inscription)
     {
         if (!$this->inscriptions->contains($inscription)) {
             $this->inscriptions[] = $inscription;
@@ -211,7 +212,7 @@ class Participant
         return $this;
     }
 
-    public function removeInscription(Inscription $inscription): self
+    public function removeInscription(Inscription $inscription)
     {
         if ($this->inscriptions->contains($inscription)) {
             $this->inscriptions->removeElement($inscription);
@@ -232,7 +233,7 @@ class Participant
         return $this->outings;
     }
 
-    public function addOuting(Outing $outing): self
+    public function addOuting(Outing $outing)
     {
         if (!$this->outings->contains($outing)) {
             $this->outings[] = $outing;
@@ -242,7 +243,7 @@ class Participant
         return $this;
     }
 
-    public function removeOuting(Outing $outing): self
+    public function removeOuting(Outing $outing)
     {
         if ($this->outings->contains($outing)) {
             $this->outings->removeElement($outing);

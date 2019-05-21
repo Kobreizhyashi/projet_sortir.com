@@ -33,17 +33,17 @@ class Etat
         $this->outings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle()
     {
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): self
+    public function setLibelle(string $libelle)
     {
         $this->libelle = $libelle;
 
@@ -53,12 +53,12 @@ class Etat
     /**
      * @return Collection|Outing[]
      */
-    public function getOutings(): Collection
+    public function getOutings()
     {
         return $this->outings;
     }
 
-    public function addOuting(Outing $outing): self
+    public function addOuting(Outing $outing)
     {
         if (!$this->outings->contains($outing)) {
             $this->outings[] = $outing;
@@ -68,7 +68,7 @@ class Etat
         return $this;
     }
 
-    public function removeOuting(Outing $outing): self
+    public function removeOuting(Outing $outing)
     {
         if ($this->outings->contains($outing)) {
             $this->outings->removeElement($outing);

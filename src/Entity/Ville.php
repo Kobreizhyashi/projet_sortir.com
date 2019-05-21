@@ -38,29 +38,29 @@ class Ville
         $this->lieus = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getCodePostal(): ?string
+    public function getCodePostal()
     {
         return $this->codePostal;
     }
 
-    public function setCodePostal(string $codePostal): self
+    public function setCodePostal(string $codePostal)
     {
         $this->codePostal = $codePostal;
 
@@ -75,7 +75,7 @@ class Ville
         return $this->lieus;
     }
 
-    public function addLieus(Lieu $lieus): self
+    public function addLieus(Lieu $lieus)
     {
         if (!$this->lieus->contains($lieus)) {
             $this->lieus[] = $lieus;
@@ -85,7 +85,7 @@ class Ville
         return $this;
     }
 
-    public function removeLieus(Lieu $lieus): self
+    public function removeLieus(Lieu $lieus)
     {
         if ($this->lieus->contains($lieus)) {
             $this->lieus->removeElement($lieus);
