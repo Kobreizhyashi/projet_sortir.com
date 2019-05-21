@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Outing
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -223,7 +224,7 @@ class Outing
         return $this->etat;
     }
 
-    public function setEtat(?Etat $etat)
+    public function setEtat(Etat $etat)
     {
         $this->etat = $etat;
 
