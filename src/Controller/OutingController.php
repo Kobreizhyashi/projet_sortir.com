@@ -17,7 +17,7 @@ class OutingController extends Controller
      */
     public function index()
     {
-        return $this->render('sortie/index.html.twig', [
+        return $this->render('sortie/connexion.html.twig', [
             'controller_name' => 'OutingController',
         ]);
     }

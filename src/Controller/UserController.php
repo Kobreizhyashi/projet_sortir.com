@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
+use App\Form\OutingType;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends Controller
@@ -12,11 +16,24 @@ class UserController extends Controller
     /**
      * @Route("/user", name="user")
      */
-    public function index()
-    {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+    public function userConnexion() {
+
+//        $outing = new Outing();
+//        $outing->setEtat("1");
+//        $outingForm = $this->createForm(OutingType::class,$outing);
+//
+//        $outingForm->handleRequest($request);
+//
+//        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+//
+//            $em->persist($outing);
+//            $em->flush();
+//
+//            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
+//            return $this->redirectToRoute("main");
+//
+//        }
+        return $this->render('user/connexion.html.twig');
     }
 
     /**
