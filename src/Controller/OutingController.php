@@ -2,18 +2,45 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
+use App\Form\OutingType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OutingController extends Controller
 {
     /**
-     * @Route("/outing", name="outing")
+     * @Route("/", name="main")
      */
     public function index()
     {
-        return $this->render('outing/index.html.twig', [
+        return $this->render('sortie/index.html.twig', [
             'controller_name' => 'OutingController',
         ]);
+    }
+
+    /**
+     * @Route("/add", name="add")
+     */
+    public function createOuting(EntityManagerInterface $em, Request $request) {
+
+        $outing = new Outing();
+        $outing->setEtat("1");
+        $outingForm = $this->createForm(OutingType::class,$outing);
+
+        $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
+            $em->persist($outing);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
+            return $this->redirectToRoute("main");
+
+        }
+        return $this->render('sortie/add.html.twig', ["outingForm"=> $outingForm->createView()]);
     }
 }
