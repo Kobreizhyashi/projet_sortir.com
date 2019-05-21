@@ -67,6 +67,7 @@ class Etat
 
         return $this;
     }
+    
 
     public function removeOuting(Outing $outing)
     {
