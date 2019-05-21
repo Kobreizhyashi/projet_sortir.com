@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\InscriptionRepository")
@@ -21,19 +22,55 @@ class Inscription
      */
     private $dateInscription;
 
-    public function getId(): ?int
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="inscriptions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Outing", inversedBy="inscriptions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $outing;
+
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getDateInscription(): ?\DateTimeInterface
+    public function getDateInscription()
     {
         return $this->dateInscription;
     }
 
-    public function setDateInscription(\DateTimeInterface $dateInscription): self
+    public function setDateInscription(\DateTimeInterface $dateInscription)
     {
         $this->dateInscription = $dateInscription;
+
+        return $this;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getOuting()
+    {
+        return $this->outing;
+    }
+
+    public function setOuting(?Outing $outing)
+    {
+        $this->outing = $outing;
 
         return $this;
     }

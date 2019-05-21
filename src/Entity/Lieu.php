@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,55 +38,114 @@ class Lieu
      */
     private $longitude;
 
-    public function getId(): ?int
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Outing", mappedBy="lieu")
+     */
+    private $outings;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ville", inversedBy="lieus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ville;
+
+    public function __construct()
+    {
+        $this->outings = new ArrayCollection();
+    }
+
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getRue(): ?string
+    public function getRue()
     {
         return $this->rue;
     }
 
-    public function setRue(?string $rue): self
+    public function setRue(?string $rue)
     {
         $this->rue = $rue;
 
         return $this;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude()
     {
         return $this->latitude;
     }
 
-    public function setLatitude(?float $latitude): self
+    public function setLatitude(?float $latitude)
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude()
     {
         return $this->longitude;
     }
 
-    public function setLongitude(?float $longitude): self
+    public function setLongitude(?float $longitude)
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getOutings(): Collection
+    {
+        return $this->outings;
+    }
+
+    public function addOuting(Outing $outing)
+    {
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setLieu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOuting(Outing $outing)
+    {
+        if ($this->outings->contains($outing)) {
+            $this->outings->removeElement($outing);
+            // set the owning side to null (unless already changed)
+            if ($outing->getLieu() === $this) {
+                $outing->setLieu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?Ville $ville)
+    {
+        $this->ville = $ville;
 
         return $this;
     }

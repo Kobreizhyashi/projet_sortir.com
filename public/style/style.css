@@ -11,6 +11,7 @@ body {
 }
 .nav-wrapper {
     background-color: #4db6ac;
+
 }
 
 /**
@@ -35,3 +36,30 @@ section {
 select {
     display: block
 }
+
+/**
+
+END recherche
+
+Add :
+ */
+
+
+.form {
+    max-width: 30%;
+    margin: auto;
+    padding: 25px;
+    margin-top: 30px;
+
+}
+
+form {
+    margin: auto;
+}
+
+@media screen and (max-width: 640px) {
+    .form {
+        max-width: 100%;
+    }
+}
+
