@@ -63,3 +63,29 @@ form {
     }
 }
 
+
+
+/**
+Affichage sortie
+ */
+
+
+.titre{
+    text-align: center;
+}
+
+.tabParticipant
+{
+    margin : auto;
+}
+
+.tpTH{
+    text-align: center;
+}
+
+.aff_sortie_label
+{
+    font-size: medium;
+    color : black;
+
+}
