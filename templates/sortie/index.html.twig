@@ -67,7 +67,7 @@
             </form>
         </div>
     </section>
-{#
+
     <section>
         <div class="row">
 
@@ -89,9 +89,10 @@
                     {% for outing in outings %}
                         <tr>
                             <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut }}</td>
-                            <td>{{ outing.dateLimiteInscription }}</td>
-                            <td>{{ outing.nbInscriptionsMax }}</td>
+                            <td>{{ outing.dateHeureDebut|date }}</td>
+                            <td>{{ outing.duree }}</td>
+                            <td>{{ outing.dateLimiteInscription|date }}</td>
+                            <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.infosSortie }}</td>
                         </tr>
                     {% endfor %}
@@ -105,8 +106,6 @@
 
 
     </section>
-
-    #}
 
 
 {% endblock %}
