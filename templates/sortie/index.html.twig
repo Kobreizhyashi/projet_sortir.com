@@ -3,67 +3,110 @@
 {% block title %} Accueil {% endblock %}
 
 {% block main %}
+    <section>
+        <div class="row">
+            <form class="col s12 l8 m10 offset-l2">
+                <div class="col s6">
 
-    <div class="row">
-        <form class="col s12">
-            <div class="col s6">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <select>
+                                <option value="" selected>Choisissez un site</option>
+                                <option value="1">RENNES</option>
+                                <option value="2">RENNES</option>
+                                <option value="3">RENNES</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
 
-                <div class="row">
-                    <div class="input-field col s6">
-                        <select>
-                            <option value="" selected>Choisissez un site</option>
-                            <option value="1">RENNES</option>
-                            <option value="2">RENNES</option>
-                            <option value="3">RENNES</option>
-                        </select>
+                        <div class="input-field col s6">
+                            <input id="beginDate" type="date" class="datepicker">
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="endDate" type="date" class="datepicker">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input placeholder="Aquaponey, elevage d'autruches naines..." id="organizer" type="text"
+                                   class="validate">
+
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-
-                    <div class="input-field col s6">
-                        <input id="beginDate" type="date" class="datepicker">
-                    </div>
-                    <div class="input-field col s6">
-                        <input id="endDate" type="date" class="datepicker">
-                    </div>
-                </div>
-                <div class="row">
+                <div class="col s6">
                     <div class="input-field col s12">
-                        <input placeholder="Aquaponey, elevage d'autruches naines..." id="organizer" type="text" class="validate">
-
+                        <p>
+                            <label>
+                                <input type="checkbox"/>
+                                <span>Sorties dont je suis l'organisateur</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox"/>
+                                <span>Sorties auxquelles je suis inscrit/e</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox"/>
+                                <span>Sorties auquelles je ne suis pas inscrit/e</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox"/>
+                                <span>Sorties passées</span>
+                            </label>
+                        </p>
+                        <button type="submit" value="" class="btn s12">Rechercher</button>
                     </div>
                 </div>
+            </form>
+        </div>
+    </section>
+{#
+    <section>
+        <div class="row">
+
+            <div class="col s12 l6 m8 offset-l3 offset-m2">
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Debut</th>
+                        <th>Durée(minutes)</th>
+                        <th>Fin</th>
+                        <th>Inscriptions</th>
+                        <th>Informations complémentaires</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for outing in outings %}
+                        <tr>
+                            <td>{{ outing.nom }}</td>
+                            <td>{{ outing.dateHeureDebut }}</td>
+                            <td>{{ outing.dateLimiteInscription }}</td>
+                            <td>{{ outing.nbInscriptionsMax }}</td>
+                            <td>{{ outing.infosSortie }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+
+
             </div>
-            <div class="col s6">
-                <div class="input-field col s12">
-                    <p>
-                        <label>
-                            <input type="checkbox"/>
-                            <span>Sorties dont je suis l'organisateur</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input type="checkbox"/>
-                            <span>Sorties auxquelles je suis inscrit/e</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input type="checkbox"/>
-                            <span>Sorties auquelles je ne suis pas inscrit/e</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input type="checkbox"/>
-                            <span>Sorties passées</span>
-                        </label>
-                    </p>
-                    <button type="submit" value="" class="btn s12">Rechercher</button>
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+
+
+    </section>
+
+    #}
+
 
 {% endblock %}

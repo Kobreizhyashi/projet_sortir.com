@@ -15,10 +15,13 @@ class OutingController extends Controller
     /**
      * @Route("/", name="main")
      */
-    public function index()
+    public function index(EntityManagerInterface $em)
     {
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findAll();
+
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController',
+            'controller_name' => 'OutingController', 'outings' => $outings
         ]);
     }
 
