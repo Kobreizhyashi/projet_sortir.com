@@ -6,7 +6,6 @@ use App\Entity\Outing;
 use App\Form\OutingType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
