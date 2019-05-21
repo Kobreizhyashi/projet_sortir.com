@@ -1,0 +1,76 @@
+{%  extends ('layout.html.twig') %}
+
+{% block title %}Détail de la sortie{% endblock %}
+
+{% block main %}
+
+    {#
+    Cette page affiche les informations en fonction de l'id utilisateur
+
+    1ere partie --Cette page receptionne une instance de sortie(contenant une instance de lieu)
+    2eme partie --Elle a également besoin d'une liste de participant ayant un L'ID de la sortie
+
+    #}
+
+    <section>
+
+        <div class="container">
+
+            <div class="row">
+                <h3 class="titre center-align">{{ user.prenom }} {{ user.nom }} </h3>
+                <br>
+            </div>
+
+            <div class="row align-center">
+
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <label class ="aff_sortie_label">Prénom :</label>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <span>{{ user.prenom }}</span>
+                </div>
+                <br>
+            </div>
+
+            <div class="row">
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <label class ="aff_sortie_label">Nom :</label>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <span><span>{{ user.nom }}</span></span>
+                </div>
+                <br>
+            </div>
+
+            <div class="row">
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <label class ="aff_sortie_label">Téléphone :</label>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <span>{{ user.telephone }}</span>
+                </div>
+                <br>
+            </div>
+
+            <div class="row">
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <label class ="aff_sortie_label">Email :</label><span></span>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <span>{{ user.email }}</span>
+                </div>
+                <br>
+            </div>
+
+            <div class="row">
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <label class ="aff_sortie_label">Ville de rattachement :</label>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <span>{{ user.site.nom }}</span>
+                </div>
+            </div>
+
+    </section>
+{% endblock %}
+
