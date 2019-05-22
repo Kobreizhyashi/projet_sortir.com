@@ -29,7 +29,7 @@ class UserType extends AbstractType
             ->add('actif')
             ->add('username')
             ->add('email')
-            ->add('motDePasse',RepeatedType::class,[
+            ->add('password',RepeatedType::class,[
                 'type'=>PasswordType::class,
                 'invalid_message'=>'Les champs mot de passe doivent être identiques',
                 'required'=>true,
