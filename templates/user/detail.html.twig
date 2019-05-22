@@ -1,6 +1,6 @@
 {%  extends ('layout.html.twig') %}
 
-{% block title %}Détail de la sortie{% endblock %}
+{% block title %}Détail du profil{% endblock %}
 
 {% block main %}
 
@@ -69,6 +69,24 @@
                 <div class ="col s4 l3 m3">
                     <span>{{ user.site.nom }}</span>
                 </div>
+                <br>
+                <br>
+            </div>
+
+            <div class="row">
+                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+{#                    modifier par un {{ path('user_modify') }} une fois qu'on à l'utlisateur en application#}
+                    <a href="{{ path('user_modify', {'id':user.id}) }}">
+                        <input type="button" class="btn btn-secondary" name="modifier" value="Modifier">
+                    </a>
+                </div>
+                <div class ="col s4 l3 m3">
+                    <a href="{{ path('main') }}">
+                        <input type="button" class="btn btn-secondary" name="retour" value="Retour">
+                    </a>
+                </div>
+                <br>
+                <br>
             </div>
 
     </section>

@@ -40,9 +40,22 @@ class UserController extends Controller
      */
     public function userDetails($id, EntityManagerInterface $em)
     {
+    // getter l'id en application une fois qu'on a la connexion utlisateur
         $user = $em->getRepository(User::class)->find($id);
 
         return $this->render('user/detail.html.twig', [
+            'user'=>$user
+        ]);
+    }
+
+    /**
+     * @Route("/user/{id}/modify", name="user_modify")
+     */
+    public function userModify($id, EntityManagerInterface $em)
+    {
+        $user = $em->getRepository(User::class)->find($id);
+
+        return $this->render('user/modify.html.twig', [
             'user'=>$user
         ]);
     }
