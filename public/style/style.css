@@ -87,5 +87,10 @@ Affichage sortie
 {
     font-size: medium;
     color : black;
+}
+
+.delete-btn
+{
+    text-align: center;
 
 }

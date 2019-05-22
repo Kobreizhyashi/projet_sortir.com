@@ -1,0 +1,69 @@
+{%  extends ('layout.html.twig') %}
+
+{% block title %}Annuler la sortie{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="row">
+
+            <h3 class="titre">Annuler une sortie</h3>
+
+            <br>
+
+            <div class="row">
+                <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                    <label class ="aff_sortie_label">Nom de la sortie :</label>
+                </div>
+                <div class ="col s3 l3 m3">
+                    <span>test</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                    <label class ="aff_sortie_label">Date de la sortie :</label>
+                </div>
+                <div class ="col s3 l3 m3">
+                    <span>test</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                    <label class ="aff_sortie_label">Ville organisatrice :</label>
+                </div>
+                <div class ="col s3 l3  m3">
+                    <span>test</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                    <label class ="aff_sortie_label">Lieu :</label>
+                </div>
+                <div class ="col s3 l3 m3">
+                    <span>test</span>
+                </div>
+            </div>
+
+            <form>
+                <div class="row">
+                    <div class ="col s5 offset-s3 l5 offset-l3  m5 offset-m3 ">
+                        <input  id="motif" type="text" class="validate">
+                        <label class="active" for="motif">Motif</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                        <button type="submit"  class=" delete-btn btn waves-effect waves-light">Enregistrer</button>
+                    </div>
+                    <div class ="col s3 l3 m3">
+                        <button href=""   class="delete-btn btn waves-effect waves-light">Annuler</button>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+        </div>
+{% endblock %}

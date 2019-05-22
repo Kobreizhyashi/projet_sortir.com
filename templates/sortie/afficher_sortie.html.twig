@@ -1,6 +1,11 @@
 {%  extends ('layout.html.twig') %}
 
+{% block title %}Détail de la sortie{% endblock %}
+
 {% block main %}
+
+
+
 
     {#
     Cette page s'affiche si l'utilisateur n'est pas le créateur de la sortie
@@ -145,8 +150,8 @@
             <tbody>
             {# for participant in participants#}
             <tr>
-                <td>{#  participant.pseudo#}</td>
-                <td>{#  participant.nom#}</td>
+                <td>test{#  participant.pseudo#}</td>
+                <td>test{#  participant.nom#}</td>
             </tr>
             {#  endfor #}
             </tbody>

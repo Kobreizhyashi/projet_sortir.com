@@ -6,6 +6,7 @@ use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\User;
+use App\Form\DeleteOutingType;
 use App\Form\OutingType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -52,6 +53,34 @@ class OutingController extends Controller
 
         }
         return $this->render('sortie/add.html.twig', ["outingForm" => $outingForm->createView()]);
+    }
+
+
+    /**
+     * @Route("/show", name="show")
+     */
+    public function showOuting() {
+
+        return $this->render('sortie/afficher_sortie.html.twig');
+    }
+
+    /**
+     * @Route("/update", name="update")
+     */
+    public function update( Request $request) {
+        $outing = new Outing();
+        $outingForm = $this->createForm(OutingType::class,$outing);
+        $outingForm->handleRequest($request);
+
+        return $this->render('sortie/update.html.twig',["outingForm"=> $outingForm->createView()]);
+    }
+
+    /**
+     * @Route("/delete", name="delete")
+     */
+    public function delete() {
+
+        return $this->render('sortie/annuler_sortie.html.twig');
     }
 
     /**
