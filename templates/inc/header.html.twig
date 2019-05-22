@@ -5,8 +5,11 @@
             <li><a href="#">Villes</a></li>
             <li><a href="#">Sites</a></li>
             <li><a href="{{ path('main') }}">Accueil</a></li>
-            <li><a href="#">Mon profil</a></li>
-            <li><a href="#">Deconnexion</a></li>
+            <li><a href="{{ path('user_details') }}">Mon profil</a></li>
+
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+            {% endif %}
         </ul>
     </div>
 </nav>
