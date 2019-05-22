@@ -7,13 +7,9 @@
     <div class="row container">
         <form  action="{{ path('login') }}" method="post">
             <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m6" >
-                <label for="username">Identifiant</label>
+                <label for="username">Identifiant ou Email</label>
                 <!--Symfony impose le nom _username pour gérer le mécanisme de login -->
                 <input type="text" name="_username" id="username">
-
-{#                <label for="email">Email</label>#}
-{#                <input type="text" name="_email" id="email">#}
-
                 <label for="password">Mot de passe :</label>
                 <!--Symfony impose le nom _password pour gérer le mécanisme de login -->
                 <input type="password" name="_password" id="password">
