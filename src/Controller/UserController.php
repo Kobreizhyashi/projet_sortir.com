@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Outing;
-use App\Form\OutingType;
+use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,14 +48,24 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/{id}/modify", name="user_modify")
+     * @Route("/user/{id}/update", name="user_update")
      */
-    public function userModify($id, EntityManagerInterface $em)
+    public function userModify(Request $request, $id, EntityManagerInterface $em)
     {
         $user = $em->getRepository(User::class)->find($id);
+        $userForm = $this->createForm(UserType::class,$user);
+        $userForm->handleRequest($request);
 
-        return $this->render('user/modify.html.twig', [
-            'user'=>$user
+        if($userForm->isSubmitted()&&$userForm->isValid()) {
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre profil a bien été modifié');
+            return $this->redirectToRoute("user_details", ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/update.html.twig', ["user" => $user,
+            "userForm"=> $userForm->createView()
         ]);
     }
 
