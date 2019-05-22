@@ -6,12 +6,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
+    public function getRoles()
+    {
+        return ["ROLE_USER"];
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -47,7 +63,7 @@ class User
     /**
      * @ORM\Column(type="string", length=30)
      */
-    private $pseudo;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=20)
@@ -57,7 +73,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $motDePasse;
+    private $password;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
@@ -146,14 +162,14 @@ class User
         return $this;
     }
 
-    public function getPseudo()
+    public function getUsername()
     {
-        return $this->pseudo;
+        return $this->username;
     }
 
-    public function setPseudo(string $pseudo)
+    public function setUsername(string $username)
     {
-        $this->pseudo = $pseudo;
+        $this->username = $username;
 
         return $this;
     }
@@ -170,14 +186,14 @@ class User
         return $this;
     }
 
-    public function getMotDePasse()
+    public function getPassword()
     {
-        return $this->motDePasse;
+        return $this->password;
     }
 
-    public function setMotDePasse(string $motDePasse)
+    public function setPassword(string $password)
     {
-        $this->motDePasse = $motDePasse;
+        $this->password = $password;
 
         return $this;
     }

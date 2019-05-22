@@ -17,9 +17,9 @@ class UserType extends AbstractType
             ->add('telephone')
             ->add('administrateur')
             ->add('actif')
-            ->add('pseudo')
+            ->add('username')
             ->add('email')
-            ->add('motDePasse')
+            ->add('password')
             ->add('site')
         ;
     }
