@@ -12,28 +12,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends Controller
 {
+
+    /**
+     * on nomme la route login car dans le fichier
+     * security.yaml on a login_path: login
+     * @Route("/login", name="login")
+     */
+    public function login(){
+        return $this->render("user/login.html.twig",
+            []);
+    }
+
+    /**
+     * Symfony gére entierement cette route il suffit de l'appeler logout.
+     * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
+     * @Route("/logout", name="logout")
+     */
+    public function logout(){}
+
     /**
      * @Route("/user", name="user")
      */
-    public function userConnexion() {
 
-//        $outing = new Outing();
-//        $outing->setEtat("1");
-//        $outingForm = $this->createForm(OutingType::class,$outing);
-//
-//        $outingForm->handleRequest($request);
-//
-//        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
-//
-//            $em->persist($outing);
-//            $em->flush();
-//
-//            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
-//            return $this->redirectToRoute("main");
-//
-//        }
-        return $this->render('user/connexion.html.twig');
-    }
 
     /**
      * @Route("/user/{id}", name="user_details")
