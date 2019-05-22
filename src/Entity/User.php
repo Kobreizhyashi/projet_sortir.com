@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User
 {
