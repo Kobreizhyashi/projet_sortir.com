@@ -7,17 +7,18 @@
         <div class="row">
             <form class="col s12 l8 m10 offset-l2">
                 <div class="col s6">
-
+                    <p> Site : </p>
                     <div class="row">
                         <div class="input-field col s6">
-                            <select>
-                                <option value="" selected>Choisissez un site</option>
-                                <option value="1">RENNES</option>
-                                <option value="2">RENNES</option>
-                                <option value="3">RENNES</option>
+                            <select class="siteSelector">
+                                <option value="131" selected>Choisissez un site</option>
+                                {% for site in sites %}
+                                    <option value="{{ site.id }}">{{ site.nom }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
+                    <p> Dates : </p>
                     <div class="row">
 
                         <div class="input-field col s6">
@@ -71,7 +72,7 @@
     <section>
         <div class="row">
 
-            <div class="col s12 l6 m8 offset-l3 offset-m2">
+            <div class="col s12 l10 m12 offset-l1">
 
                 <table>
                     <thead>
@@ -85,7 +86,7 @@
                     </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="tableBody">
                     {% for outing in outings %}
                         <tr>
                             <td>{{ outing.nom }}</td>
@@ -104,8 +105,52 @@
             </div>
         </div>
 
+        <div class="row">
 
+            <div class="offset-l2 col l2 m4 s8">
+                <a href="{{ path('add') }}">
+                    <button type="button" class="btn">Ajouter une sortie</button>
+                </a>
+            </div>
+        </div>
     </section>
+
+
+
+    <script>
+
+
+        $('.siteSelector').change(function (e) {
+
+            var value = $(this).val();
+
+            $.ajax({
+
+                url: '{{ path('ajaxFormIndex') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'value': value
+                },
+                assync: true,
+                success: function (data) {
+                    console.log(data);
+                    $('.tableBody').empty();
+                    $.each(data, function (key, value) {
+                        $('.tableBody').append($('<tr value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td> <td>' + value['duree'] + '</td> <td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['infosSortie'] + '</td></tr>'
+                        ));
+
+                    });
+                }
+
+            })
+
+            e.preventDefault();
+
+        });
+
+
+    </script>
 
 
 {% endblock %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Outing;
+use App\Entity\Site;
 use App\Entity\User;
 use App\Form\DeleteOutingType;
 use App\Form\OutingType;
@@ -24,9 +25,10 @@ class OutingController extends Controller
     {
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
-
+        $repo = $em->getRepository(Site::class);
+        $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites
         ]);
     }
 
@@ -59,7 +61,8 @@ class OutingController extends Controller
     /**
      * @Route("/show", name="show")
      */
-    public function showOuting() {
+    public function showOuting()
+    {
 
         return $this->render('sortie/afficher_sortie.html.twig');
     }
@@ -67,18 +70,20 @@ class OutingController extends Controller
     /**
      * @Route("/update", name="update")
      */
-    public function update( Request $request) {
+    public function update(Request $request)
+    {
         $outing = new Outing();
-        $outingForm = $this->createForm(OutingType::class,$outing);
+        $outingForm = $this->createForm(OutingType::class, $outing);
         $outingForm->handleRequest($request);
 
-        return $this->render('sortie/update.html.twig',["outingForm"=> $outingForm->createView()]);
+        return $this->render('sortie/update.html.twig', ["outingForm" => $outingForm->createView()]);
     }
 
     /**
      * @Route("/delete", name="delete")
      */
-    public function delete() {
+    public function delete()
+    {
 
         return $this->render('sortie/annuler_sortie.html.twig');
     }
@@ -102,4 +107,37 @@ class OutingController extends Controller
         return $response;
     }
 
+
+    /**
+     * @Route("/ajaxFormIndex", name="ajaxFormIndex")
+     */
+    public function ajaxFormIndex(Request $request, EntityManagerInterface $em)
+    {
+        $value = $request->request->get('value');
+        if ($value == 131) {
+            $outings = $em->getRepository(Outing::class)->findAll();
+        } else {
+            $outings = $em->getRepository(Outing::class)->findBy(array('site' => $value));
+        }
+        $returned = [];
+
+        foreach ($outings as $outing) {
+
+            $returned[$outing->getId()] = [
+                'nom' => $outing->getNom(),
+                'dateHeureDebut' => $outing->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                'duree' => $outing->getDuree(),
+                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('Y-m-d H:i:s'),
+                'nbInscriptions' => $outing->getInscriptions()->count(),
+                'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
+                'infosSortie'=> $outing->getInfosSortie(),
+                'etat'=> $outing->getEtat(),
+            ];
+        };
+        dump($returned);
+
+        $response = new Response(json_encode($returned));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 }

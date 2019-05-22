@@ -94,3 +94,7 @@ Affichage sortie
     text-align: center;
 
 }
+
+.tableBody {
+    width: 80%;
+}

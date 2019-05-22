@@ -22,7 +22,7 @@
     $('.choice').change(function (e) {
         var choice = $(this).val();
         $.ajax({
-            url: '{{ path('ajaxFormAdd') }}',
+            url: '{{ path('ajaxFormIndex') }}',
             type: 'POST',
             dataType: 'json',
             data: {
