@@ -6,7 +6,7 @@
 
 
 {% block main %}
-    <div class="form col s12 l4 valign-wrapper offset-l4 z-depth-2">
+<div class="form col s12 l4 valign-wrapper offset-l4 z-depth-2">
     {{ form_start(outingForm) }}
 
     {{ form_widget(outingForm) }}
@@ -14,6 +14,36 @@
 
     <button type="submit" class="btn waves-effect waves-light">Ajouter.</button>
     {{ form_end(outingForm) }}
-    </div>
+</div>
+
+
+<script>
+
+    $('.choice').change(function (e) {
+        var choice = $(this).val();
+        $.ajax({
+            url: '{{ path('ajaxFormAdd') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'choice': choice
+            },
+            async: true,
+            success: function (data) {
+
+                $('.ajaxSite').empty();
+                $.each(data, function (id, lieu) {
+                    $('.ajaxSite').append($('<option value="'+ id + '">' + lieu + '</option>'));
+                });
+            }
+        });
+        e.preventDefault();
+    });
+
+
+    // https://openclassrooms.com/forum/sujet/symfony-formulaire-dynamique-cadeau
+
+</script>
+
 {% endblock %}
 

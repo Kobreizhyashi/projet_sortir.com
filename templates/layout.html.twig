@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../public/style/style.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 
     <title>{% block title %}{% endblock %}</title>
 </head>
@@ -17,10 +18,10 @@
 <div class="'container">
     <header>{% include ('inc/header.html.twig') %}</header>
 
+    <main>
 
-    <main>{% block main %}{% endblock %}</main>
+        {% block main %}{% endblock %}</main>
 </div>
-
 
 
 </body>

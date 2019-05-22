@@ -61,15 +61,13 @@ class OutingController extends Controller
     {
         $choice = $request->request->get('choice');
         $lieux = $em->getRepository(Lieu::class)->findBy(array('ville' => $choice));
-        dump($lieux);
+
         $returned = [];
         foreach ($lieux as $lieu) {
-            $returned[] = $lieu;
+            $returned[$lieu->getId()] = $lieu->getNom();
         };
 
-        var_dump($returned);
-        $response = new Response(json_encode(array(
-            'lieux'=>$returned)));
+        $response = new Response(json_encode($returned));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
