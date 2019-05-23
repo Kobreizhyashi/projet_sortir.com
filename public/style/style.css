@@ -29,6 +29,12 @@ Recherche :
     width: 100%;
 }
 
+.logindiv {
+    padding: 50px;
+    align-content: center;
+    width: 100%;
+}
+
 section {
     margin-left: auto;
     margin-right: auto;

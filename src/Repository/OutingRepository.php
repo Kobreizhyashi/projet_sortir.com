@@ -4,7 +4,16 @@ namespace App\Repository;
 
 use App\Entity\Outing;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Etat;
+use App\Entity\Lieu;
+use App\Entity\Site;
+use App\Entity\User;
+use App\Form\DeleteOutingType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @method Outing|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +56,112 @@ class OutingRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getPersonalResearch($requestedArray, EntityManagerInterface $em)
+    {
+
+        $requestedArray['siteValue'];
+
+        $qb = $this->createQueryBuilder('s')
+            ->where('1 = 1');
+
+        if ($requestedArray['siteValue'] != '' && $requestedArray['siteValue'] != NULL && $requestedArray['siteValue'] != 131){
+            $qb ->leftJoin('s.site','site')
+                ->andWhere('site.id = :site')
+                ->setParameter('site', $requestedArray['siteValue']);
+        }
+
+        $qb->andWhere('s.nom like :nom' )
+            ->setParameter('nom', '%'.$requestedArray['stringSearch'].'%');
+
+        if ($requestedArray['dateFirst'] != '' && $requestedArray['dateFirst'] != NULL){
+            $qb->andWhere('s.dateHeureDebut >= :dateMin' )
+                ->setParameter('dateMin', $requestedArray['dateFirst']);
+        };
+
+        if ($requestedArray['dateLast'] != '' && $requestedArray['dateLast'] != NULL){
+            $qb->andWhere('s.dateHeureDebut <= :dateMax' )
+                ->setParameter('dateMax', $requestedArray['dateLast']);
+        };
+
+        $qb->orderBy('s.dateHeureDebut','desc');
+        $query=$qb->getQuery();
+        $returned = $query->getResult();
+
+
+        /*
+
+
+        =================== A GARDER ==========================
+
+        $sqlString = '
+        SELECT o FROM App\Entity\Outing o 
+        JOIN App\Entity\Site s
+        JOIN App\Entity\Etat e
+        WHERE 1 = 1 ';
+        $parametersArray = [];
+
+        if ($requestedArray['siteValue'] != 131) {
+            $sqlString .= 'AND s.id = :siteValue ';
+            $parametersArray['siteValue'] = $requestedArray['siteValue'];
+        }
+        if (($requestedArray['dateFirst'] != '') && ($requestedArray['dateLast'] != '')) {
+            $sqlString .= 'AND o.dateHeureDebut > :dateFirst AND o.dateHeureDebut < :dateLast ';
+            $parametersArray['dateFirst'] = $requestedArray['dateFirst'];
+            $parametersArray['dateLast'] = $requestedArray['dateLast'];
+        } elseif (($requestedArray['dateFirst'] != '')) {
+            $sqlString .= 'AND o.dateHeureDebut > :dateFirst ';
+            $parametersArray['dateFirst'] = $requestedArray['dateFirst'];
+        } elseif (($requestedArray['dateLast'] != '')) {
+            $sqlString .= 'AND o.dateHeureDebut > :dateFirst ';
+            $parametersArray['dateLast'] = $requestedArray['dateLast'];
+        }
+        if ($requestedArray['stringSearch'] != '') {
+
+            $sqlString .= 'AND o.nom LIKE :stringSearch';
+            $parametersArray['stringSearch'] = $requestedArray['stringSearch'];
+        }
+
+        $query = $this->getEntityManager()->createQuery($sqlString);
+
+        if (!empty($parametersArray['siteValue'])) {
+            $query->setParameter('siteValue', $parametersArray['siteValue']);
+        }
+        if ((!empty($parametersArray['dateFirst'])) && (!empty($parametersArray['dateLast']))) {
+            $query->setParameter('dateFirst', '%' . $parametersArray['dateFirst'] . '%');
+            $query->setParameter('dateLast', '%' . $parametersArray['dateLast'] . '%');
+        } elseif (!empty($parametersArray['dateFirst'])) {
+            $query->setParameter('dateFirst', '%' . $parametersArray['dateFirst'] . '%');
+        } elseif (!empty($parametersArray['dateLast'])) {
+            $query->setParameter('dateLast', '%' . $parametersArray['dateLast'] . '%');
+        }
+        if (!empty($parametersArray['stringSearch'])) {
+            $query->setParameter('dateLast', '%' . $parametersArray['stringSearch'] . '%');
+        }
+
+        $returned = $query->getResult();
+
+*/
+
+
+
+        /** @var Outing $outing */
+        foreach ($returned as $outing) {
+            $returned[$outing->getId()] = [
+                'nom' => $outing->getNom(),
+                'dateHeureDebut' => $outing->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                'duree' => $outing->getDuree(),
+                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('Y-m-d H:i:s'),
+                'nbInscriptions' => $outing->getInscriptions()->count(),
+                'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
+                'infosSortie' => $outing->getInfosSortie(),
+                'etat' => $outing->getEtat(),
+            ];
+        };
+        return $returned;
+
+
+    }
+
+
 }
