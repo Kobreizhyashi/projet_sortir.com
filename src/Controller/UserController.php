@@ -46,10 +46,10 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user", name="user_details")
+     * @Route("/myprofile", name="my_details")
      * voir les informations de son propre profil
      */
-    public function userDetails(EntityManagerInterface $em)
+    public function myDetails(EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -58,6 +58,21 @@ class UserController extends Controller
             'user'=>$user
         ]);
     }
+
+    /**
+     * @Route("/user/{id}", name="their_details")
+     * voir les informations d'un autre profil
+     */
+    public function theirDetails(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $em->getRepository(User::class)->find($id);
+        return $this->render('user/detail.html.twig', [
+            'user'=>$user
+        ]);
+    }
+
 
     /**
      * @Route("/user/{id}/update", name="user_update")
