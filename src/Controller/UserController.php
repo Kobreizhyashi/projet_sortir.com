@@ -8,6 +8,8 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Doctrine\Bundle\FixturesBundle;
 
 class UserController extends Controller
 {
@@ -17,9 +19,18 @@ class UserController extends Controller
      * security.yaml on a login_path: login
      * @Route("/login", name="login")
      */
-    public function login(){
-        return $this->render("user/login.html.twig",
-            []);
+    public function login(AuthenticationUtils $authenticationUtils){
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render("user/login.html.twig",[
+            'last_username' => $lastUsername,
+            'error'         => $error,
+            ]);
     }
 
     /**
