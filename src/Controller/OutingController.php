@@ -23,6 +23,8 @@ class OutingController extends Controller
      */
     public function index(EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
         $repo = $em->getRepository(Site::class);
@@ -37,6 +39,7 @@ class OutingController extends Controller
      */
     public function createOuting(EntityManagerInterface $em, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
@@ -63,6 +66,7 @@ class OutingController extends Controller
      */
     public function showOuting()
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         return $this->render('sortie/afficher_sortie.html.twig');
     }
@@ -72,6 +76,8 @@ class OutingController extends Controller
      */
     public function update(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $outing = new Outing();
         $outingForm = $this->createForm(OutingType::class, $outing);
         $outingForm->handleRequest($request);
@@ -84,6 +90,7 @@ class OutingController extends Controller
      */
     public function delete()
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         return $this->render('sortie/annuler_sortie.html.twig');
     }

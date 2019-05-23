@@ -44,10 +44,6 @@ class UserController extends Controller
      */
     public function logout(){}
 
-    /**
-     * @Route("/user", name="user")
-     */
-
 
     /**
      * @Route("/user", name="user_details")
@@ -55,15 +51,12 @@ class UserController extends Controller
      */
     public function userDetails(EntityManagerInterface $em)
     {
-        if($this->getUser()!=null){
-            $user = $this->getUser();
-            return $this->render('user/detail.html.twig', [
-                'user'=>$user
-            ]);
-        } else {
-            return $this->redirectToRoute('main',[]);
-        }
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
+        $user = $this->getUser();
+        return $this->render('user/detail.html.twig', [
+            'user'=>$user
+        ]);
     }
 
     /**
@@ -71,6 +64,8 @@ class UserController extends Controller
      */
     public function userUpdate(Request $request, $id, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $user = $em->getRepository(User::class)->find($id);
         $userForm = $this->createForm(UserType::class,$user);
         $userForm->handleRequest($request);
