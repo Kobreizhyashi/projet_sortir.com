@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Bundle\FixturesBundle;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
@@ -19,10 +20,13 @@ class UserController extends Controller
      * security.yaml on a login_path: login
      * @Route("/login", name="login")
      */
-    public function login(AuthenticationUtils $authenticationUtils){
+    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        if (!empty($error)) {
+          $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
+        }
 
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
