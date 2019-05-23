@@ -10,7 +10,7 @@
                     <p> Site : </p>
                     <div class="row">
                         <div class="input-field col s6">
-                            <select class="siteSelector">
+                            <select class="siteSelector" id="siteSelector">
                                 <option value="131" selected>Choisissez un site</option>
                                 {% for site in sites %}
                                     <option value="{{ site.id }}">{{ site.nom }}</option>
@@ -21,15 +21,15 @@
                     <p> Dates : </p>
                     <div class="row">
 
-                        <div class="input-field col s6">
+                        <div class="input-field col s6" id="dateFirst">
                             <input id="beginDate" type="date" class="datepicker">
                         </div>
-                        <div class="input-field col s6">
+                        <div class="input-field col s6" id="dateLast">
                             <input id="endDate" type="date" class="datepicker">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s12">
+                        <div class="input-field col s12" id="stringRecherche">
                             <input placeholder="Aquaponey, elevage d'autruches naines..." id="organizer" type="text"
                                    class="validate">
 
@@ -62,7 +62,7 @@
                                 <span>Sorties passées</span>
                             </label>
                         </p>
-                        <button type="submit" value="" class="btn s12">Rechercher</button>
+                        <button type="submit" name="submitter" class="submitter btn s12">Rechercher</button>
                     </div>
                 </div>
             </form>
@@ -83,18 +83,20 @@
                         <th>Fin</th>
                         <th>Inscriptions</th>
                         <th>Informations complémentaires</th>
+                        <th>Etat</th>
                     </tr>
                     </thead>
 
                     <tbody class="tableBody">
                     {% for outing in outings %}
-                        <tr>
-                            <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut|date }}</td>
-                            <td>{{ outing.duree }}</td>
-                            <td>{{ outing.dateLimiteInscription|date }}</td>
-                            <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
-                            <td>{{ outing.infosSortie }}</td>
+                        <td>
+                        <td>{{ outing.nom }}</td>
+                        <td>{{ outing.dateHeureDebut|date }}</td>
+                        <td>{{ outing.duree }}</td>
+                        <td>{{ outing.dateLimiteInscription|date }}</td>
+                        <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
+                        <td>{{ outing.infosSortie }}</td>
+                        <td id="state">{{ outing.etat.libelle }}</td>
                         </tr>
                     {% endfor %}
 
@@ -120,26 +122,29 @@
     <script>
 
 
-        $('.siteSelector').change(function (e) {
-
-            var value = $(this).val();
-
+        $('.submitter').click(function (e) {
             $.ajax({
 
                 url: '{{ path('ajaxFormIndex') }}',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    'value': value
+                    'siteValue': $('#siteSelector').val(),
+                    'dateFirst': $('#beginDate').val(),
+                    'dateLast': $('#endDate').val(),
+                    'stringSearch': $('#organizer').val(),
                 },
                 assync: true,
                 success: function (data) {
                     console.log(data);
                     $('.tableBody').empty();
                     $.each(data, function (key, value) {
-                        $('.tableBody').append($('<tr value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td> <td>' + value['duree'] + '</td> <td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['infosSortie'] + '</td></tr>'
-                        ));
+                        if (key != 0) {
 
+
+                            $('.tableBody').append($('<tr value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td> <td>' + value['duree'] + '</td> <td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['infosSortie'] + '</td><td> ' + value['etat'] + ' </td></tr>'
+                            ));
+                        }
                     });
                 }
 

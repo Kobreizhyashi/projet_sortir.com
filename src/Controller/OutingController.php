@@ -9,6 +9,7 @@ use App\Entity\Site;
 use App\Entity\User;
 use App\Form\DeleteOutingType;
 use App\Form\OutingType;
+use App\Repository\OutingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,6 +28,7 @@ class OutingController extends Controller
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
@@ -120,31 +122,21 @@ class OutingController extends Controller
      */
     public function ajaxFormIndex(Request $request, EntityManagerInterface $em)
     {
-        $value = $request->request->get('value');
-        if ($value == 131) {
-            $outings = $em->getRepository(Outing::class)->findAll();
-        } else {
-            $outings = $em->getRepository(Outing::class)->findBy(array('site' => $value));
-        }
-        $returned = [];
 
-        foreach ($outings as $outing) {
+        $requestedArray['siteValue'] = $request->request->get('siteValue');
+        $requestedArray['dateFirst'] = $request->request->get('dateFirst');
+        $requestedArray['dateLast'] = $request->request->get('dateLast');
+       $requestedArray['stringSearch'] = $request->request->get('stringSearch');
 
-            $returned[$outing->getId()] = [
-                'nom' => $outing->getNom(),
-                'dateHeureDebut' => $outing->getDateHeureDebut()->format('Y-m-d H:i:s'),
-                'duree' => $outing->getDuree(),
-                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('Y-m-d H:i:s'),
-                'nbInscriptions' => $outing->getInscriptions()->count(),
-                'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
-                'infosSortie'=> $outing->getInfosSortie(),
-                'etat'=> $outing->getEtat(),
-            ];
-        };
+        $returned = $em->getRepository(Outing::class)->getPersonalResearch($requestedArray, $em);
+
+
+
         dump($returned);
 
         $response = new Response(json_encode($returned));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
 }
