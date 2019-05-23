@@ -16,7 +16,7 @@
                     <label class ="aff_sortie_label">Nom de la sortie :</label>
                 </div>
                 <div class ="col s3 l3 m3">
-                    <span>test</span>
+                    <span>{{ outing.nom }}</span>
                 </div>
             </div>
 
@@ -25,7 +25,7 @@
                     <label class ="aff_sortie_label">Date de la sortie :</label>
                 </div>
                 <div class ="col s3 l3 m3">
-                    <span>test</span>
+                    <span>{{outing.dateHeureDebut|date('d-m-Y') }}</span>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                     <label class ="aff_sortie_label">Ville organisatrice :</label>
                 </div>
                 <div class ="col s3 l3  m3">
-                    <span>test</span>
+                    <span>{{outing.lieu.ville.nom}}</span>
                 </div>
             </div>
 
@@ -43,7 +43,7 @@
                     <label class ="aff_sortie_label">Lieu :</label>
                 </div>
                 <div class ="col s3 l3 m3">
-                    <span>test</span>
+                    <span>{{outing.lieu.nom}}</span>
                 </div>
             </div>
 

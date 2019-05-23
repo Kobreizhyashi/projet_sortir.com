@@ -63,12 +63,9 @@ form {
     }
 }
 
-
-
 /**
 Affichage sortie
  */
-
 
 .titre{
     text-align: center;
@@ -80,7 +77,7 @@ Affichage sortie
 }
 
 .tpTH{
-    text-align: center;
+    margin: auto;
 }
 
 .aff_sortie_label
@@ -92,7 +89,6 @@ Affichage sortie
 .delete-btn
 {
     text-align: center;
-
 }
 
 .tableBody {

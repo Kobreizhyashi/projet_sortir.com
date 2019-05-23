@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Inscription;
 use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
@@ -59,12 +60,21 @@ class OutingController extends Controller
 
 
     /**
-     * @Route("/show", name="show")
+     * @Route("/show/{id}", name="show",requirements={"id":"\d+"})
      */
-    public function showOuting()
-    {
+    public function showOuting($id) {
 
-        return $this->render('sortie/afficher_sortie.html.twig');
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $InscriptionRepo=$this->getDoctrine()->getRepository(Inscription::class);
+        $Inscription= $InscriptionRepo->findBy(array('outing'=>$id));
+
+        if(empty($Outing)){
+            throw $this->createNotFoundException("This outing do not exists !");
+        }
+
+        return $this->render('sortie/afficher_sortie.html.twig', array("outing"=>$Outing,"users"=>$Inscription));
     }
 
     /**
@@ -80,12 +90,18 @@ class OutingController extends Controller
     }
 
     /**
-     * @Route("/delete", name="delete")
+     * @Route("/delete/{id}", name="delete",requirements={"id":"\d+"})
      */
-    public function delete()
-    {
+    public function delete($id) {
 
-        return $this->render('sortie/annuler_sortie.html.twig');
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        if(empty($Outing)){
+            throw $this->createNotFoundException("This outing do not exists !");
+        }
+
+        return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing]);
     }
 
     /**
