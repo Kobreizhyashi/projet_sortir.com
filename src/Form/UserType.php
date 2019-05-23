@@ -22,11 +22,11 @@ class UserType extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
-            ->add('administrateur', CheckboxType::class, [
-                'label'    => 'Administrateur',
-                'required' => false,
-            ])
-            ->add('actif')
+//            ->add('administrateur', CheckboxType::class, [
+//                'label'    => 'Administrateur',
+//                'required' => false,
+//            ])
+            //->add('actif')
             ->add('username')
             ->add('email')
             ->add('password',RepeatedType::class,[

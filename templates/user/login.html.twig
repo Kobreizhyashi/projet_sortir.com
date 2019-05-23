@@ -4,9 +4,9 @@
 
 {% block main %}
 
-    <div class="row container">
+    <div class=" logindiv row container">
         <form  action="{{ path('login') }}" method="post">
-            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m6" >
+            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3" >
                 <label for="username">Identifiant ou Email</label>
                 <!--Symfony impose le nom _username pour gérer le mécanisme de login -->
                 <input type="text" name="_username" id="username">

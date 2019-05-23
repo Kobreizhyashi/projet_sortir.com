@@ -8,6 +8,9 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Doctrine\Bundle\FixturesBundle;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
@@ -17,9 +20,21 @@ class UserController extends Controller
      * security.yaml on a login_path: login
      * @Route("/login", name="login")
      */
-    public function login(){
-        return $this->render("user/login.html.twig",
-            []);
+    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        if (!empty($error)) {
+          $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
+        }
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render("user/login.html.twig",[
+            'last_username' => $lastUsername,
+            'error'         => $error,
+            ]);
     }
 
     /**
@@ -29,19 +44,16 @@ class UserController extends Controller
      */
     public function logout(){}
 
-    /**
-     * @Route("/user", name="user")
-     */
-
 
     /**
-     * @Route("/user/{id}", name="user_details")
+     * @Route("/user", name="user_details")
+     * voir les informations de son propre profil
      */
-    public function userDetails($id, EntityManagerInterface $em)
+    public function userDetails(EntityManagerInterface $em)
     {
-    // getter l'id en application une fois qu'on a la connexion utlisateur
-        $user = $em->getRepository(User::class)->find($id);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
+        $user = $this->getUser();
         return $this->render('user/detail.html.twig', [
             'user'=>$user
         ]);
@@ -50,8 +62,10 @@ class UserController extends Controller
     /**
      * @Route("/user/{id}/update", name="user_update")
      */
-    public function userModify(Request $request, $id, EntityManagerInterface $em)
+    public function userUpdate(Request $request, $id, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $user = $em->getRepository(User::class)->find($id);
         $userForm = $this->createForm(UserType::class,$user);
         $userForm->handleRequest($request);
