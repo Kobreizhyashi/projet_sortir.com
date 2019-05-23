@@ -214,7 +214,7 @@ class Outing
 
     public function getOrganisateur()
     {
-        return $this->participant;
+        return $this->organisateur;
     }
 
     public function setOrganisateur(?User $organisateur)

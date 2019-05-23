@@ -47,11 +47,10 @@
                 </div>
             </div>
 
-            <form>
+                {{ form_start(outingForm) }}
                 <div class="row">
-                    <div class ="col s5 offset-s3 l5 offset-l3  m5 offset-m3 ">
-                        <input  id="motif" type="text" class="validate">
-                        <label class="active" for="motif">Motif</label>
+                    <div class ="col s3 offset-s3 l3 offset-l3 m3 offset-m3">
+                        {{ form_widget(outingForm) }}
                     </div>
                 </div>
                 <div class="row">
@@ -60,9 +59,8 @@
                     </div>
                     <div class ="col s3 l3 m3">
                         <button href=""   class="delete-btn btn waves-effect waves-light">Annuler</button>
-                    </div>
-                </div>
-            </form>
+
+                {{ form_end(outingForm) }}
 
             <br>
         </div>
