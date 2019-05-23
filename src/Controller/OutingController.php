@@ -8,7 +8,7 @@ use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
 use App\Entity\User;
-use App\Form\DeleteOutingType;
+use App\Form\OutingDeleteType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,10 +43,11 @@ class OutingController extends Controller
     public function createOuting(EntityManagerInterface $em, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userId = $this->getUser()->getId();
 
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
-        $outing->setOrganisateur($em->getRepository(User::class)->find(1));
+        $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
         $outingForm = $this->createForm(OutingType::class, $outing);
 
         $outingForm->handleRequest($request);
@@ -84,15 +85,27 @@ class OutingController extends Controller
     }
 
     /**
-     * @Route("/update", name="update")
+     * @Route("/update/{id}", name="update",requirements={"id":"\d+"})
      */
-    public function update(Request $request)
+    public function update(Request $request, $id,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $outing = new Outing();
-        $outingForm = $this->createForm(OutingType::class, $outing);
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $outingForm = $this->createForm(OutingType::class, $Outing);
         $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
+            $em->persist($Outing);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
+            return $this->redirectToRoute("main");
+
+        }
 
         return $this->render('sortie/update.html.twig', ["outingForm" => $outingForm->createView()]);
     }
@@ -100,17 +113,37 @@ class OutingController extends Controller
     /**
      * @Route("/delete/{id}", name="delete",requirements={"id":"\d+"})
      */
-    public function delete()
+    public function delete($id,Request $request,EntityManagerInterface $em)
     {
 
         $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
 
+        $EtatRepo=$this->getDoctrine()->getRepository(Etat::class);
+        $Etat = $EtatRepo->find(6);
+
+        if(empty($Etat)){
+            throw $this->createNotFoundException("This etat do not exists !");
+        }
+
         if(empty($Outing)){
             throw $this->createNotFoundException("This outing do not exists !");
         }
 
-        return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing]);
+        $outingForm = $this->createForm(OutingDeleteType::class,$Outing);
+        $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+            $Outing->setEtat($Etat);
+            $em->persist($Outing);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre sortie est bien supprimée!');
+            return $this->redirectToRoute("main");
+
+        }
+
+        return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing,'outingForm'=>$outingForm->createView()]);
     }
 
     /**

@@ -77,26 +77,29 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Debut</th>
-                        <th>Durée(minutes)</th>
-                        <th>Fin</th>
-                        <th>Inscriptions</th>
-                        <th>Informations complémentaires</th>
+                        <th>Nom de la sortie</th>
+                        <th>Debut de la sortie</th>
+                        <th>Clôture</th>
+                        <th>Inscrits/places</th>
                         <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+
                     </tr>
                     </thead>
 
                     <tbody class="tableBody">
                     {% for outing in outings %}
-                        <td>
-                        <td>{{ outing.nom }}</td>
-                        <td>{{ outing.dateHeureDebut|date }}</td>
-                        <td>{{ outing.duree }}</td>
-                        <td>{{ outing.dateLimiteInscription|date }}</td>
-                        <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
-                        <td>{{ outing.infosSortie }}</td>
-                        <td id="state">{{ outing.etat.libelle }}</td>
+                        <tr>
+                            <td>{{ outing.nom }}</td>
+                            <td>{{ outing.dateHeureDebut|date('h:m d/m/Y')}}</td>
+                            <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
+                            <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
+                            <td>{{ outing.etat.libelle }}</td>
+                            <td>A FAIRE</td>
+                            <td>{{ outing.organisateur.username }}</td>
+                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a></td>
                         </tr>
                     {% endfor %}
 
@@ -119,18 +122,13 @@
 
     {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
-    <a href="{{ path('show',{'id':1})}}">TEST SHOW</a><br>
-    <a href="{{ path('delete',{'id':1})}}">TEST DELETE</a>
+
+    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
+    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
 
 
     {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
-
-    <a href="{{ path('show',{'id':1})}}">TEST SHOW</a><br>
-    <a href="{{ path('delete',{'id':1})}}">TEST DELETE</a>
-
-
-    {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
 
 
