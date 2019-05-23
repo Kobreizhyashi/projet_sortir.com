@@ -61,7 +61,7 @@ class User implements UserInterface
     private $actif;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, unique=true)
      */
     private $username;
 

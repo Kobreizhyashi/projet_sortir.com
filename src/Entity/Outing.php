@@ -80,6 +80,11 @@ class Outing
      */
     private $lieu;
 
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    private $motif;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -239,6 +244,18 @@ class Outing
     public function setLieu(?Lieu $lieu)
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getMotif(): ?string
+    {
+        return $this->motif;
+    }
+
+    public function setMotif(?string $motif): self
+    {
+        $this->motif = $motif;
 
         return $this;
     }
