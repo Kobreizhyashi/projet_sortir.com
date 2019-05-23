@@ -46,22 +46,26 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user/{id}", name="user_details")
+     * @Route("/user", name="user_details")
+     * voir les informations de son propre profil
      */
-    public function userDetails($id, EntityManagerInterface $em)
+    public function userDetails(EntityManagerInterface $em)
     {
-    // getter l'id en application une fois qu'on a la connexion utlisateur
-        $user = $em->getRepository(User::class)->find($id);
+        if($this->getUser()!=null){
+            $user = $this->getUser();
+            return $this->render('user/detail.html.twig', [
+                'user'=>$user
+            ]);
+        } else {
+            return $this->redirectToRoute('main',[]);
+        }
 
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
     }
 
     /**
      * @Route("/user/{id}/update", name="user_update")
      */
-    public function userModify(Request $request, $id, EntityManagerInterface $em)
+    public function userUpdate(Request $request, $id, EntityManagerInterface $em)
     {
         $user = $em->getRepository(User::class)->find($id);
         $userForm = $this->createForm(UserType::class,$user);
