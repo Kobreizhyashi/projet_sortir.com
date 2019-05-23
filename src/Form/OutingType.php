@@ -25,7 +25,7 @@ class OutingType extends AbstractType
             ->add('nom', TextType::class, ['label' => 'Nom de la sortie', 'attr' => ['placeholder' => 'Aquaponey, Curling..', 'class' => 'input-field']])
             ->add('dateHeureDebut', DateType::class, ['label' => "Date de l'evenement", 'widget' => 'single_text', 'attr' => ['class' => "input-field datepicker"]])
             ->add('duree', IntegerType::class, ['label' => "Durée de l'evenement", 'attr' => ['class' => "input-field"]])
-            ->add('dateLimiteInscription', DateType::class, ['label' => "Date de l'evenement", 'widget' => 'single_text', 'attr' => ['class' => "input-field datepicker"]])
+            ->add('dateLimiteInscription', DateType::class, ['label' => "Date limite d'inscription", 'widget' => 'single_text', 'attr' => ['class' => "input-field datepicker"]])
             ->add('nbInscriptionsMax', IntegerType::class, ['label' => "Nombre de participants (maximum)", 'attr' => ['class' => "input-field"]])
             ->add('infosSortie', TextareaType::class, ['label' => "Infos sur l'evenement", 'attr' => ['class' => "input-field"]])
             ->add('lieu', EntityType::class, ['label' => "Lieu de l'evenement", 'class' => Lieu::class, 'choice_label' => 'nom', 'attr' => ['class' => 'ajaxSite']]);

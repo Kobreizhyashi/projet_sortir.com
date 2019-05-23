@@ -51,7 +51,7 @@ class UserController extends Controller
      */
     public function myDetails(EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+       $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
         return $this->render('user/detail.html.twig', [
@@ -60,7 +60,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/{id}", name="their_details")
+     * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
      * voir les informations d'un autre profil
      */
     public function theirDetails(EntityManagerInterface $em, $id)
@@ -75,13 +75,15 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/user/{id}/update", name="user_update")
+     * @Route("/user/update", name="user_update")
+     * Mettre à jour ses informations de profil
      */
-    public function userUpdate(Request $request, $id, EntityManagerInterface $em)
+    public function userUpdate(Request $request, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $user = $em->getRepository(User::class)->find($id);
+        $user = $this->getUser();
+
         $userForm = $this->createForm(UserType::class,$user);
         $userForm->handleRequest($request);
 
@@ -90,7 +92,7 @@ class UserController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'Votre profil a bien été modifié');
-            return $this->redirectToRoute("user_details", ['id' => $user->getId()]);
+            return $this->redirectToRoute("my_details", ['user' => $user]);
         }
 
         return $this->render('user/update.html.twig', ["user" => $user,
