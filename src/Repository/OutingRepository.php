@@ -60,36 +60,51 @@ class OutingRepository extends ServiceEntityRepository
     public function getPersonalResearch($requestedArray, EntityManagerInterface $em)
     {
 
-        $requestedArray['siteValue'];
 
-        $qb = $this->createQueryBuilder('s')
+        $qb = $this->createQueryBuilder('o')
+            ->leftJoin('o.etat', 'etat')
+            ->leftJoin('o.site', 's')
+            ->leftJoin('o.inscriptions', 'i')
             ->where('1 = 1');
 
-        if ($requestedArray['siteValue'] != '' && $requestedArray['siteValue'] != NULL && $requestedArray['siteValue'] != 131){
-            $qb ->leftJoin('s.site','site')
-                ->andWhere('site.id = :site')
+
+        if ($requestedArray['siteValue'] != '' && $requestedArray['siteValue'] != NULL && $requestedArray['siteValue'] != 131) {
+            $qb->andWhere('s.id = :site')
                 ->setParameter('site', $requestedArray['siteValue']);
         }
 
-        $qb->andWhere('s.nom like :nom' )
-            ->setParameter('nom', '%'.$requestedArray['stringSearch'].'%');
+        $qb->andWhere('o.nom like :nom')
+            ->setParameter('nom', '%' . $requestedArray['stringSearch'] . '%');
 
-        if ($requestedArray['dateFirst'] != '' && $requestedArray['dateFirst'] != NULL){
-            $qb->andWhere('s.dateHeureDebut >= :dateMin' )
+        if ($requestedArray['dateFirst'] != '' && $requestedArray['dateFirst'] != NULL) {
+            $qb->andWhere('o.dateHeureDebut >= :dateMin')
                 ->setParameter('dateMin', $requestedArray['dateFirst']);
         };
 
-        if ($requestedArray['dateLast'] != '' && $requestedArray['dateLast'] != NULL){
-            $qb->andWhere('s.dateHeureDebut <= :dateMax' )
+        if ($requestedArray['dateLast'] != '' && $requestedArray['dateLast'] != NULL) {
+            $qb->andWhere('o.dateHeureDebut <= :dateMax')
                 ->setParameter('dateMax', $requestedArray['dateLast']);
         };
 
-        $qb->orderBy('s.dateHeureDebut','desc');
-        $query=$qb->getQuery();
+        if ($requestedArray['isOrganizer'] == true) {
+            $qb->andWhere('o.organisateur = :currentUser')
+                ->setParameter('currentUser', $requestedArray['currentUserID']);
+        }
+        if ($requestedArray['isInscrit'] == true) {
+                $qb->andWhere('i.user = :currentUser')
+                /// $qb->join('s.users', 'u', 'WITH', 'u.id = :currentUser')
+                ->setParameter('currentUser', $requestedArray['currentUserID']);
+        }
+
+
+
+        $query = $qb->getQuery();
         $returned = $query->getResult();
 
 
+        dump($returned);
         /*
+
 
 
         =================== A GARDER ==========================
@@ -144,18 +159,18 @@ class OutingRepository extends ServiceEntityRepository
 */
 
 
-
         /** @var Outing $outing */
         foreach ($returned as $outing) {
             $returned[$outing->getId()] = [
                 'nom' => $outing->getNom(),
-                'dateHeureDebut' => $outing->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                'dateHeureDebut' => $outing->getDateHeureDebut()->format('d-m-Y'),
                 'duree' => $outing->getDuree(),
-                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('Y-m-d H:i:s'),
+                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('d-m-Y'),
                 'nbInscriptions' => $outing->getInscriptions()->count(),
                 'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
                 'infosSortie' => $outing->getInfosSortie(),
-                'etat' => $outing->getEtat(),
+                'etat' => $outing->getEtat()->getLibelle(),
+                'organizerName' => $outing->getOrganisateur()->getUsername()
             ];
         };
         return $returned;

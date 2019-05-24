@@ -46,6 +46,11 @@ class OutingController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userId = $this->getUser()->getId();
 
+
+
+
+
+
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
         $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
@@ -57,6 +62,8 @@ class OutingController extends Controller
 
             $em->persist($outing);
             $em->flush();
+            $em->getRepository(Inscription::class)->subscribeManager($outing, $this->getUser(), $em);
+
 
             $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
             return $this->redirectToRoute("main");
@@ -177,6 +184,11 @@ class OutingController extends Controller
         $requestedArray['dateFirst'] = $request->request->get('dateFirst');
         $requestedArray['dateLast'] = $request->request->get('dateLast');
        $requestedArray['stringSearch'] = $request->request->get('stringSearch');
+        $requestedArray['isOrganizer'] = $request->request->get('isOrganizer');
+        $requestedArray['isInscrit'] = $request->request->get('isInscrit');
+        $requestedArray['isNotInscrit'] = $request->request->get('isNotInscrit');
+        $requestedArray['finishedOutings'] = $request->request->get('finishedOutings');
+        $requestedArray['currentUserID'] = $this->getUser()->getId();
 
         $returned = $em->getRepository(Outing::class)->getPersonalResearch($requestedArray, $em);
 
