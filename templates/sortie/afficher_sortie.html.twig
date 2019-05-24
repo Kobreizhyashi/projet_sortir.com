@@ -137,7 +137,26 @@
 
 <section>
     <br>
+
+
+    {% if outing.etat.id == 6 %}
+
+    <div class="row">
+        <div class ="col s6 l6 m6 right-align">
+            <label class ="aff_sortie_label">Motif de l'annulation de l'organisateur :</label>
+        </div>
+
+        <div class ="col s6 l6 m6 left-align">
+            <span class ="">{{ outing.motif }}</span>
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% if outing.etat.id != 6 %}
+
     <h5 class="center-align">Liste des participants inscrits</h5>
+
     <div class="tabParticipant">
 
         <div class="row">
@@ -151,16 +170,30 @@
             </thead>
 
             <tbody>
+
             {%for inscription in users%}
             <tr>
-                <td>{{inscription.user.pseudo}}</td>
+                <td> {%if  inscription.user.id!= userId %}
+
+                    <a href="{{path('their_details',{'id':inscription.user.id})}}">{{inscription.user.username}}</a></td>
+
+                {% else %}
+
+                    <div>{{inscription.user.username}}</div></td>
+
+                {% endif %}
+
                 <td>{{inscription.user.nom}} {{inscription.user.prenom}}</td>
+
             </tr>
             {%endfor%}
+
             </tbody>
         </table>
         </div>
     </div>
+
+    {% endif %}
 
 </section>
 {% endblock %}

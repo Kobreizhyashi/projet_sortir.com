@@ -91,20 +91,61 @@
 
                     <tbody class="tableBody">
                     {% for outing in outings %}
+                        {% set inscrit = false %}
+                        {% for inscription in  outing.inscriptions %}
+                            {% if user.inscriptions.contains(inscription) %}
+                                {% set inscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
                         <tr>
                             <td>{{ outing.nom }}</td>
                             <td>{{ outing.dateHeureDebut|date('h:m d/m/Y')}}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.etat.libelle }}</td>
-                            <td>A FAIRE</td>
-                            <td>{{ outing.organisateur.username }}</td>
-                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+                            <td> {%if  inscrit == true %}
 
-                                {%if  outing.organisateur.id == userId %}
-                                    <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a></td>
+                                    <div>X</div></td>
+
                                 {% endif %}
+                            <td> {%if  outing.organisateur.id != user.id %}
+
+                            {#GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+                            <a href="{{path('their_details',{'id':outing.organisateur.id})}}">{{ outing.organisateur.username }}</a></td>
+
+                                 {% else %}
+
+                            <div>{{ outing.organisateur.username }}</div></td>
+
+                                 {% endif %}
+
+                            <td>
+
+                                <a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+
+                                 {%if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
+
+                                <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a>
+
+                                 {% endif %}
+
+                                 {%if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1  %}
+
+                                <a href="{{ path('subscribe',{'id':outing.id})}}">S'inscrire</a>
+
+                                 {% endif %}
+
+                                 {%if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id  %}
+
+                                 <a href="{{ path('renounce',{'id':outing.id})}}">Se désister</a>
+
+                                 {% endif %}
+                             </td>
+                             {# FIN GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+
                         </tr>
+
                     {% endfor %}
 
                     </tbody>
@@ -123,18 +164,6 @@
             </div>
         </div>
     </section>
-
-    {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
-
-
-    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
-    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
-
-
-    {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
-
-
-
 
     <script>
 
