@@ -60,6 +60,31 @@ class UserController extends Controller
         ]);
     }
 
+
+    /**
+     * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
+     * routing pour visionnage infos profil
+     */
+    public function getProfile(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $connectedUser = $this->getUser();
+        $connectedUserId = $connectedUser->getId();
+
+        $toViewUser = $em->getRepository(User::class)->find($id);
+
+        if($connectedUserId==$id){
+            return $this->redirectToRoute('my_details', [
+                'user'=>$connectedUser
+            ]);
+        } else {
+            return $this->redirectToRoute('their_details', [
+                'id'=>$id
+            ]);
+        }
+
+    }
+
     /**
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
      * voir les informations d'un autre profil
