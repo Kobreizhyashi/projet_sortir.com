@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @UniqueEntity(fields={"username"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -68,14 +70,18 @@ class User implements UserInterface
     /**
      * @Assert\NotBlank(message="Veuillez saisir un nom d'utilisateur")
      * @Assert\Length(min="4", max="30",
-     *     minMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères",
-     *     maxMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères")
+     *     minMessage="Le pseudo doit contenir au moins 4 caractères et au maximum 30 caractères",
+     *     maxMessage="Le pseudo doit contenir au moins 4 caractères et au maximum 30 caractères")
      * @ORM\Column(type="string", length=30, unique=true)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * * @Assert\Email(
+     *     message = "l'email '{{ value }}' n'est par valide",
+     *     checkMX = true
+     * )
      */
     private $email;
 
