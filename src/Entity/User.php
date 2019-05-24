@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -36,11 +37,15 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Veuillez saisir votre nom")
+     * @Assert\Length(max="30",maxMessage="Max : 30 caractères")
      * @ORM\Column(type="string", length=30)
      */
     private $nom;
 
     /**
+     * @Assert\NotBlank(message="Veuillez saisir votre prénom")
+     * @Assert\Length(max="30",maxMessage="Max : 30 caractères")
      * @ORM\Column(type="string", length=30)
      */
     private $prenom;
@@ -61,6 +66,10 @@ class User implements UserInterface
     private $actif;
 
     /**
+     * @Assert\NotBlank(message="Veuillez saisir un nom d'utilisateur")
+     * @Assert\Length(min="4", max="30",
+     *     minMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères",
+     *     maxMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères")
      * @ORM\Column(type="string", length=30, unique=true)
      */
     private $username;
@@ -71,6 +80,10 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @Assert\NotBlank(message="Veuillez saisir un mot de passe")
+     * @Assert\Length(min="4", max="16",
+     *     minMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères",
+     *     maxMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères")
      * @ORM\Column(type="string", length=255)
      */
     private $password;
