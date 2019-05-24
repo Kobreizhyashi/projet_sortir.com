@@ -52,13 +52,13 @@
                         </p>
                         <p>
                             <label>
-                                <input type="checkbox" id="isNotInscrit" disabled />
+                                <input type="checkbox" id="isNotInscrit"/>
                                 <span>Sorties auquelles je ne suis pas inscrit/e</span>
                             </label>
                         </p>
                         <p>
                             <label>
-                                <input type="checkbox" id="finishedOutings" disabled />
+                                <input type="checkbox" id="finishedOutings"/>
                                 <span>Sorties passées</span>
                             </label>
                         </p>
@@ -93,17 +93,17 @@
                     {% for outing in outings %}
                         <tr>
                             <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut|date('h:m d/m/Y')}}</td>
+                            <td>{{ outing.dateHeureDebut|date('h:m d/m/Y') }}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.etat.libelle }}</td>
                             <td>A FAIRE</td>
                             <td>{{ outing.organisateur.username }}</td>
-                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+                            <td><a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
 
-                                {%if  outing.organisateur.id == userId %}
-                                    <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a></td>
-                                {% endif %}
+                                {% if  outing.organisateur.id == userId %}
+                                <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
 
@@ -124,17 +124,21 @@
         </div>
     </section>
 
+
+    <section id="tableVue"></section>
+
     {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
 
-    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
-    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
+    <a href="{{ path('delete',{'id':2}) }}">TEST DELETE</a>
+    <a href="{{ path('update',{'id':2}) }}">TEST UPDATE</a>
 
 
     {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
 
 
+    <script src="{{ asset('public/assets/js/app.js') }}"></script>
 
     <script>
 
@@ -161,11 +165,14 @@
                     console.log(data);
                     $('.tableBody').empty();
                     $.each(data, function (key, value) {
-                        if (key != 0) {
-
-
-                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td><td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['etat'] + '</td><td>PAS FAIT</td><td>' + value['organizerName'] + '</td> <td><a href="show/'+key+'">Afficher</a> </td></tr>'
+                        console.log(value);
+                        if (value['nom'] != undefined) {
+                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td><td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['etat'] + '</td><td>PAS FAIT</td><td>' + value['organizerName'] + '</td><td class="links" ><a href="show/' + key + '">Afficher</a></td></tr>'
                             ));
+                            if (value['organizerId'] == value['currentUserID']) {
+                                console.log('Jesuis dedans')
+                                $('.links').append($(' <a href="delete/' + key + '"> Effacer</a>'));
+                            }
                         }
                     });
                 }
@@ -175,7 +182,6 @@
             e.preventDefault();
 
         });
-
 
     </script>
 
