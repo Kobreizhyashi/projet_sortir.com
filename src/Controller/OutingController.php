@@ -26,7 +26,7 @@ class OutingController extends Controller
     public function index(EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $userId = $this->getUser()->getId();
+        $user = $this->getUser();
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
@@ -34,8 +34,46 @@ class OutingController extends Controller
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'userId'=>$userId
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
         ]);
+    }
+
+    /**
+     * @Route("/subscribe/{id}", name="subscribe")
+     */
+    public function subscribe(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $em->getRepository(Inscription::class)->subscribeManager($Outing, $this->getUser(), $em);
+
+        $this->addFlash('success', 'Votre inscription est validée ! Espérons que vous ne serez pas seul !');
+        return $this->redirectToRoute("main");
+
+    }
+
+    /**
+     * @Route("/renounce/{id}", name="renounce")
+     */
+    public function renounce(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $InscriptionRepo=$this->getDoctrine()->getRepository(Inscription::class);
+        $Inscription= $InscriptionRepo->findOneBy(array('outing'=>$id,'user'=>$this->getUser()->getId()));
+
+        if(empty($Inscription)){
+            throw $this->createNotFoundException("This outing do not exists !");
+        }
+        $em->remove($Inscription);
+        $em->flush();
+
+        $this->addFlash('success', 'Votre désistement est validé !');
+        return $this->redirectToRoute("main");
+
     }
 
     /**
@@ -45,11 +83,6 @@ class OutingController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userId = $this->getUser()->getId();
-
-
-
-
-
 
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
@@ -77,7 +110,10 @@ class OutingController extends Controller
      * @Route("/show/{id}", name="show",requirements={"id":"\d+"})
      */
     public function showOuting($id) {
+
+
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userId = $this->getUser()->getId();
 
         $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
@@ -89,7 +125,7 @@ class OutingController extends Controller
             throw $this->createNotFoundException("This outing do not exists !");
         }
 
-        return $this->render('sortie/afficher_sortie.html.twig', array("outing"=>$Outing,"users"=>$Inscription));
+        return $this->render('sortie/afficher_sortie.html.twig', array("outing"=>$Outing,"users"=>$Inscription,"userId"=>$userId));
     }
 
     /**

@@ -170,12 +170,24 @@
             </thead>
 
             <tbody>
+
             {%for inscription in users%}
             <tr>
-                <td>{{inscription.user.username}}</td>
+                <td> {%if  inscription.user.id!= userId %}
+
+                    <a href="{{path('their_details',{'id':inscription.user.id})}}">{{inscription.user.username}}</a></td>
+
+                {% else %}
+
+                    <div>{{inscription.user.username}}</div></td>
+
+                {% endif %}
+
                 <td>{{inscription.user.nom}} {{inscription.user.prenom}}</td>
+
             </tr>
             {%endfor%}
+
             </tbody>
         </table>
         </div>
