@@ -91,6 +91,7 @@
 
                     <tbody class="tableBody">
                     {% for outing in outings %}
+
                         <tr>
                             <td>{{ outing.nom }}</td>
                             <td>{{ outing.dateHeureDebut|date('h:m d/m/Y') }}</td>
@@ -98,13 +99,26 @@
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.etat.libelle }}</td>
                             <td>A FAIRE</td>
-                            <td>{{ outing.organisateur.username }}</td>
-                            <td><a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
+                            <td> {%if  outing.organisateur.id != userId %}
 
-                                {% if  outing.organisateur.id == userId %}
-                                <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a></td>
-                            {% endif %}
+                            <a href="{{path('their_details',{'id':outing.organisateur.id})}}">{{ outing.organisateur.username }}</a></td>
+
+                                 {% else %}
+
+                            <div>{{ outing.organisateur.username }}</div></td>
+
+                                 {% endif %}
+
+                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+
+                                 {%if  outing.organisateur.id == userId and outing.etat.id != 6 %}
+
+                             <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a></td>
+
+                                 {% endif %}
+
                         </tr>
+
                     {% endfor %}
 
                     </tbody>
@@ -124,21 +138,17 @@
         </div>
     </section>
 
-
-    <section id="tableVue"></section>
-
     {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
 
-    <a href="{{ path('delete',{'id':2}) }}">TEST DELETE</a>
-    <a href="{{ path('update',{'id':2}) }}">TEST UPDATE</a>
+    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
+    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
 
 
     {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
 
 
 
-    <script src="{{ asset('public/assets/js/app.js') }}"></script>
 
     <script>
 
