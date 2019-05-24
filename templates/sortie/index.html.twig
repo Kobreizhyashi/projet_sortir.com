@@ -99,7 +99,11 @@
                             <td>{{ outing.etat.libelle }}</td>
                             <td>A FAIRE</td>
                             <td>{{ outing.organisateur.username }}</td>
-                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a></td>
+                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+
+                                {%if  outing.organisateur.id == userId %}
+                                    <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a></td>
+                                {% endif %}
                         </tr>
                     {% endfor %}
 

@@ -26,6 +26,7 @@ class OutingController extends Controller
     public function index(EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userId = $this->getUser()->getId();
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
@@ -33,7 +34,7 @@ class OutingController extends Controller
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'userId'=>$userId
         ]);
     }
 
