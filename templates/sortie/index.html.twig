@@ -10,7 +10,7 @@
                     <p> Site : </p>
                     <div class="row">
                         <div class="input-field col s6">
-                            <select class="siteSelector">
+                            <select class="siteSelector" id="siteSelector">
                                 <option value="131" selected>Choisissez un site</option>
                                 {% for site in sites %}
                                     <option value="{{ site.id }}">{{ site.nom }}</option>
@@ -21,15 +21,15 @@
                     <p> Dates : </p>
                     <div class="row">
 
-                        <div class="input-field col s6">
+                        <div class="input-field col s6" id="dateFirst">
                             <input id="beginDate" type="date" class="datepicker">
                         </div>
-                        <div class="input-field col s6">
+                        <div class="input-field col s6" id="dateLast">
                             <input id="endDate" type="date" class="datepicker">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s12">
+                        <div class="input-field col s12" id="stringRecherche">
                             <input placeholder="Aquaponey, elevage d'autruches naines..." id="organizer" type="text"
                                    class="validate">
 
@@ -40,29 +40,29 @@
                     <div class="input-field col s12">
                         <p>
                             <label>
-                                <input type="checkbox"/>
+                                <input id="isOrganizer" type="checkbox"/>
                                 <span>Sorties dont je suis l'organisateur</span>
                             </label>
                         </p>
                         <p>
                             <label>
-                                <input type="checkbox"/>
+                                <input type="checkbox" id="isInscrit"/>
                                 <span>Sorties auxquelles je suis inscrit/e</span>
                             </label>
                         </p>
                         <p>
                             <label>
-                                <input type="checkbox"/>
+                                <input type="checkbox" id="isNotInscrit" disabled />
                                 <span>Sorties auquelles je ne suis pas inscrit/e</span>
                             </label>
                         </p>
                         <p>
                             <label>
-                                <input type="checkbox"/>
+                                <input type="checkbox" id="finishedOutings" disabled />
                                 <span>Sorties passées</span>
                             </label>
                         </p>
-                        <button type="submit" value="" class="btn s12">Rechercher</button>
+                        <button type="submit" name="submitter" class="submitter btn s12">Rechercher</button>
                     </div>
                 </div>
             </form>
@@ -77,12 +77,15 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Debut</th>
-                        <th>Durée(minutes)</th>
-                        <th>Fin</th>
-                        <th>Inscriptions</th>
-                        <th>Informations complémentaires</th>
+                        <th>Nom de la sortie</th>
+                        <th>Debut de la sortie</th>
+                        <th>Clôture</th>
+                        <th>Inscrits/places</th>
+                        <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+
                     </tr>
                     </thead>
 
@@ -90,11 +93,17 @@
                     {% for outing in outings %}
                         <tr>
                             <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut|date }}</td>
-                            <td>{{ outing.duree }}</td>
-                            <td>{{ outing.dateLimiteInscription|date }}</td>
+                            <td>{{ outing.dateHeureDebut|date('h:m d/m/Y')}}</td>
+                            <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
-                            <td>{{ outing.infosSortie }}</td>
+                            <td>{{ outing.etat.libelle }}</td>
+                            <td>A FAIRE</td>
+                            <td>{{ outing.organisateur.username }}</td>
+                            <td><a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+
+                                {%if  outing.organisateur.id == userId %}
+                                    <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a></td>
+                                {% endif %}
                         </tr>
                     {% endfor %}
 
@@ -115,14 +124,22 @@
         </div>
     </section>
 
+    {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
+
+
+    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
+    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
+
+
+    {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
+
+
 
 
     <script>
 
 
-        $('.siteSelector').change(function (e) {
-
-            var value = $(this).val();
+        $('.submitter').click(function (e) {
 
             $.ajax({
 
@@ -130,16 +147,26 @@
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    'value': value
+                    'siteValue': $('#siteSelector').val(),
+                    'dateFirst': $('#beginDate').val(),
+                    'dateLast': $('#endDate').val(),
+                    'stringSearch': $('#organizer').val(),
+                    'isOrganizer': $('#isOrganizer').prop('checked'),
+                    'isInscrit': $('#isInscrit').prop('checked'),
+                    'isNotInscrit': $('#isNotInscrit').prop('checked'),
+                    'finishedOutings': $('#finishedOutings').prop('checked')
                 },
                 assync: true,
                 success: function (data) {
                     console.log(data);
                     $('.tableBody').empty();
                     $.each(data, function (key, value) {
-                        $('.tableBody').append($('<tr value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td> <td>' + value['duree'] + '</td> <td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['infosSortie'] + '</td></tr>'
-                        ));
+                        if (key != 0) {
 
+
+                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td><td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['etat'] + '</td><td>PAS FAIT</td><td>' + value['organizerName'] + '</td> <td><a href="show/'+key+'">Afficher</a> </td></tr>'
+                            ));
+                        }
                     });
                 }
 

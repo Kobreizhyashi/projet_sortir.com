@@ -78,7 +78,7 @@
             <div class="row">
                 {% if user.id == app.user.id %}
                     <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
-                        <a href="{{ path('user_update', {'id':user.id}) }}">
+                        <a href="{{ path('user_update') }}">
                             <input type="button" class="btn btn-secondary" name="modifier" value="Modifier">
                         </a>
                     </div>

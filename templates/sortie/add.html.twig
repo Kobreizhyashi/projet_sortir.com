@@ -12,7 +12,7 @@
     {{ form_widget(outingForm) }}
 
 
-    <button type="submit" class="btn waves-effect waves-light">Ajouter.</button>
+    <button type="submit" class="btn waves-effect waves-light">Ajouter</button>
     {{ form_end(outingForm) }}
 </div>
 
@@ -22,7 +22,7 @@
     $('.choice').change(function (e) {
         var choice = $(this).val();
         $.ajax({
-            url: '{{ path('ajaxFormIndex') }}',
+            url: '{{ path('ajaxFormAdd') }}',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -44,6 +44,8 @@
     // https://openclassrooms.com/forum/sujet/symfony-formulaire-dynamique-cadeau
 
 </script>
+
+
 
 {% endblock %}
 

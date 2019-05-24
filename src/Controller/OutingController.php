@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Inscription;
 use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
 use App\Entity\User;
-use App\Form\DeleteOutingType;
+use App\Form\OutingDeleteType;
 use App\Form\OutingType;
+use App\Repository\OutingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,13 +26,15 @@ class OutingController extends Controller
     public function index(EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userId = $this->getUser()->getId();
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'userId'=>$userId
         ]);
     }
 
@@ -40,10 +44,16 @@ class OutingController extends Controller
     public function createOuting(EntityManagerInterface $em, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userId = $this->getUser()->getId();
+
+
+
+
+
 
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
-        $outing->setOrganisateur($em->getRepository(User::class)->find(1));
+        $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
         $outingForm = $this->createForm(OutingType::class, $outing);
 
         $outingForm->handleRequest($request);
@@ -52,6 +62,8 @@ class OutingController extends Controller
 
             $em->persist($outing);
             $em->flush();
+            $em->getRepository(Inscription::class)->subscribeManager($outing, $this->getUser(), $em);
+
 
             $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
             return $this->redirectToRoute("main");
@@ -62,37 +74,84 @@ class OutingController extends Controller
 
 
     /**
-     * @Route("/show", name="show")
+     * @Route("/show/{id}", name="show",requirements={"id":"\d+"})
      */
-    public function showOuting()
-    {
+    public function showOuting($id) {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        return $this->render('sortie/afficher_sortie.html.twig');
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $InscriptionRepo=$this->getDoctrine()->getRepository(Inscription::class);
+        $Inscription= $InscriptionRepo->findBy(array('outing'=>$id));
+
+        if(empty($Outing)){
+            throw $this->createNotFoundException("This outing do not exists !");
+        }
+
+        return $this->render('sortie/afficher_sortie.html.twig', array("outing"=>$Outing,"users"=>$Inscription));
     }
 
     /**
-     * @Route("/update", name="update")
+     * @Route("/update/{id}", name="update",requirements={"id":"\d+"})
      */
-    public function update(Request $request)
+    public function update(Request $request, $id,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $outing = new Outing();
-        $outingForm = $this->createForm(OutingType::class, $outing);
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $outingForm = $this->createForm(OutingType::class, $Outing);
         $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
+            $em->persist($Outing);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
+            return $this->redirectToRoute("main");
+
+        }
 
         return $this->render('sortie/update.html.twig', ["outingForm" => $outingForm->createView()]);
     }
 
     /**
-     * @Route("/delete", name="delete")
+     * @Route("/delete/{id}", name="delete",requirements={"id":"\d+"})
      */
-    public function delete()
+    public function delete($id,Request $request,EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
 
-        return $this->render('sortie/annuler_sortie.html.twig');
+        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $Outing = $OutingRepo->find($id);
+
+        $EtatRepo=$this->getDoctrine()->getRepository(Etat::class);
+        $Etat = $EtatRepo->find(6);
+
+        if(empty($Etat)){
+            throw $this->createNotFoundException("This etat do not exists !");
+        }
+
+        if(empty($Outing)){
+            throw $this->createNotFoundException("This outing do not exists !");
+        }
+
+        $outingForm = $this->createForm(OutingDeleteType::class,$Outing);
+        $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+            $Outing->setEtat($Etat);
+            $em->persist($Outing);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre sortie est bien supprimée!');
+            return $this->redirectToRoute("main");
+
+        }
+
+        return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing,'outingForm'=>$outingForm->createView()]);
     }
 
     /**
@@ -120,31 +179,26 @@ class OutingController extends Controller
      */
     public function ajaxFormIndex(Request $request, EntityManagerInterface $em)
     {
-        $value = $request->request->get('value');
-        if ($value == 131) {
-            $outings = $em->getRepository(Outing::class)->findAll();
-        } else {
-            $outings = $em->getRepository(Outing::class)->findBy(array('site' => $value));
-        }
-        $returned = [];
 
-        foreach ($outings as $outing) {
+        $requestedArray['siteValue'] = $request->request->get('siteValue');
+        $requestedArray['dateFirst'] = $request->request->get('dateFirst');
+        $requestedArray['dateLast'] = $request->request->get('dateLast');
+       $requestedArray['stringSearch'] = $request->request->get('stringSearch');
+        $requestedArray['isOrganizer'] = $request->request->get('isOrganizer');
+        $requestedArray['isInscrit'] = $request->request->get('isInscrit');
+        $requestedArray['isNotInscrit'] = $request->request->get('isNotInscrit');
+        $requestedArray['finishedOutings'] = $request->request->get('finishedOutings');
+        $requestedArray['currentUserID'] = $this->getUser()->getId();
 
-            $returned[$outing->getId()] = [
-                'nom' => $outing->getNom(),
-                'dateHeureDebut' => $outing->getDateHeureDebut()->format('Y-m-d H:i:s'),
-                'duree' => $outing->getDuree(),
-                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('Y-m-d H:i:s'),
-                'nbInscriptions' => $outing->getInscriptions()->count(),
-                'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
-                'infosSortie'=> $outing->getInfosSortie(),
-                'etat'=> $outing->getEtat(),
-            ];
-        };
+        $returned = $em->getRepository(Outing::class)->getPersonalResearch($requestedArray, $em);
+
+
+
         dump($returned);
 
         $response = new Response(json_encode($returned));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
 }

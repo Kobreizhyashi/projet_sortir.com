@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -47,4 +48,17 @@ class InscriptionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+public function subscribeManager($outing, $user, EntityManagerInterface $em) {
+
+    $subscribe = new Inscription();
+    $subscribe->setDateInscription(new \DateTime());
+    $subscribe->setOuting($outing);
+    $subscribe->setUser($user);
+    $em->persist($subscribe);
+    $em->flush();
+
+}
+
+
 }
