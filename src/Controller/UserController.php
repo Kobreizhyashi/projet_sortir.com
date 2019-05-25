@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\ModifyPwdType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Bundle\FixturesBundle;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,6 +40,51 @@ class UserController extends Controller
             'error'         => $error,
             ]);
     }
+
+    /**
+     * @Route("/modifypwd", name="modifyPwd")
+     */
+    public function change_user_password(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user=$this -> getUser();
+
+        $pwdForm = $this->createForm(ModifyPwdType::class,$user);
+        $pwdForm->handleRequest($request);
+
+
+        if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
+            $old_pwd = $request->get('currentPassword');
+            $new_pwd = $request->get('newPassword');
+            dump($old_pwd);
+            echo $old_pwd . '  ' . $new_pwd;
+
+            $checkPass = $passwordEncoder->isPasswordValid($user, $old_pwd);
+            if ($checkPass === true) {
+                return $this->render('user/modifyPwd.html.twig',
+                    ["user" => $user,
+                        "pwdForm" => $pwdForm->createView()]);
+            } else {
+                $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
+                return $this->render('user/modifyPwd.html.twig',
+                    ['user' => $user,
+                        'pwdForm' => $pwdForm->createView()]);
+            }
+        }
+
+
+//            $em->persist($user);
+//            $em->flush();
+//
+//            $this->addFlash('success', 'Votre profil a bien été modifié');
+//            return $this->redirectToRoute("my_details", ['user' => $user]);
+
+
+
+        return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
+    }
+
 
     /**
      * Symfony gére entierement cette route il suffit de l'appeler logout.
@@ -111,6 +159,7 @@ class UserController extends Controller
         $user = $this->getUser();
 
         $userForm = $this->createForm(UserType::class,$user);
+        $userForm->remove('password');
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted()&&$userForm->isValid()) {

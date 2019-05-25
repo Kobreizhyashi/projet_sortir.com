@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Modification Mot de Passe{% endblock %}
+
+{% block main %}
+
+    <div class=" logindiv row container">
+            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3  z-depth-2" >
+
+                    <h3 class=" center-align green-text text-teal darken-2">{{ user.username }}</h3>
+
+                {{ form_start(pwdForm, {'method': 'GET'}) }}
+                {{ form_errors(pwdForm) }}
+                {{  form_row(pwdForm.currentPassword) }}
+                {{  form_row(pwdForm.newPassword) }}
+
+                <div class="loginrow row">
+                    <br>
+                    <div class= "col">
+                        <div class="col">
+                            <button type="submit" class="btn s12">Valider</button>
+                        </div >
+                        <div class="col">
+                            <a href="{{ path('main') }}" class="btn s12" style="background-color: #FF6347">Annuler</a>
+                        </div >
+
+                    </div>
+                </div>
+                {{ form_end(pwdForm) }}
+            </div>
+    </div>
+
+
+
+{% endblock %}
