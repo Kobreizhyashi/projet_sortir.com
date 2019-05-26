@@ -44,44 +44,42 @@ class UserController extends Controller
     /**
      * @Route("/modifypwd", name="modifyPwd")
      */
-    public function change_user_password(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
+    public function modifyPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user=$this -> getUser();
+        $pwdInDB=$user-> getPassword();
+
+        // dump ne fonctionne pas !!!
+        dump($pwdInDB);
+        //echo ('Pwd en Base: '.$pwdInDB);
 
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
         $pwdForm->handleRequest($request);
 
 
-        if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
-            $old_pwd = $request->get('currentPassword');
-            $new_pwd = $request->get('newPassword');
-            dump($old_pwd);
-            echo $old_pwd . '  ' . $new_pwd;
 
-            $checkPass = $passwordEncoder->isPasswordValid($user, $old_pwd);
+        if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
+            $current_pwd=$pwdForm-> get("currentPassword")->getData();
+            $new_pwd = $pwdForm->get("newPassword")->getData();
+//            echo nl2br('Pwd en Base          : '.$pwdInDB);
+//            echo nl2br('courrent Pwd récupéré : '.$current_pwd);
+//            echo nl2br('new Pwd récupéré      : '.$new_pwd);
+
+            $checkPass = $passwordEncoder->isPasswordValid($user, $current_pwd);
             if ($checkPass === true) {
+                $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'Votre mot de passe a bien été mis à jour !');
                 return $this->render('user/modifyPwd.html.twig',
                     ["user" => $user,
                         "pwdForm" => $pwdForm->createView()]);
             } else {
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
-                return $this->render('user/modifyPwd.html.twig',
-                    ['user' => $user,
-                        'pwdForm' => $pwdForm->createView()]);
             }
         }
-
-
-//            $em->persist($user);
-//            $em->flush();
-//
-//            $this->addFlash('success', 'Votre profil a bien été modifié');
-//            return $this->redirectToRoute("my_details", ['user' => $user]);
-
-
-
         return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
     }
 
