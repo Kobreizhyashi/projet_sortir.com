@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\ModifyPassword;
-use App\Form\ModifyPasswordType;
+use App\Entity\User;
+use App\Form\ModifyPwdType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,69 +42,46 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/modifypassword", name="modifyPassword")
+     * @Route("/modifypwd", name="modifyPwd")
      */
-    public function change_user_password(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
+    public function modifyPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
-        $user=$this -> getUser();
-        dump($user);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $pwdForm = $this->createForm(ModifyPasswordType::class,$user);
+        $user=$this -> getUser();
+        $pwdInDB=$user-> getPassword();
+
+        // dump ne fonctionne pas !!!
+        dump($pwdInDB);
+        //echo ('Pwd en Base: '.$pwdInDB);
+
+        $pwdForm = $this->createForm(ModifyPwdType::class,$user);
         $pwdForm->handleRequest($request);
 
 
-//        if($pwdForm->isSubmitted()&& $pwdForm->isValid()) {
-//            $old_pwd = $request->get('old_password');
-//            $new_pwd = $request->get('new_password');
-//            $new_pwd_confirm = $request->get('new_password_confirm');
-//
-//
-//
-//            $em->persist($user);
-//            $em->flush();
-//
-//            $this->addFlash('success', 'Votre profil a bien été modifié');
-//            return $this->redirectToRoute("my_details", ['user' => $user]);
-//        }
-//
-//        $old_pwd = $request->get('old_password');
-//        $new_pwd = $request->get('new_password');
-//        $new_pwd_confirm = $request->get('new_password_confirm');
-//        $user = $this->getUser();
-//        $checkPass = $passwordEncoder->isPasswordValid($user, $old_pwd);
-//        if($checkPass === true) {
-//            return $this->render('user/modifyPassword.html.twig',
-//                ["user" => $user,
-//                "pwdForm"=> $pwdForm->createView()
-//            ]);
-//        } else {
-//            $this->addFlash('error', 'Votre mot de passe actuel est erronné !');
-//            return $this->render('user/modifyPassword.html.twig', ['user'=>$user]);
-//        }
-        return $this->render("user/modifyPassword.html.twig",[]);
-    }
 
-//    public function userUpdate(Request $request, EntityManagerInterface $em)
-//    {
-//        $this->denyAccessUnlessGranted('ROLE_USER');
-//
-//        $user = $this->getUser();
-//
-//        $userForm = $this->createForm(UserType::class,$user);
-//        $userForm->handleRequest($request);
-//
-//        if($userForm->isSubmitted()&&$userForm->isValid()) {
-//            $em->persist($user);
-//            $em->flush();
-//
-//            $this->addFlash('success', 'Votre profil a bien été modifié');
-//            return $this->redirectToRoute("my_details", ['user' => $user]);
-//        }
-//
-//        return $this->render('user/update.html.twig', ["user" => $user,
-//            "userForm"=> $userForm->createView()
-//        ]);
-//    }
+        if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
+            $current_pwd=$pwdForm-> get("currentPassword")->getData();
+            $new_pwd = $pwdForm->get("newPassword")->getData();
+//            echo nl2br('Pwd en Base          : '.$pwdInDB);
+//            echo nl2br('courrent Pwd récupéré : '.$current_pwd);
+//            echo nl2br('new Pwd récupéré      : '.$new_pwd);
+
+            $checkPass = $passwordEncoder->isPasswordValid($user, $current_pwd);
+            if ($checkPass === true) {
+                $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'Votre mot de passe a bien été mis à jour !');
+                return $this->render('user/modifyPwd.html.twig',
+                    ["user" => $user,
+                        "pwdForm" => $pwdForm->createView()]);
+            } else {
+                $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
+            }
+        }
+        return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
+    }
 
 
     /**
@@ -181,6 +157,7 @@ class UserController extends Controller
         $user = $this->getUser();
 
         $userForm = $this->createForm(UserType::class,$user);
+        $userForm->remove('password');
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted()&&$userForm->isValid()) {

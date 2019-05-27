@@ -81,7 +81,7 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank(message="Veuillez saisir un mot de passe")
-     * @Assert\Length(min="4", max="16",
+     * Assert\Length(min="4", max="16",
      *     minMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères",
      *     maxMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères")
      * @ORM\Column(type="string", length=255)
