@@ -36,6 +36,8 @@ class OutingController extends Controller
             $this->updateEtats($outing);
         }
 
+        $outings = $repo->findAll();
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
@@ -204,6 +206,7 @@ class OutingController extends Controller
         $now = new \DateTime('now');
         $duree = $outing->getDuree();
         $debut = $outing->getDateHeureDebut();
+        $dateLimiteInscription = $outing->getDateLimiteInscription();
 
         $clone = clone $outing->getDateHeureDebut();
 
@@ -222,6 +225,9 @@ class OutingController extends Controller
         if($outing->getEtat()!=$annulee){
             if ($now > $debut && $now < $fin) {
                 $outing->setEtat($enCours);
+                //ajout er elseif pour cloture
+            } elseif ($now > $dateLimiteInscription && $now < $debut){
+                $outing->setEtat($cloturee);
             } elseif ($now < $debut){
                 $outing->setEtat($ouverte);
             } elseif ($now > $fin){
