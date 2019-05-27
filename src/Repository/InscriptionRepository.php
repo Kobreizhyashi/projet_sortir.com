@@ -60,5 +60,16 @@ public function subscribeManager($outing, $user, EntityManagerInterface $em) {
 
 }
 
+public function renounceManager($outing, $user, EntityManagerInterface $em) {
+
+    $subscribe = new Inscription();
+    $subscribe->setDateInscription(new \DateTime());
+    $subscribe->setOuting($outing);
+    $subscribe->setUser($user);
+    $em->remove($subscribe);
+    $em->flush();
+
+}
+
 
 }
