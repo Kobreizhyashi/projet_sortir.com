@@ -39,6 +39,13 @@ class UserController extends Controller
     }
 
     /**
+     * Symfony gére entierement cette route il suffit de l'appeler logout.
+     * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
+     * @Route("/logout", name="logout")
+     */
+    public function logout(){}
+
+    /**
      * @Route("/modifypwd", name="modifyPwd")
      */
     public function modifyPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
@@ -81,28 +88,6 @@ class UserController extends Controller
     }
 
 
-    /**
-     * Symfony gére entierement cette route il suffit de l'appeler logout.
-     * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
-     * @Route("/logout", name="logout")
-     */
-    public function logout(){}
-
-
-    /**
-     * @Route("/myprofile", name="my_details")
-     * voir les informations de son propre profil
-     */
-    public function myDetails(EntityManagerInterface $em)
-    {
-       $this->denyAccessUnlessGranted('ROLE_USER');
-
-        $user = $this->getUser();
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
-    }
-
 
     /**
      * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
@@ -124,6 +109,22 @@ class UserController extends Controller
         }
 
     }
+
+
+    /**
+     * @Route("/myprofile", name="my_details")
+     * voir les informations de son propre profil
+     */
+    public function myDetails(EntityManagerInterface $em)
+    {
+       $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        return $this->render('user/detail.html.twig', [
+            'user'=>$user
+        ]);
+    }
+    
 
     /**
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
