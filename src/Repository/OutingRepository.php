@@ -58,7 +58,8 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
-    public function removeOuting($idToRemove){
+    public function removeOuting($idToRemove)
+    {
         $em = $this->getEntityManager();
 
         $idToRemove = $outing->getId();
