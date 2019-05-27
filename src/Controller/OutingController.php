@@ -234,16 +234,15 @@ class OutingController extends Controller
                 }
             }
         }
-
         $this->redirectToRoute('main');
     }
 
-    //Gérer l'erreur dans le repo !
+    //Attention, la suppression se fait manifestement après l'affichage
     public function archive($outing){
         echo('suppression');
         var_dump($outing->getNom());
         $outingRepo = $this->getDoctrine()->getRepository(Outing::class);
-        $outingRepo->removeOuting($outing->getId());
+        $outingRepo->removeOuting($outing);
     }
 
 
