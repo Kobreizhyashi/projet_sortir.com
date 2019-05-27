@@ -67,6 +67,8 @@ class OutingController extends Controller
 
         $archiveThreshold = 43200;
 
+        //rajouter cloture
+
         if($outing->getEtat()!=$annulee){
             if ($now > $debut && $now < $fin) {
                 $outing->setEtat($enCours);
