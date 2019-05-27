@@ -30,7 +30,7 @@ class OutingController extends Controller
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
-
+/*
         //Update des états
         foreach ($outings as $outing) {
             $this->updateEtats($outing);
@@ -291,8 +291,6 @@ class OutingController extends Controller
         $returned = $em->getRepository(Outing::class)->getPersonalResearch($requestedArray, $em);
 
 
-
-        dump($returned);
 
         $response = new Response(json_encode($returned));
         $response->headers->set('Content-Type', 'application/json');

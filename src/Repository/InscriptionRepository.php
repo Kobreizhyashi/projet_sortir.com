@@ -72,4 +72,33 @@ public function renounceManager($outing, $user, EntityManagerInterface $em) {
 }
 
 
+public function getInscrit($outing, $userId) {
+
+
+    $qb = $this->createQueryBuilder('i')
+        ->leftJoin('i.user', 'u')
+        ->leftJoin('i.outing', 'o')
+        ->where('u.id = :user')
+        ->setParameter('user', $userId)
+        ->andWhere('o.id = :outingId')
+        ->setParameter('outingId', $outing->getId());
+
+
+// Si c'est vide, c'est good, pas d'inscription, sinon, c'est inscrit.
+    $query = $qb->getQuery();
+    $returned = $query->getResult();
+
+    if (count($returned) === 1) {
+        return true;
+    } else {
+        return false;
+    }
+
+
+
+
+
+}
+
+
 }
