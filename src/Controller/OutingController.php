@@ -197,6 +197,57 @@ class OutingController extends Controller
     }
 
     /**
+     * Mise à jour des états appelée à chaque affichage de 'main'
+     */
+    public function updateEtats($outing)
+    {
+        $now = new \DateTime('now');
+        $duree = $outing->getDuree();
+        $debut = $outing->getDateHeureDebut();
+
+        $clone = clone $outing->getDateHeureDebut();
+
+        $fin = $clone->add(new \DateInterval('PT'.$duree.'M'));
+
+        $repoEtat = $this->getDoctrine()->getRepository(Etat::class);
+        $creee = $repoEtat->find(1);
+        $ouverte = $repoEtat->find(2);
+        $cloturee = $repoEtat->find(3);
+        $enCours = $repoEtat->find(4);
+        $passee = $repoEtat->find(5);
+        $annulee = $repoEtat->find(6);
+
+        $archiveThreshold = 43200;
+
+        if($outing->getEtat()!=$annulee){
+            if ($now > $debut && $now < $fin) {
+                $outing->setEtat($enCours);
+            } elseif ($now < $debut){
+                $outing->setEtat($ouverte);
+            } elseif ($now > $fin){
+                $cloneFin = clone $fin;
+                $cloneFin->add(new \DateInterval('PT'.$archiveThreshold.'M'));
+                if($now>$cloneFin){
+                    $this->archive($outing);
+                } else{
+                    $outing->setEtat($passee);
+                }
+            }
+        }
+
+        $this->redirectToRoute('main');
+    }
+
+    //Gérer l'erreur dans le repo !
+    public function archive($outing){
+        echo('suppression');
+        var_dump($outing->getNom());
+        $outingRepo = $this->getDoctrine()->getRepository(Outing::class);
+        $outingRepo->removeOuting($outing->getId());
+    }
+
+
+    /**
      * @Route("/add/ajax_request", name="ajaxFormAdd")
      */
     public function ajaxAction(Request $request, EntityManagerInterface $em)
