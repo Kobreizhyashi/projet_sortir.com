@@ -24,21 +24,18 @@ class UserController extends Controller
      * security.yaml on a login_path: login
      * @Route("/login", name="login")
      */
-    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
-
+    public function login(EntityManagerInterface $em, AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         if (!empty($error)) {
-          $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
+            $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
         }
-
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render("user/login.html.twig",[
             'last_username' => $lastUsername,
             'error'         => $error,
-            ]);
+        ]);
     }
 
     /**
@@ -115,11 +112,8 @@ class UserController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $connectedUser = $this->getUser();
-        $connectedUserId = $connectedUser->getId();
 
-        $toViewUser = $em->getRepository(User::class)->find($id);
-
-        if($connectedUserId==$id){
+        if($connectedUser->getId()==$id){
             return $this->redirectToRoute('my_details', [
                 'user'=>$connectedUser
             ]);

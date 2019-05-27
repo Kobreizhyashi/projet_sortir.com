@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OutingRepository")
@@ -20,31 +22,47 @@ class Outing
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Veuillez saisir un nom de sortie")
+     * @Assert\Length(max="30",maxMessage="Le nom ne doit pas dépasser 30 caractères")
      * @ORM\Column(type="string", length=30)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
+     * @Assert\Expression(
+     *     "this.checkBeginningDate()==false",
+     *     message="La date de début de l'événement ne peut être antérieure à la date actuelle"
+     * )
+
      */
     private $dateHeureDebut;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", precision=4, nullable=true)
+     * @Assert\LessThan(value = 10081,
+     *     message="Alors, on se la coule douce ? Faudrait penser à bosser de temps en temps !")
      */
     private $duree;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Expression(
+     *     "this.compareDates()==true",
+     *     message="Saisir une date limite d'inscription antérieure à la date de début de l'événement"
+     * )
      */
     private $dateLimiteInscription;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", precision=3, nullable=true)
+     * @Assert\LessThan(value = 100,
+     *     message="C'est plus une sortie à ce niveau-là ! Veuillez indiquer un nombre d'inscriptions inférieur à 100")
      */
     private $nbInscriptionsMax;
 
     /**
+     * @Assert\Length(max="500",maxMessage="Les informtations ne doivent pas dépasser 500 caractères")
      * @ORM\Column(type="string", length=500, nullable=true)
      */
     private $infosSortie;
@@ -81,6 +99,7 @@ class Outing
     private $lieu;
 
     /**
+     * @Assert\Length(max="1000",maxMessage="Le motif ne doit pas dépasser 1000 caractères")
      * @ORM\Column(type="string", length=1000, nullable=true)
      */
     private $motif;
@@ -168,7 +187,6 @@ class Outing
     }
 
 
-
     /**
      * @return Collection|Inscription[]
      */
@@ -199,6 +217,26 @@ class Outing
 
         return $this;
     }
+
+    //Vérification que le date de début de l'événement n'est pas antérieure à maintenant
+    public function checkBeginningDate(){
+        if($this->getDateHeureDebut()> new \DateTime('now')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //    Comparaison de la date limite d'nscription avec la date de début de sortie
+    public function compareDates(){
+        if($this->getDateHeureDebut()<$this->getDateLimiteInscription()){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
 
     public function getSite()
     {

@@ -31,12 +31,18 @@ class OutingController extends Controller
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
 
+        //Update des états
+        foreach ($outings as $outing) {
+            $this->updateEtats($outing);
+        }
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
             'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
         ]);
     }
+
 
     /**
      * @Route("/subscribe/{id}", name="subscribe")
