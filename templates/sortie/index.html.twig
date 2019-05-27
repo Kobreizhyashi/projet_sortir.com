@@ -93,7 +93,7 @@
                     {% for outing in outings %}
                         <tr>
                             <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut|date('h:m d/m/Y')}}</td>
+                            <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i')}}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.etat.libelle }}</td>

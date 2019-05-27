@@ -57,6 +57,18 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
+    public function removeOuting($idToRemove){
+        $em = $this->getEntityManager();
+        $dql = "DELETE o
+                FROM App\Entity\Outing o
+                WHERE o.id = $idToRemove";
+
+        $query = $em->createQuery($dql);
+        $result = $query->getResult();
+        return $result;
+    }
+
+
     public function getPersonalResearch($requestedArray, EntityManagerInterface $em)
     {
 

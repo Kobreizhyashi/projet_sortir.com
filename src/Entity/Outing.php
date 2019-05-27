@@ -187,7 +187,6 @@ class Outing
     }
 
 
-
     /**
      * @return Collection|Inscription[]
      */

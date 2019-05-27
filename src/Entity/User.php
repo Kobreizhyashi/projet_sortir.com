@@ -53,6 +53,9 @@ class User implements UserInterface
     private $prenom;
 
     /**
+     * @Assert\Length(min = 10, max = 11, minMessage = "Veuillez saisir un numéro de téléphone valide",
+     *     maxMessage = "Veuillez saisir un numéro de téléphone valide")
+     * @Assert\Regex(pattern="/^[0-9]*$/", message="Veuillez saisir un numéro de téléphone valide")
      * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $telephone;
