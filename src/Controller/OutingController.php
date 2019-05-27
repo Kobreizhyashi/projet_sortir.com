@@ -30,30 +30,14 @@ class OutingController extends Controller
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
-/*
+
         //Update des états
         foreach ($outings as $outing) {
             $this->updateEtats($outing);
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
         $outings = $repo->findAll();
 
-=======
-*/
->>>>>>> Stashed changes
-=======
-*/
->>>>>>> Stashed changes
-=======
-*/
->>>>>>> Stashed changes
-=======
-*/
->>>>>>> Stashed changes
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
