@@ -51,8 +51,7 @@ class UserController extends Controller
         $user=$this -> getUser();
         $pwdInDB=$user-> getPassword();
 
-        // dump ne fonctionne pas !!!
-        dump($pwdInDB);
+          dump($pwdInDB);
         //echo ('Pwd en Base: '.$pwdInDB);
 
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
