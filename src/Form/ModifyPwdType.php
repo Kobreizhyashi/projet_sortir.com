@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class ModifyPwdType extends AbstractType
 {
@@ -21,6 +22,7 @@ class ModifyPwdType extends AbstractType
             ))
             ->add('newPassword', RepeatedType::class, array(
                 'mapped' => false,
+                'constraints' => [new Length(['min' => 4],['max' => 30])],
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les 2 mots de passe doivent être identiques !',
                 'options' => array('attr' => array('class' => 'password-field')),

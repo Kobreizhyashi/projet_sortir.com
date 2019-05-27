@@ -55,8 +55,7 @@ class UserController extends Controller
         $user=$this -> getUser();
         $pwdInDB=$user-> getPassword();
 
-        // dump ne fonctionne pas !!!
-        dump($pwdInDB);
+          dump($pwdInDB);
         //echo ('Pwd en Base: '.$pwdInDB);
 
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
@@ -77,9 +76,7 @@ class UserController extends Controller
                 $em->persist($user);
                 $em->flush();
                 $this->addFlash('success', 'Votre mot de passe a bien été mis à jour !');
-                return $this->render('user/modifyPwd.html.twig',
-                    ["user" => $user,
-                        "pwdForm" => $pwdForm->createView()]);
+                return $this->redirectToRoute('my_details');
             } else {
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
             }
