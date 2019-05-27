@@ -31,13 +31,13 @@ class UserType extends AbstractType
 //            ])
             //->add('actif')
             ->add('email', EmailType::class)
-            ->add('password',RepeatedType::class,[
-                'type'=>PasswordType::class,
-                'invalid_message'=>'Les champs mot de passe doivent être identiques',
-                'required'=>true,
-                'first_options'=>array('label'=>'Mot de passe'),
-                'second_options'=>array('label'=>'Répéter mot de passe'),
-            ])
+//            ->add('password',RepeatedType::class,[
+//                'type'=>PasswordType::class,
+//                'invalid_message'=>'Les champs mot de passe doivent être identiques',
+//                'required'=>true,
+//                'first_options'=>array('label'=>'Mot de passe'),
+//                'second_options'=>array('label'=>'Répéter mot de passe'),
+//            ])
             ->add('site', EntityType::class, [
                 'label'=>'Site de rattachement', 'class' => Site::class, 'choice_label' => 'nom',
                 'attr'=> ['class'=>'choice']])

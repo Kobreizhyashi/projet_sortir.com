@@ -110,15 +110,16 @@ Affichage sortie
 .flash{
     padding: 20px;
     display: block;
-    font-size: 24px;
+    font-size: 20px;
     color:#FFF;
-    font-weight: bold;
+    opacity: .66;
+    font-weight: normal;
 }
 
 .flash-success{
-    background-color: #6b9311;
+    background-color: #43a047;
 }
 
 .flash-error{
-    background-color: #AA3333;
+    background-color: #d32f2f ;
 }

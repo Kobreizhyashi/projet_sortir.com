@@ -6,6 +6,8 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -34,6 +36,20 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

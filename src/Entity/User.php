@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @UniqueEntity(fields={"username"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -51,6 +53,9 @@ class User implements UserInterface
     private $prenom;
 
     /**
+     * @Assert\Length(min = 10, max = 11, minMessage = "Veuillez saisir un numéro de téléphone valide",
+     *     maxMessage = "Veuillez saisir un numéro de téléphone valide")
+     * @Assert\Regex(pattern="/^[0-9]*$/", message="Veuillez saisir un numéro de téléphone valide")
      * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $telephone;
@@ -76,6 +81,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=20)
+     * * @Assert\Email(
+     *     message = "l'email '{{ value }}' n'est par valide",
+     *     checkMX = true
+     * )
      */
     private $email;
 

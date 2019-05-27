@@ -24,22 +24,26 @@ class UserController extends Controller
      * security.yaml on a login_path: login
      * @Route("/login", name="login")
      */
-    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
-
+    public function login(EntityManagerInterface $em, AuthenticationUtils $authenticationUtils, TranslatorInterface  $translator){
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         if (!empty($error)) {
-          $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
+            $this->addFlash('error', $translator->trans($error->getMessageKey(), [], 'security'));
         }
-
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render("user/login.html.twig",[
             'last_username' => $lastUsername,
             'error'         => $error,
-            ]);
+        ]);
     }
+
+    /**
+     * Symfony gére entierement cette route il suffit de l'appeler logout.
+     * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
+     * @Route("/logout", name="logout")
+     */
+    public function logout(){}
 
     /**
      * @Route("/modifypwd", name="modifyPwd")
@@ -81,12 +85,27 @@ class UserController extends Controller
     }
 
 
+
     /**
-     * Symfony gére entierement cette route il suffit de l'appeler logout.
-     * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
-     * @Route("/logout", name="logout")
+     * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
+     * routing pour visionnage infos profil
      */
-    public function logout(){}
+    public function getProfile(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $connectedUser = $this->getUser();
+
+        if($connectedUser->getId()==$id){
+            return $this->redirectToRoute('my_details', [
+                'user'=>$connectedUser
+            ]);
+        } else {
+            return $this->redirectToRoute('their_details', [
+                'id'=>$id
+            ]);
+        }
+
+    }
 
 
     /**
@@ -102,31 +121,7 @@ class UserController extends Controller
             'user'=>$user
         ]);
     }
-
-
-    /**
-     * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
-     * routing pour visionnage infos profil
-     */
-    public function getProfile(EntityManagerInterface $em, $id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        $connectedUser = $this->getUser();
-        $connectedUserId = $connectedUser->getId();
-
-        $toViewUser = $em->getRepository(User::class)->find($id);
-
-        if($connectedUserId==$id){
-            return $this->redirectToRoute('my_details', [
-                'user'=>$connectedUser
-            ]);
-        } else {
-            return $this->redirectToRoute('their_details', [
-                'id'=>$id
-            ]);
-        }
-
-    }
+    
 
     /**
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})

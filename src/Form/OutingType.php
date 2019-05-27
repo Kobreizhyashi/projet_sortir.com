@@ -29,7 +29,7 @@ class OutingType extends AbstractType
                 ['label' => 'Nom de la sortie',
                     'attr' => ['placeholder' => 'Aquaponey, Curling..', 'class' => 'input-field']])
             ->add('dateHeureDebut',
-                DateType::class,
+                DateTimeType::class,
                 ['label' => "Date de l'evenement",
                     'widget' => 'single_text',
                     'attr' => ['class' => "input-field datepicker"]])

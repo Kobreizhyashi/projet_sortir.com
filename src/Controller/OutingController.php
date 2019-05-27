@@ -31,12 +31,20 @@ class OutingController extends Controller
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
 
+        //Update des états
+        foreach ($outings as $outing) {
+            $this->updateEtats($outing);
+        }
+
+        $outings = $repo->findAll();
+
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
         return $this->render('sortie/index.html.twig', [
             'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
         ]);
     }
+
 
     /**
      * @Route("/subscribe/{id}", name="subscribe")
@@ -189,6 +197,60 @@ class OutingController extends Controller
 
         return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing,'outingForm'=>$outingForm->createView()]);
     }
+
+    /**
+     * Mise à jour des états appelée à chaque affichage de 'main'
+     */
+    public function updateEtats($outing)
+    {
+        $now = new \DateTime('now');
+        $duree = $outing->getDuree();
+        $debut = $outing->getDateHeureDebut();
+        $dateLimiteInscription = $outing->getDateLimiteInscription();
+
+        $clone = clone $outing->getDateHeureDebut();
+
+        $fin = $clone->add(new \DateInterval('PT'.$duree.'M'));
+
+        $repoEtat = $this->getDoctrine()->getRepository(Etat::class);
+        $creee = $repoEtat->find(1);
+        $ouverte = $repoEtat->find(2);
+        $cloturee = $repoEtat->find(3);
+        $enCours = $repoEtat->find(4);
+        $passee = $repoEtat->find(5);
+        $annulee = $repoEtat->find(6);
+
+        $archiveThreshold = 43200;
+
+        if($outing->getEtat()!=$annulee){
+            if ($now > $debut && $now < $fin) {
+                $outing->setEtat($enCours);
+                //ajout er elseif pour cloture
+            } elseif ($now > $dateLimiteInscription && $now < $debut){
+                $outing->setEtat($cloturee);
+            } elseif ($now < $debut){
+                $outing->setEtat($ouverte);
+            } elseif ($now > $fin){
+                $cloneFin = clone $fin;
+                $cloneFin->add(new \DateInterval('PT'.$archiveThreshold.'M'));
+                if($now>$cloneFin){
+                    $this->archive($outing);
+                } else{
+                    $outing->setEtat($passee);
+                }
+            }
+        }
+        $this->redirectToRoute('main');
+    }
+
+    //Attention, la suppression se fait manifestement après l'affichage
+    public function archive($outing){
+        echo('suppression');
+        var_dump($outing->getNom());
+        $outingRepo = $this->getDoctrine()->getRepository(Outing::class);
+        $outingRepo->removeOuting($outing);
+    }
+
 
     /**
      * @Route("/add/ajax_request", name="ajaxFormAdd")
