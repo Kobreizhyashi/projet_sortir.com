@@ -18,7 +18,8 @@ class User implements UserInterface
 {
     public function getRoles()
     {
-        return ["ROLE_USER"];
+        return ["ROLE_USER", "ROLE_ADMIN"];
+
     }
 
     public function getSalt()
@@ -112,6 +113,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Outing", mappedBy="organisateur")
      */
     private $outings;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Picture", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $picture;
 
     public function __construct()
     {
@@ -290,6 +296,18 @@ class User implements UserInterface
                 $outing->setOrganisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?Picture $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

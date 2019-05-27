@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PictureRepository")
@@ -16,54 +17,68 @@ class Picture
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $path;
+//    /**
+//     * @ORM\Column(type="string", length=255, nullable=true)
+//     */
+    //private $path;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function getPath()
+//    public function getPath()
+//    {
+//        return $this->path;
+//    }
+//
+//    public function setPath(?string $path)
+//    {
+//        $this->path = $path;
+//        return $this;
+//    }
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank(message="Please, upload the product brochure as a PDF file.")
+     * @Assert\File(mimeTypes={ "image/jpeg" })
+     */
+    private $img;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="picture", cascade={"persist", "remove"})
+     */
+    private $user;
+
+    public function getImg()
     {
-        return $this->path;
+        return $this->img;
     }
 
-    public function setPath(?string $path)
+    public function setImg($img)
     {
-        $this->path = $path;
+        $this->img = $img;
 
         return $this;
     }
 
-    public function getAbsolutePath()
+    public function getUser(): ?User
     {
-        return null === $this->path
-            ? null
-            : $this->getUploadRootDir().'/'.$this->path;
+        return $this->user;
     }
 
-    public function getWebPath()
+    public function setUser(?User $user): self
     {
-        return null === $this->path
-            ? null
-            : $this->getUploadDir().'/'.$this->path;
-    }
+        $this->user = $user;
 
-    protected function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded
-        // documents should be saved
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
-    }
+        // set (or unset) the owning side of the relation if necessary
+        $newPicture = $user === null ? null : $this;
+        if ($newPicture !== $user->getPicture()) {
+            $user->setPicture($newPicture);
+        }
 
-    protected function getUploadDir()
-    {
-        // get rid of the __DIR__ so it doesn't screw up
-        // when displaying uploaded doc/image in the view.
-        return '/pictures';
+        return $this;
     }
 
 }
