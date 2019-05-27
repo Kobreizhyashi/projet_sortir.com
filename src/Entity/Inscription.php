@@ -24,13 +24,13 @@ class Inscription
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="inscriptions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Outing", inversedBy="inscriptions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $outing;
 

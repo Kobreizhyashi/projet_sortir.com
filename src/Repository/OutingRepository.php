@@ -57,13 +57,18 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
-    public function removeOuting($idToRemove){
-        $em = $this->getEntityManager();
-        $dql = "DELETE o
-                FROM App\Entity\Outing o
-                WHERE o.id = $idToRemove";
 
-        $query = $em->createQuery($dql);
+    public function removeOuting($outing){
+        $em = $this->getEntityManager();
+
+        $idToRemove = $outing->getId();
+
+        $dql = "DELETE
+                FROM App\Entity\Outing o
+                WHERE o.id = :idToRemove";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('idToRemove', $idToRemove);
         $result = $query->getResult();
         return $result;
     }
