@@ -165,4 +165,43 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/user/create", name="user_create")
+     * Creer manuellement un profil
+     */
+    public function createUser(Request $request, EntityManagerInterface $em,UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_ANONYMOUSLY');
+
+
+        $user = new User();
+
+        $userForm = $this->createForm(UserType::class,$user);
+
+        $user->setAdministrateur(0);
+        $user->setActif(1);
+
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+
+            $user->setAdministrateur(0);
+
+            $new_pwd = $userForm->get("password")->getData();
+            $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
+            $user->setActif(1);
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre compte a bien été créer !');
+            return $this->redirectToRoute("login");
+
+        }
+
+
+        return $this->render('user/createManually.html.twig', ["userForm"=> $userForm->createView()]);
+    }
+
 }
