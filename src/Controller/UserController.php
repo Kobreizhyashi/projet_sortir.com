@@ -149,11 +149,11 @@ class UserController extends Controller
         $picturePath = $user->getPicturePath();
 
         //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = false;
+        $isPicture = true;
         if($picturePath == 'uploads/pictures/'){
-            $isPicture=true;
+            $isPicture=false;
         }
-
+        var_dump($isPicture);
         return $this->render('user/detail.html.twig', [
             'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
         ]);
