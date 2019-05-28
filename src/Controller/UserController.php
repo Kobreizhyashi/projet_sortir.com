@@ -257,4 +257,78 @@ class UserController extends Controller
         return $this->render('user/createManually.html.twig', ["userForm"=> $userForm->createView()]);
     }
 
+
+    /**
+     * @Route("/admin/gestion", name="admin_gestion")
+     * Gestion des utilisateur par un Administrateur
+     */
+    public function userManager(Request $request, EntityManagerInterface $em)
+    {
+        $user = $this->getUser();
+
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $repo = $em->getRepository(User::class);
+        $users = $repo->findAll();
+        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
+    }
+
+    /**
+     * @Route("/admin/supprimer/{id}", name="admin_supprimer",requirements={"id"="\d+"})
+     * Suppression des utilisateurs par un Administrateur
+     */
+    public function deleteUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $em->remove($user);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur est effacé !");
+        return $this->redirectToRoute("admin_gestion");
+
+    }
+
+
+    /**
+     * @Route("/admin/activer/{id}", name="admin_activer",requirements={"id"="\d+"})
+     * Activation des utilisateurs par un Administrateur
+     */
+    public function activateUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $user->setActif(1);
+        $em->merge($user);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur est activé !");
+        return $this->redirectToRoute("admin_gestion");
+
+    }
+
+    /**
+     * @Route("/admin/desactiver/{id}", name="admin_desactiver",requirements={"id"="\d+"})
+     * Desactivation des utilisateurs par un Administrateur
+     */
+    public function disableUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $user->setActif(0);
+        $em->merge($user);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur est desactivé !");
+        return $this->redirectToRoute("admin_gestion");
+
+    }
+
+
 }
