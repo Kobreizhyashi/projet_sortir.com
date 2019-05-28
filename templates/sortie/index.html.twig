@@ -6,10 +6,10 @@
     <section>
         <div class="row">
             <form class="col s12 l8 m10 offset-l2">
-                <div class="col s12 l6">
+                <div class="col s6">
                     <p> Site : </p>
                     <div class="row">
-                        <div class="input-field col s12">
+                        <div class="input-field col s6">
                             <select class="siteSelector" id="siteSelector">
                                 <option value="131" selected>Choisissez un site</option>
                                 {% for site in sites %}
@@ -21,10 +21,10 @@
                     <p> Dates : </p>
                     <div class="row">
 
-                        <div class="input-field col l6 s12" id="dateFirst">
+                        <div class="input-field col s6" id="dateFirst">
                             <input id="beginDate" type="date" class="datepicker">
                         </div>
-                        <div class="input-field col l6 s12" id="dateLast">
+                        <div class="input-field col s6" id="dateLast">
                             <input id="endDate" type="date" class="datepicker">
                         </div>
                     </div>
@@ -36,8 +36,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s12 l6">
-                    <div class="input-field col s12 l10">
+                <div class="col s6">
+                    <div class="input-field col s12">
                         <p>
                             <label>
                                 <input id="isOrganizer" type="checkbox"/>
@@ -72,9 +72,9 @@
     <section>
         <div class="row">
 
-            <div class="col s12 l8 m10 offset-l2">
+            <div class="col s12 l10 m12 offset-l1">
 
-                <table class="responsive-table centered">
+                <table>
                     <thead>
                     <tr>
                         <th>Nom de la sortie</th>
@@ -159,9 +159,9 @@
 
         <div class="row">
 
-            <div class="offset-l2 col l2 m4 s12">
+            <div class="offset-l2 col l2 m4 s8">
                 <a href="{{ path('add') }}">
-                    <button type="button" id="addOutingButton" class="btn center-align btn-large pulse">Ajouter</button>
+                    <button type="button" class="btn">Ajouter une sortie</button>
                 </a>
             </div>
         </div>

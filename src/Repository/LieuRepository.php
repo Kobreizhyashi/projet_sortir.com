@@ -3,11 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Lieu;
-use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Lieu|null find($id, $lockMode = null, $lockVersion = null)
@@ -50,23 +47,4 @@ class LieuRepository extends ServiceEntityRepository
         ;
     }
     */
-
-
-    public function LieuCreationManager(Request $request, EntityManagerInterface $em) {
-
-
-        $ville = $em->getRepository(Ville::class)->find($request->request->get('siteSelected'));
-
-        $lieu = new Lieu();
-        $lieu->setNom($request->request->get('nom'));
-        $lieu->setRue($request->request->get('adresse'));
-        $lieu->setLatitude($request->request->get('lat'));
-        $lieu->setLongitude($request->request->get('long'));
-        $lieu->setVille($ville);
-
-        $em->persist($lieu);
-        $em->flush();
-
-    }
-
 }

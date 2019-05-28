@@ -1,4 +1,4 @@
-{% extends ('layout.html.twig') %}
+{%  extends ('layout.html.twig') %}
 
 {% block title %}Détail de la sortie{% endblock %}
 
@@ -12,209 +12,188 @@
 
     #}
 
-    <section>
+<section>
 
-        <div class="container row">
+    <div class="container">
 
-            <h3 class="titre center-align">Détails de la sortie</h3>
+        <h3 class="titre center-align">Détails de la sortie</h3>
 
-            <div class="col s12 l6 m6 xl6">
-
-                <div class="row">
-
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Nom de la sortie :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.nom }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Ville organisatrice :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.ville.nom }}</span>
-                        </div>
-                    </div>
-
+        <div class="row">
+            <br>
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Nom de la sortie :</label>
+                </div>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.nom}}</span>
                 </div>
 
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Ville organisatrice :</label>
+                </div>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.ville.nom}}</span>
+                </div>
+            <br>
+        </div>
 
-                <div class="row">
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Date et heure de la sortie :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Lieu :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.nom }}</span>
-                        </div>
-                    </div>
+        <div class="row">
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Date et heure de la sortie :</label>
                 </div>
 
-
-                <div class="row">
-
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Date limite d'inscription :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.dateLimiteInscription|date('d-m-Y') }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Rue :</label>
-                        </div>
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.rue }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 l6 m6 xl6">
-                <div class="row">
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Nombre de places :</label><span></span>
-                        </div>
-
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.nbInscriptionsMax }}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Code postal :</label><span></span>
-                        </div>
-
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.ville.codePostal }}</span>
-                        </div>
-                    </div>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.dateHeureDebut|date('d-m-Y / H:i') }}</span>
                 </div>
 
-
-                <div class="row">
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Durée :</label>
-                        </div>
-
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.duree }} minutes</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Latitude :</label>
-                        </div>
-
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.latitude }}</span>
-                        </div>
-                    </div>
-
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Lieu :</label>
                 </div>
 
-                <div class="row">
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Longitude :</label>
-                        </div>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.nom}}</span>
+                </div>
+            <br>
+        </div>
 
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.lieu.longitude }}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s6 l6 m6">
-                            <label class="aff_sortie_label">Description et infos :</label>
-                        </div>
-
-                        <div class="col s6 l6 m6">
-                            <span>{{ outing.infosSortie }}</span>
-                        </div>
-                    </div>
-
+        <div class="row">
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Date limite d'inscription :</label>
                 </div>
 
-            </div>
-
-    </section>
-
-    <section>
-
-
-        {% if outing.etat.id == 6 %}
-
-            <div class="row">
-                <div class="col s6 l6 m6 right-align">
-                    <label class="aff_sortie_label">Motif de l'annulation de l'organisateur :</label>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.dateLimiteInscription|date('d-m-Y') }}</span>
                 </div>
 
-                <div class="col s6 l6 m6 left-align">
-                    <span class="">{{ outing.motif }}</span>
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Rue :</label>
                 </div>
 
-            </div>
-        {% endif %}
-
-        {% if outing.etat.id != 6 %}
-
-            <h5 class="center-align">Liste des participants inscrits</h5>
-
-            <div class="tabParticipant">
-
-                <div class="row">
-
-                    <table class="col s12 l6 offset-l3  m8 offset-m2">
-                        <thead>
-                        <tr>
-                            <th class="tpTH">Pseudo</th>
-                            <th class="tpTH">Nom</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-
-                        {% for inscription in users %}
-                            <tr>
-                                <td> {% if  inscription.user.id!= userId %}
-
-                                    <a href="{{ path('their_details',{'id':inscription.user.id}) }}">{{ inscription.user.username }}</a>
-                                </td>
-
-                                {% else %}
-
-                                    <div>{{ inscription.user.username }}</div></td>
-
-                                {% endif %}
-
-                                <td>{{ inscription.user.nom }} {{ inscription.user.prenom }}</td>
-
-                            </tr>
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.rue}}</span>
                 </div>
-            </div>
+            <br>
+        </div>
 
-        {% endif %}
+        <div class="row">
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Nombre de places :</label><span></span>
+                </div>
 
-    </section>
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.nbInscriptionsMax}}</span>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Code postal :</label><span></span>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.ville.codePostal}}</span>
+                </div>
+            <br>
+        </div>
+
+        <div class="row">
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Durée :</label>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <span>{{ outing.duree }} minutes</span>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Latitude :</label>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.latitude}}</span>
+                </div>
+            <br>
+        </div>
+
+        <div class="row">
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Description et infos :</label>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <span>{{ outing.infosSortie }}</span>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <label class ="aff_sortie_label">Longitude :</label>
+                </div>
+
+                <div class ="col s6 l3 m3">
+                    <span>{{outing.lieu.longitude}}</span>
+                </div>
+            <br>
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+    <br>
+
+
+    {% if outing.etat.id == 6 %}
+
+    <div class="row">
+        <div class ="col s6 l6 m6 right-align">
+            <label class ="aff_sortie_label">Motif de l'annulation de l'organisateur :</label>
+        </div>
+
+        <div class ="col s6 l6 m6 left-align">
+            <span class ="">{{ outing.motif }}</span>
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% if outing.etat.id != 6 %}
+
+    <h5 class="center-align">Liste des participants inscrits</h5>
+
+    <div class="tabParticipant">
+
+        <div class="row">
+
+        <table class ="col s12 l6 offset-l3  m8 offset-m2">
+            <thead>
+            <tr>
+                <th class="tpTH">Pseudo</th>
+                <th class="tpTH">Nom</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {%for inscription in users%}
+            <tr>
+                <td> {%if  inscription.user.id!= userId %}
+
+                    <a href="{{path('their_details',{'id':inscription.user.id})}}">{{inscription.user.username}}</a></td>
+
+                {% else %}
+
+                    <div>{{inscription.user.username}}</div></td>
+
+                {% endif %}
+
+                <td>{{inscription.user.nom}} {{inscription.user.prenom}}</td>
+
+            </tr>
+            {%endfor%}
+
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    {% endif %}
+
+</section>
 {% endblock %}
