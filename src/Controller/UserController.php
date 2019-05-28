@@ -59,24 +59,13 @@ class UserController extends Controller
     public function modifyPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user=$this -> getUser();
-        $pwdInDB=$user-> getPassword();
-
-          dump($pwdInDB);
-        //echo ('Pwd en Base: '.$pwdInDB);
-
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
         $pwdForm->handleRequest($request);
-
-
 
         if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
             $current_pwd=$pwdForm-> get("currentPassword")->getData();
             $new_pwd = $pwdForm->get("newPassword")->getData();
-//            echo nl2br('Pwd en Base          : '.$pwdInDB);
-//            echo nl2br('courrent Pwd récupéré : '.$current_pwd);
-//            echo nl2br('new Pwd récupéré      : '.$new_pwd);
 
             $checkPass = $passwordEncoder->isPasswordValid($user, $current_pwd);
             if ($checkPass === true) {
@@ -106,7 +95,6 @@ class UserController extends Controller
         return $this->redirectToRoute($routing);
     }
 
-
     /**
      * mger OK
      * @Route("/myprofile", name="my_details")
@@ -119,7 +107,6 @@ class UserController extends Controller
         $mger = new UserManager($em);
         return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
-    
 
     /**
      * mger OK
