@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\Site;
+use App\Entity\Upload;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
+use App\Form\UploadType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,6 +19,60 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
+
+    /**
+     * fichier CSV doit contenir liste de users avec prenom, nom et email
+     * ce fichier sera envoyé en base avec email généré sous format prenom.nom.random(1000,9999)
+     * ce fichier est enregistré sous public/userdata en crypté sha1
+     * @Route("/insertfile", name="insert_file")
+     */
+    public function insertFile(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em) {
+
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $upload =new Upload();
+        $fileForm = $this->createForm(UploadType::class,$upload);
+        $fileForm->handleRequest($request);
+
+        if($fileForm->isSubmitted() && $fileForm->isValid()) {
+            $file = $upload->getName();
+
+            foreach (file($file) as $line) {
+                $userdata[]=explode(',',$line);
+                $user = new User();
+                //Affectation par défaut sur site de Nantes
+                $repo = $em->getRepository(Site::class);
+                $siteNantes = $repo->find('2');
+                $user->setSite($siteNantes);
+                $user->setNom($userdata[0][1]);
+                $user->setPrenom($userdata[0][0]);
+                $user->setAdministrateur(0);
+                $user->setActif(1);
+                $user->setUsername($userdata[0][0].$userdata[0][1]);
+                $user->setEmail(rtrim($userdata[0][2]));
+                $password = $userdata[0][0].$userdata[0][1].random_int(1000,9999);
+                $user-> setPassword($passwordEncoder->encodePassword($user,$password));
+                unset($userdata);
+
+                $em->persist($user);
+                $em->flush();
+
+            }
+
+            //fichier en crypté
+            $fileName = sha1(uniqid()).'.'.$file->guessExtension();
+
+            $file->move($this->getParameter('userdata_directory'),$fileName);
+            $upload->setName($fileName);
+
+            $this->addFlash('success', 'Votre fichier a bien été chargé sous le répertoire -uploads- !');
+
+            return $this->redirectToRoute('my_details');
+
+        }
+
+        return $this->render('user/insertFile.html.twig',['fileForm'=> $fileForm->createView()]);
+    }
+
 
     /**
      * on nomme la route login car dans le fichier
@@ -53,13 +110,8 @@ class UserController extends Controller
         $user=$this -> getUser();
         $pwdInDB=$user-> getPassword();
 
-          dump($pwdInDB);
-        //echo ('Pwd en Base: '.$pwdInDB);
-
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
         $pwdForm->handleRequest($request);
-
-
 
         if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
             $current_pwd=$pwdForm-> get("currentPassword")->getData();
