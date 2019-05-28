@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\Picture;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
+use App\Form\PictureType;
 use App\Form\UserType;
 use App\service\FileUploader;
 use App\service\UserManager;
