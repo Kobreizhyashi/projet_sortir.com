@@ -27,6 +27,11 @@ class OutingController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
+        if ($user->getActif()==0)
+        {
+            $this->addFlash('error', "Votre compte est désactivé, veuillez contacter l'administrateur");
+            return $this->redirectToRoute("logout");
+        }
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
