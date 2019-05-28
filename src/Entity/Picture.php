@@ -17,32 +17,16 @@ class Picture
      */
     private $id;
 
-//    /**
-//     * @ORM\Column(type="string", length=255, nullable=true)
-//     */
-    //private $path;
-
     public function getId()
     {
         return $this->id;
     }
 
-//    public function getPath()
-//    {
-//        return $this->path;
-//    }
-//
-//    public function setPath(?string $path)
-//    {
-//        $this->path = $path;
-//        return $this;
-//    }
-
     /**
      * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank(message="Please, upload the product brochure as a PDF file.")
-     * @Assert\File(mimeTypes={ "image/jpeg" })
+     * @Assert\NotBlank(message="Merci de télécharger un fichier image")
+     * @Assert\File(mimeTypes={ "image/jpeg" , "image/png" })
      */
     private $img;
 

@@ -15,12 +15,13 @@
     <section>
 
         <div class="container">
+<br>
+{#            Affichage de la photo#}
 
-            {% if picturePath is not null %}
+            {% if picture %}
             <div class="row">
                 <div class="photo center-align">
-                    {{ picturePath }}
-                    <img src="{{ asset(picturePath)}}" alt="test">
+                    <img src="{{ asset(picturePath)}}" alt="test" width="150" border="rounded">
                 </div>
             </div>
             {% endif %}

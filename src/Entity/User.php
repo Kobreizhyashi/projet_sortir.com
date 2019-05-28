@@ -317,10 +317,10 @@ class User implements UserInterface
     public function getPicturePath()
     {
         $pictureName = '';
-        $picture = $this->picture;
+        $picture = $this->getPicture();
         if($picture!=null){
             $pictureName = $picture->getImg();
         }
-        return 'upload/pictures/'.$pictureName;
+        return 'uploads/pictures/'.$pictureName;
     }
 }
