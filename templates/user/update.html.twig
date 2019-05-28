@@ -10,7 +10,7 @@
 <div class="container">
 
     <div class="row center-align">
-        <div class="col s10 offset-s1 m4 offset-m4 l4 offset-l4 form">
+        <div class="col s4 offset-s4 m4 offset-m4 l4 offset-l4 form">
             <h3 class="titre">Mon profil</h3>
             {{ form_start(userForm) }}
 
@@ -23,12 +23,6 @@
             <div class ="row center-align">
                 <a href="{{ path('modifyPwd') }}">
                     <input type="button" class="btn btn-small waves-effect waves-light red lighten-" name="modifyPwd" value="Modifier Mot de Passe">
-                </a>
-            </div>
-
-            <div class ="row center-align">
-                <a href="{{ path('user_picture') }}">
-                    <input type="button" class="btn btn-small waves-effect waves-light green lighten-" name="modifyPwd" value="Uploader une image">
                 </a>
             </div>
             {{  form_row(userForm.site) }}
@@ -51,12 +45,12 @@
 
     <div class="row container center-align">
         <br>
-        <div class ="col s5 l3 m3 offset-s1 offset-m3 offset-l3">
+        <div class ="col s4 l3 m3 offset-s2 offset-m3 offset-l3">
                 <button type="submit" class="btn waves-effect waves-light">Enregistrer</button>
             {{ form_end(userForm) }}
         </div>
 
-        <div class ="col s5 l3 m3 offset-s1 offset-m3 offset-l3">
+        <div class ="col">
             <a href="{{ path('main') }}">
                 <input type="button" class="btn waves-effect waves-light" name="annuler" value="Annuler">
             </a>

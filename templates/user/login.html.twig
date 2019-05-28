@@ -6,17 +6,17 @@
 
     <div class=" logindiv row container">
         <form  action="{{ path('login') }}" method="post">
-            <div class= "col s12 l6 xl6 offset-xl3 offset-l3 m10 offset-m1  z-depth-1 center-align" >
+            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3  z-depth-2" >
                 <label for="username">Identifiant ou Email</label>
                 <!--Symfony impose le nom _username pour gérer le mécanisme de login -->
                 <input type="text" name="_username" id="username">
                 <label for="password">Mot de passe :</label>
                 <!--Symfony impose le nom _password pour gérer le mécanisme de login -->
                 <input type="password" name="_password" id="password">
-                <div class="row center-align">
-
+                <div class="loginrow row">
+                    <div class= "col">
                         <div class="col">
-                        <button type="submit" class="btn">Connexion</button>
+                        <button type="submit" class="btn s12">Connexion</button>
                         </div >
 
                         <div class="col">
