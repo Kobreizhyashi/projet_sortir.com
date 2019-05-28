@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
 use App\Entity\Picture;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
@@ -194,43 +195,6 @@ class UserController extends Controller
 
 
         return $this->render('user/createManually.html.twig', ["userForm"=> $userForm->createView()]);
-    }
-
-
-
-    //ITERATION 2
-
-
-    /**
-     * @Route("/picture", name="user_picture")
-     * Upload de la photo de profil
-     */
-    public function uploadPicture(Request $request, EntityManagerInterface $em){
-
-
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        //Création du formulaire
-        $picture = new Picture();
-        $pictureForm = $this->createForm(PictureType::class,$picture);
-        $pictureForm->handleRequest($request)->getData();
-
-        if($pictureForm->isSubmitted()&&$pictureForm->isValid()) {
-
-            $file = $picture->getImg();
-            $fileUploader = new FileUploader('uploads/pictures');
-            $fileName = $fileUploader->upload($file);
-            $picture->setImg($fileName);
-            $this->getUser()->setPicture($picture);
-            $em->persist($picture);
-            $em->flush();
-
-            $this->addFlash('success', 'Votre photo a bien été téléchargée');
-            return $this->redirectToRoute("my_details", ['user' => $picture]);
-        }
-
-        return $this->render('user/picture.html.twig', ["picture" => $picture,
-            "pictureForm"=> $pictureForm->createView()
-        ]);
     }
 
 }
