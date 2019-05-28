@@ -6,10 +6,10 @@
     <section>
         <div class="row">
             <form class="col s12 l8 m10 offset-l2">
-                <div class="col s6">
+                <div class="col s12 l6">
                     <p> Site : </p>
                     <div class="row">
-                        <div class="input-field col s6">
+                        <div class="input-field col s12">
                             <select class="siteSelector" id="siteSelector">
                                 <option value="131" selected>Choisissez un site</option>
                                 {% for site in sites %}
@@ -21,10 +21,10 @@
                     <p> Dates : </p>
                     <div class="row">
 
-                        <div class="input-field col s6" id="dateFirst">
+                        <div class="input-field col l6 s12" id="dateFirst">
                             <input id="beginDate" type="date" class="datepicker">
                         </div>
-                        <div class="input-field col s6" id="dateLast">
+                        <div class="input-field col l6 s12" id="dateLast">
                             <input id="endDate" type="date" class="datepicker">
                         </div>
                     </div>
@@ -36,8 +36,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s6">
-                    <div class="input-field col s12">
+                <div class="col s12 l6">
+                    <div class="input-field col s12 l10">
                         <p>
                             <label>
                                 <input id="isOrganizer" type="checkbox"/>
@@ -72,9 +72,9 @@
     <section>
         <div class="row">
 
-            <div class="col s12 l10 m12 offset-l1">
+            <div class="col s12 l8 m10 offset-l2">
 
-                <table>
+                <table class="responsive-table centered">
                     <thead>
                     <tr>
                         <th>Nom de la sortie</th>
@@ -100,49 +100,51 @@
 
                         <tr>
                             <td>{{ outing.nom }}</td>
-                            <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i')}}</td>
+                            <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
                             <td>{{ outing.etat.libelle }}</td>
-                            <td> {%if  inscrit == true %}
+                            <td> {% if  inscrit == true %}
 
-                                    <div>X</div></td>
+                                <div>Oui</div>
+                            </td>
 
-                                {% endif %}
-                            <td> {%if  outing.organisateur.id != user.id %}
+                            {% endif %}
+                            <td> {% if  outing.organisateur.id != user.id %}
 
-                            {#GESTION DES BOUTONS POUR CHAQUE SORTIE#}
-                            <a href="{{path('their_details',{'id':outing.organisateur.id})}}">{{ outing.organisateur.username }}</a></td>
+                                {#GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+                                <a href="{{ path('their_details',{'id':outing.organisateur.id}) }}">{{ outing.organisateur.username }}</a>
+                            </td>
 
-                                 {% else %}
+                        {% else %}
 
                             <div>{{ outing.organisateur.username }}</div></td>
 
-                                 {% endif %}
+                            {% endif %}
 
                             <td>
 
-                                <a href="{{ path('show',{'id':outing.id})}}">Afficher</a>
+                                <a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
 
-                                 {%if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
+                                {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
 
-                                <a href="{{ path('delete',{'id':outing.id})}}">Effacer</a>
+                                    <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
 
-                                 {% endif %}
+                                {% endif %}
 
-                                 {%if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1  %}
+                                {% if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1 %}
 
-                                <a href="{{ path('subscribe',{'id':outing.id})}}">S'inscrire</a>
+                                    <a href="{{ path('subscribe',{'id':outing.id}) }}">S'inscrire</a>
 
-                                 {% endif %}
+                                {% endif %}
 
-                                 {%if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id  %}
+                                {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}
 
-                                 <a href="{{ path('renounce',{'id':outing.id})}}">Se désister</a>
+                                    <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>
 
-                                 {% endif %}
-                             </td>
-                             {# FIN GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+                                {% endif %}
+                            </td>
+                            {# FIN GESTION DES BOUTONS POUR CHAQUE SORTIE#}
 
                         </tr>
 
@@ -157,25 +159,13 @@
 
         <div class="row">
 
-            <div class="offset-l2 col l2 m4 s8">
+            <div class="offset-l2 col l2 m4 s12">
                 <a href="{{ path('add') }}">
-                    <button type="button" class="btn">Ajouter une sortie</button>
+                    <button type="button" id="addOutingButton" class="btn center-align btn-large pulse">Ajouter</button>
                 </a>
             </div>
         </div>
     </section>
-
-    {#CECI EST LE DEBUT DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
-
-
-    <a href="{{ path('delete',{'id':2})}}">TEST DELETE</a>
-    <a href="{{ path('update',{'id':2})}}">TEST UPDATE</a>
-
-
-    {#CECI EST LA FIN DU TEST DE CLEMENT POUR AFFICHER LE DETAILS DES SORTIES#}
-
-
-
 
     <script>
 
@@ -197,24 +187,42 @@
                     'isNotInscrit': $('#isNotInscrit').prop('checked'),
                     'finishedOutings': $('#finishedOutings').prop('checked')
                 },
-                assync: true,
+                async: true,
                 success: function (data) {
-                    console.log(data);
+
                     $('.tableBody').empty();
-                    $.each(data, function (key, value) {
-                        console.log(value);
-                        if (value['nom'] != undefined) {
-                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + value['nom'] + '</td> <td>' + value['dateHeureDebut'] + '</td><td>' + value['dateLimiteInscription'] + '</td> <td>' + value['nbInscriptions'] + ' / ' + value['nbInscriptionsMax'] + '</td> <td>' + value['etat'] + '</td><td>PAS FAIT</td><td>' + value['organizerName'] + '</td><td class="links" ><a href="show/' + key + '">Afficher</a></td></tr>'
+                    $.each(data, function (key, val) {
+                        if (val['nom'] != undefined) {
+                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + val['nom'] + '</td> <td>' + val['dateHeureDebut'] + '</td><td>' + val['dateLimiteInscription'] + '</td> <td>' + val['nbInscriptions'] + ' / ' + val['nbInscriptionsMax'] + '</td> <td>' + val['etat'] + '</td><td class="isInscrit' + key + '"> </td><td class="organizerName' + key + '">' + val['organizerName'] + '</td><td class="links' + key + '" ><a href="show/' + key + '">Afficher</a></td></tr>'
                             ));
-                            if (value['organizerId'] == value['currentUserID']) {
-                                console.log('Jesuis dedans')
-                                $('.links').append($(' <a href="delete/' + key + '"> Effacer</a>'));
+                            console.log(val['isInscrit'])
+                            if (val['canDelete'] === true) {
+                                $('.links' + key + '').append($(' <a href="delete/' + key + '"> Effacer</a>'));
+
+                            } else if ((val['isInscrit'] === true && val['canUnsubscribe'] === true) && val['canDelete'] === false) {
+
+                                $('.links' + key + '').append($(' <a href="renounce/' + key + '"> Se désister</a>'));
+                                $('.organizerName' + key + '').empty();
+                                $('.organizerName' + key + '').append($('<a href="user/' + val['currentUserID'] + '"> ' + val['organizerName'] + ' </a>'));
+
+
+                            } else if (val['canSubscribe'] === true && (val['isInscrit'] === false && val['canDelete'] === false)) {
+                                $('.links' + key + '').append($('<a href="subscribe/' + key + '"> S\'inscrire</a>'));
+                                $('.organizerName' + key + '').empty();
+                                $('.organizerName' + key + '').append($('<a href="user/' + val['organizerId'] + '"> ' + val['organizerName'] + ' </a>'));
+
+                            }
+
+                            if (val['isInscrit'] === true) {
+                                $('.isInscrit' + key + '').append($('<span>Oui</span>'));
+                            } else {
+                                $('.isInscrit' + key + '').append($('<span>Non</span>'));
                             }
                         }
                     });
                 }
 
-            })
+            });
 
             e.preventDefault();
 

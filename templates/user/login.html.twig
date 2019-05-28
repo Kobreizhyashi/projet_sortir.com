@@ -6,25 +6,32 @@
 
     <div class=" logindiv row container">
         <form  action="{{ path('login') }}" method="post">
-            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3" >
+            <div class= "col s12 l6 xl6 offset-xl3 offset-l3 m10 offset-m1  z-depth-1 center-align" >
                 <label for="username">Identifiant ou Email</label>
                 <!--Symfony impose le nom _username pour gérer le mécanisme de login -->
                 <input type="text" name="_username" id="username">
                 <label for="password">Mot de passe :</label>
                 <!--Symfony impose le nom _password pour gérer le mécanisme de login -->
                 <input type="password" name="_password" id="password">
-                <div class="row">
-                    <div class="col">
-                    <button type="submit" class="btn s12">Connexion</button>
+                <div class="row center-align">
+
+                        <div class="col">
+                        <button type="submit" class="btn">Connexion</button>
+                        </div >
+
+                        <div class="col">
+                            <label>
+                                <input type="checkbox" name="_nomPourSeSouvenirDeMoi"/>
+                                <span>Se souvenir de moi</span>
+                                <div>
+                                    <a href="#">Mot de passe oublié</a>
+                                </div>
+                            </label>
+                        </div>
+
                     </div>
                     <div class="col">
-                        <label>
-                            <input type="checkbox" name="_nomPourSeSouvenirDeMoi"/>
-                            <span>Se souvenir de moi</span>
-                            <div>
-                                <a href="#">Mot de passe oublié</a>
-                            </div>
-                        </label>
+                        <a type="button" href="{{ path("user_create") }}" class="btn s12 right-align">Créer un compte</a>
                     </div>
                 </div>
 

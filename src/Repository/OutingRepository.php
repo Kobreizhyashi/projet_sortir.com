@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Inscription;
 use App\Entity\Outing;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,8 +58,8 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
-
-    public function removeOuting($outing){
+    public function removeOuting($idToRemove)
+    {
         $em = $this->getEntityManager();
 
         $idToRemove = $outing->getId();
@@ -82,7 +83,6 @@ class OutingRepository extends ServiceEntityRepository
             ->leftJoin('o.etat', 'etat')
             ->leftJoin('o.site', 's')
             ->leftJoin('o.inscriptions', 'i')
-
             /// $qb->join('s.users', 'u', 'WITH', 'u.id = :currentUser')
             ->where('1 = 1');
 
@@ -110,7 +110,7 @@ class OutingRepository extends ServiceEntityRepository
                 ->setParameter('currentUser', $requestedArray['currentUserID']);
         }
         if ($requestedArray['isInscrit'] == "true") {
-                $qb->andWhere('i.user = :currentUser')
+            $qb->andWhere('i.user = :currentUser')
                 ->setParameter('currentUser', $requestedArray['currentUserID']);
         }
         if ($requestedArray['isNotInscrit'] == "true") {
@@ -125,7 +125,6 @@ class OutingRepository extends ServiceEntityRepository
         if ($requestedArray['finishedOutings'] == "true") {
             $qb->andWhere('etat.id = 5');
         }
-
 
 
         $query = $qb->getQuery();
@@ -185,6 +184,7 @@ class OutingRepository extends ServiceEntityRepository
         $returned = $query->getResult();
 
 */
+        $currentId = $requestedArray['currentUserID'];
 
 
         /** @var Outing $outing */
@@ -199,15 +199,56 @@ class OutingRepository extends ServiceEntityRepository
                 'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
                 'infosSortie' => $outing->getInfosSortie(),
                 'etat' => $outing->getEtat()->getLibelle(),
+                'etatId' => $outing->getEtat()->getId(),
                 'organizerName' => $outing->getOrganisateur()->getUsername(),
                 'organizerId' => $outing->getOrganisateur()->getId(),
-                'currentUserID' => $requestedArray['currentUserID']
+                'currentUserID' => $currentId,
+                'canDelete' => $this->canDelete($outing, $currentId),
+                'canSubscribe' => $this->canSubscribe($outing, $currentId),
+                'canUnsubscribe' => $this->canUnsubscribe($outing, $currentId),
+                'isInscrit' => $em->getRepository(Inscription::class)->getInscrit($outing, $currentId)
+
             ];
         };
         return $returned;
 
 
     }
+
+    /** @var Outing $outing */
+    public function canDelete($outing, $id)
+    {
+        if (($id == $outing->getOrganisateur()->getId()) && ($outing->getEtat()->getId() != 6)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** @var Outing $outing */
+    public function canSubscribe($outing, $id)
+    {
+        if ($this->canDelete($outing, $id) == false) {
+            if ($outing->getEtat()->getId() <= 2 && (($outing->getNbInscriptionsMax()) - ($outing->getInscriptions()->count()) >= 1)) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /** @var Outing $outing */
+    public function canUnsubscribe($outing, $id)
+    {
+        if ($this->canDelete($outing, $id) == false) {
+            if ($outing->getEtat()->getId() <= 2) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
 
 }

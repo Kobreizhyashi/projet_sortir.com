@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Outing;
+use App\Entity\Picture;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
+use App\Form\PictureType;
 use App\Form\UserType;
+use App\service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -15,6 +19,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Bundle\FixturesBundle;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
+use App\service\FileUploader;
 
 class UserController extends Controller
 {
@@ -51,25 +59,13 @@ class UserController extends Controller
     public function modifyPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user=$this -> getUser();
-        $pwdInDB=$user-> getPassword();
-
-        // dump ne fonctionne pas !!!
-        dump($pwdInDB);
-        //echo ('Pwd en Base: '.$pwdInDB);
-
         $pwdForm = $this->createForm(ModifyPwdType::class,$user);
         $pwdForm->handleRequest($request);
-
-
 
         if($pwdForm->isSubmitted() && $pwdForm->isValid()) {
             $current_pwd=$pwdForm-> get("currentPassword")->getData();
             $new_pwd = $pwdForm->get("newPassword")->getData();
-//            echo nl2br('Pwd en Base          : '.$pwdInDB);
-//            echo nl2br('courrent Pwd récupéré : '.$current_pwd);
-//            echo nl2br('new Pwd récupéré      : '.$new_pwd);
 
             $checkPass = $passwordEncoder->isPasswordValid($user, $current_pwd);
             if ($checkPass === true) {
@@ -77,9 +73,7 @@ class UserController extends Controller
                 $em->persist($user);
                 $em->flush();
                 $this->addFlash('success', 'Votre mot de passe a bien été mis à jour !');
-                return $this->render('user/modifyPwd.html.twig',
-                    ["user" => $user,
-                        "pwdForm" => $pwdForm->createView()]);
+                return $this->redirectToRoute('my_details');
             } else {
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
             }
@@ -88,56 +82,43 @@ class UserController extends Controller
     }
 
 
-
     /**
+     * mger OK
      * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
      * routing pour visionnage infos profil
      */
     public function getProfile(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $connectedUser = $this->getUser();
-
-        if($connectedUser->getId()==$id){
-            return $this->redirectToRoute('my_details', [
-                'user'=>$connectedUser
-            ]);
-        } else {
-            return $this->redirectToRoute('their_details', [
-                'id'=>$id
-            ]);
-        }
-
+        $mger = new UserManager($em);
+        $routing = $mger->filterUsersToDetails($id, $this->getUser());
+        return $this->redirectToRoute($routing);
     }
 
-
     /**
+     * mger OK
      * @Route("/myprofile", name="my_details")
      * voir les informations de son propre profil
      */
     public function myDetails(EntityManagerInterface $em)
     {
        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $this->getUser();
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
-    
 
     /**
+     * mger OK
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
      * voir les informations d'un autre profil
      */
     public function theirDetails(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $em->getRepository(User::class)->find($id);
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
 
 
@@ -166,6 +147,54 @@ class UserController extends Controller
         return $this->render('user/update.html.twig', ["user" => $user,
             "userForm"=> $userForm->createView()
         ]);
+    }
+
+    /**
+     * @Route("/user/create", name="user_create")
+     * Creer manuellement un profil
+     */
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_ANONYMOUSLY');
+
+
+        $user = new User();
+
+        $userForm = $this->createForm(UserType::class,$user);
+
+        //Comment faire en sorte que l'admin n'aie pas à entrer un mot de passe pour la validation du formulaire ???
+
+        //$userForm->get('password')->submit('');
+
+        $user->setAdministrateur(0);
+        $user->setActif(1);
+
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+
+            $user->setAdministrateur(0);
+
+            //Génération du mot de passe aléatoire
+            $userPrenom = $userForm->get("prenom")->getData();
+            $userNom = $userForm->get("nom")->getData();
+            $randNumber = random_int(1000, 9999);
+            $new_pwd = $userPrenom.$userNom.$randNumber;
+
+            $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
+            $user->setActif(1);
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre compte a bien été créé !');
+            return $this->redirectToRoute("login");
+
+        }
+
+
+        return $this->render('user/createManually.html.twig', ["userForm"=> $userForm->createView()]);
     }
 
 }

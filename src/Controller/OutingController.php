@@ -8,6 +8,7 @@ use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
 use App\Entity\User;
+use App\Entity\Ville;
 use App\Form\OutingDeleteType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -27,6 +28,11 @@ class OutingController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
+        if ($user->getActif()==0)
+        {
+            $this->addFlash('error', "Votre compte est désactivé, veuillez contacter l'administrateur");
+            return $this->redirectToRoute("logout");
+        }
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
@@ -35,8 +41,8 @@ class OutingController extends Controller
         foreach ($outings as $outing) {
             $this->updateEtats($outing);
         }
-
         $outings = $repo->findAll();
+
 
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
@@ -92,6 +98,14 @@ class OutingController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userId = $this->getUser()->getId();
 
+        // Liste des écoles
+        $repo = $em->getRepository(Ville::class);
+        $sites = $repo->findAll();
+
+
+
+
+
         $outing = new Outing();
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
         $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
@@ -110,7 +124,7 @@ class OutingController extends Controller
             return $this->redirectToRoute("main");
 
         }
-        return $this->render('sortie/add.html.twig', ["outingForm" => $outingForm->createView()]);
+        return $this->render('sortie/add.html.twig', ["outingForm" => $outingForm->createView(), "sites" => $sites]);
     }
 
 
@@ -292,11 +306,21 @@ class OutingController extends Controller
 
 
 
-        dump($returned);
-
         $response = new Response(json_encode($returned));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+
+    /**
+     * @Route("/ajaxSiteAdd", name="ajaxSiteAdd")
+     */
+    public function ajaxSiteAdd(Request $request, EntityManagerInterface $em)
+    {
+        $em->getRepository(Lieu::class)->LieuCreationManager($request, $em);
+        $response = new Response();
+        return $response;
+
     }
 
 }

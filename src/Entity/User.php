@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Picture;
 
 /**
  * @UniqueEntity(fields={"username"})
@@ -18,7 +20,12 @@ class User implements UserInterface
 {
     public function getRoles()
     {
-        return ["ROLE_USER"];
+        if($this->getAdministrateur()==1) {
+            return ["ROLE_ADMIN","ROLE_USER"];
+        }
+        else{
+            return ["ROLE_USER"];
+        }
     }
 
     public function getSalt()
@@ -72,9 +79,9 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank(message="Veuillez saisir un nom d'utilisateur")
-     * @Assert\Length(min="4", max="30",
-     *     minMessage="Le pseudo doit contenir au moins 4 caractères et au maximum 30 caractères",
-     *     maxMessage="Le pseudo doit contenir au moins 4 caractères et au maximum 30 caractères")
+     * Assert\Length(min="4", max="30",
+     *     minMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères",
+     *     maxMessage="Le nom d'utilisateur doit contenir au moins 4 caractères et au maximum 30 caractères")
      * @ORM\Column(type="string", length=30, unique=true)
      */
     private $username;
@@ -90,7 +97,7 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank(message="Veuillez saisir un mot de passe")
-     * Assert\Length(min="4", max="16",
+     *Assert\Length(min="4", max="16",
      *     minMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères",
      *     maxMessage="Le mot de passe doit contenir au moins 4 caractères et au maximum 16 caractères")
      * @ORM\Column(type="string", length=255)
@@ -112,6 +119,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Outing", mappedBy="organisateur")
      */
     private $outings;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Picture", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $picture;
 
     public function __construct()
     {
@@ -292,5 +304,27 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?Picture $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPicturePath()
+    {
+        $pictureName = '';
+        $picture = $this->getPicture();
+        if($picture!=null){
+            $pictureName = $picture->getImg();
+        }
+        return 'uploads/pictures/'.$pictureName;
     }
 }

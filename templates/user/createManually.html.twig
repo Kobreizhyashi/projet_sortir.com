@@ -1,0 +1,23 @@
+{%  extends ('layout.html.twig') %}
+
+{% block title %}Création du profil{% endblock %}
+
+{% block main %}
+
+<h3 class="titre center-align">Création du compte</h3>
+
+<div class="form col s12 l6 m10 valign-wrapper offset-l3 offset-m1 z-depth-2">
+
+    {{ form_start(userForm) }}
+
+    {{ form_widget(userForm) }}
+
+    <button type="submit" class="btn button-with-responsive waves-effect waves-light left-align">Créer le compte </button>
+    <a href="{{ path('login')}}" class="btn button-with-responsive waves-effect waves-light right-align">Annuler</a>
+
+</div>
+
+    {{ form_end(userForm) }}
+
+
+{% endblock %}
