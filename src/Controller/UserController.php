@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\Picture;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
+use App\Form\PictureType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,6 +18,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Bundle\FixturesBundle;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
+use App\service\FileUploader;
 
 class UserController extends Controller
 {
@@ -118,8 +124,16 @@ class UserController extends Controller
        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
+        $picturePath = $user->getPicturePath();
+
+        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
+        $isPicture = true;
+        if($picturePath == 'uploads/pictures/'){
+            $isPicture = false;
+        }
+
         return $this->render('user/detail.html.twig', [
-            'user'=>$user
+            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
         ]);
     }
     
@@ -133,8 +147,16 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $em->getRepository(User::class)->find($id);
+        $picturePath = $user->getPicturePath();
+
+        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
+        $isPicture = true;
+        if($picturePath == 'uploads/pictures/'){
+            $isPicture=false;
+        }
+        var_dump($isPicture);
         return $this->render('user/detail.html.twig', [
-            'user'=>$user
+            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
         ]);
     }
 
@@ -170,7 +192,7 @@ class UserController extends Controller
      * @Route("/user/create", name="user_create")
      * Creer manuellement un profil
      */
-    public function createUser(Request $request, EntityManagerInterface $em,UserPasswordEncoderInterface $passwordEncoder)
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_ANONYMOUSLY');
 
@@ -178,6 +200,10 @@ class UserController extends Controller
         $user = new User();
 
         $userForm = $this->createForm(UserType::class,$user);
+
+        //Comment faire en sorte que l'admin n'aie pas à entrer un mot de passe pour la validation du formulaire ???
+
+        //$userForm->get('password')->submit('');
 
         $user->setAdministrateur(0);
         $user->setActif(1);
@@ -189,14 +215,19 @@ class UserController extends Controller
 
             $user->setAdministrateur(0);
 
-            $new_pwd = $userForm->get("password")->getData();
+            //Génération du mot de passe aléatoire
+            $userPrenom = $userForm->get("prenom")->getData();
+            $userNom = $userForm->get("nom")->getData();
+            $randNumber = random_int(1000, 9999);
+            $new_pwd = $userPrenom.$userNom.$randNumber;
+
             $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
             $user->setActif(1);
 
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Votre compte a bien été créer !');
+            $this->addFlash('success', 'Votre compte a bien été créé !');
             return $this->redirectToRoute("login");
 
         }
@@ -204,79 +235,5 @@ class UserController extends Controller
 
         return $this->render('user/createManually.html.twig', ["userForm"=> $userForm->createView()]);
     }
-
-
-    /**
-     * @Route("/admin/gestion", name="admin_gestion")
-     * Gestion des utilisateur par un Administrateur
-     */
-    public function userManager(Request $request, EntityManagerInterface $em)
-    {
-        $user = $this->getUser();
-
-
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $repo = $em->getRepository(User::class);
-        $users = $repo->findAll();
-        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
-    }
-
-    /**
-     * @Route("/admin/supprimer/{id}", name="admin_supprimer",requirements={"id"="\d+"})
-     * Suppression des utilisateurs par un Administrateur
-     */
-    public function deleteUser(Request $request, EntityManagerInterface $em,$id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $userRepo=$this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->find($id);
-        $em->remove($user);
-        $em->flush();
-
-        $this->addFlash('success', "L'utilisateur est effacé !");
-        return $this->redirectToRoute("admin_gestion");
-
-    }
-
-
-    /**
-     * @Route("/admin/activer/{id}", name="admin_activer",requirements={"id"="\d+"})
-     * Activation des utilisateurs par un Administrateur
-     */
-    public function activateUser(Request $request, EntityManagerInterface $em,$id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $userRepo=$this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->find($id);
-        $user->setActif(1);
-        $em->merge($user);
-        $em->flush();
-
-        $this->addFlash('success', "L'utilisateur est activé !");
-        return $this->redirectToRoute("admin_gestion");
-
-    }
-
-    /**
-     * @Route("/admin/desactiver/{id}", name="admin_desactiver",requirements={"id"="\d+"})
-     * Desactivation des utilisateurs par un Administrateur
-     */
-    public function disableUser(Request $request, EntityManagerInterface $em,$id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $userRepo=$this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->find($id);
-        $user->setActif(0);
-        $em->merge($user);
-        $em->flush();
-
-        $this->addFlash('success', "L'utilisateur est desactivé !");
-        return $this->redirectToRoute("admin_gestion");
-
-    }
-
 
 }

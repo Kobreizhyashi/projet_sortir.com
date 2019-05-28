@@ -1,6 +1,7 @@
 <nav>
     <div class="nav-wrapper">
         <div class="designed-font brand-logo">Out</div>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <li><a href="{{ path('main') }}">Accueil</a></li>
@@ -21,3 +22,21 @@
         </ul>
     </div>
 </nav>
+
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="{{ path('main') }}">Accueil</a></li>
+    <li><a href="{{ path('my_details') }}">Mon profil</a></li>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <li><a href="{{ path('logout') }}" style="color: #ff5252">Déconnexion</a></li>
+    {% endif %}
+
+</ul>
+
+
+<script>
+
+    $(document).ready(function(){
+        $('.sidenav').sidenav();
+    });
+
+</script>
