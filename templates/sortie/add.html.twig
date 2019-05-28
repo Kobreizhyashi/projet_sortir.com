@@ -7,9 +7,8 @@
 
 {% block main %}
     <div class="form col s12 l8 m8 xl4  offset-l2 z-depth-2">
-
-        <label for="choice">Ville concernée :</label>
         <div class="input-field col s12">
+            <label for="choice">Ville concernée :</label>
             <select class="choice">
                 {% for ville in villes %}
                     <option value="{{ ville.id }}" id="{{ ville.id }}">{{ ville.nom }}</option>
@@ -37,21 +36,20 @@
                 </div>
 
                 <div class="input-field col s10">
+                    <input placeholder="Aux champs Elysées.. Palapalapa" id="nom" type="text" class="validate">
                     <label for="first_name">Nom</label>
-                    <input id="nom" type="text" class="validate">
-
                 </div>
                 <div class="input-field col s10">
-                    <input id="adresse" type="text"
+                    <input placeholder="Place des grands hommes (dans 10 ans)" id="adresse" type="text"
                            class="validate">
                     <label for="first_name">Adresse</label>
                 </div>
                 <div class="input-field col s10">
-                    <input id="long" type="number" class="validate" >
+                    <input placeholder="123" id="long" type="number" class="validate" >
                     <label for="first_name">Longitude</label>
                 </div>
                 <div class="input-field col s10">
-                    <input id="lat" type="number" class="validate" >
+                    <input placeholder="456" id="lat" type="number" class="validate" >
                     <label for="first_name">Latitude</label>
                 </div>
                 <button type="button" id="validePlaceCreation" style="margin-bottom: 5px;"
