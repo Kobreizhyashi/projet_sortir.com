@@ -20,8 +20,12 @@ class User implements UserInterface
 {
     public function getRoles()
     {
-        return ["ROLE_USER", "ROLE_ADMIN"];
-
+        if($this->getAdministrateur()==1) {
+            return ["ROLE_ADMIN","ROLE_USER"];
+        }
+        else{
+            return ["ROLE_USER"];
+        }
     }
 
     public function getSalt()
