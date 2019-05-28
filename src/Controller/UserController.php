@@ -149,11 +149,11 @@ class UserController extends Controller
         $picturePath = $user->getPicturePath();
 
         //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = false;
+        $isPicture = true;
         if($picturePath == 'uploads/pictures/'){
-            $isPicture=true;
+            $isPicture=false;
         }
-
+        var_dump($isPicture);
         return $this->render('user/detail.html.twig', [
             'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
         ]);
@@ -191,7 +191,7 @@ class UserController extends Controller
      * @Route("/user/create", name="user_create")
      * Creer manuellement un profil
      */
-    public function createUser(Request $request, EntityManagerInterface $em,UserPasswordEncoderInterface $passwordEncoder)
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_ANONYMOUSLY');
 
@@ -199,6 +199,10 @@ class UserController extends Controller
         $user = new User();
 
         $userForm = $this->createForm(UserType::class,$user);
+
+        //Comment faire en sorte que l'admin n'aie pas à entrer un mot de passe pour la validation du formulaire ???
+
+        //$userForm->get('password')->submit('');
 
         $user->setAdministrateur(0);
         $user->setActif(1);
@@ -210,14 +214,19 @@ class UserController extends Controller
 
             $user->setAdministrateur(0);
 
-            $new_pwd = $userForm->get("password")->getData();
+            //Génération du mot de passe aléatoire
+            $userPrenom = $userForm->get("prenom")->getData();
+            $userNom = $userForm->get("nom")->getData();
+            $randNumber = random_int(1000, 9999);
+            $new_pwd = $userPrenom.$userNom.$randNumber;
+
             $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
             $user->setActif(1);
 
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Votre compte a bien été créer !');
+            $this->addFlash('success', 'Votre compte a bien été créé !');
             return $this->redirectToRoute("login");
 
         }
