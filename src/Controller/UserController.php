@@ -8,14 +8,11 @@ use App\Form\ModifyPwdType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Doctrine\Bundle\FixturesBundle;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class UserController extends Controller
 {
