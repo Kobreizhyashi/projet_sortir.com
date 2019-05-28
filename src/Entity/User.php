@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Picture;
 
 /**
  * @UniqueEntity(fields={"username"})
@@ -310,5 +312,15 @@ class User implements UserInterface
         $this->picture = $picture;
 
         return $this;
+    }
+
+    public function getPicturePath()
+    {
+        $pictureName = '';
+        $picture = $this->picture;
+        if($picture!=null){
+            $pictureName = $picture->getImg();
+        }
+        return 'upload/pictures/'.$pictureName;
     }
 }

@@ -126,8 +126,9 @@ class UserController extends Controller
        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
+        $picturePath = $user->getPicturePath();
         return $this->render('user/detail.html.twig', [
-            'user'=>$user
+            'user'=>$user, 'picturePath'=>$picturePath
         ]);
     }
     
@@ -141,8 +142,9 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $em->getRepository(User::class)->find($id);
+        $picturePath = $user->getPicturePath();
         return $this->render('user/detail.html.twig', [
-            'user'=>$user
+            'user'=>$user, 'picturePath'=>$picturePath
         ]);
     }
 
@@ -185,44 +187,19 @@ class UserController extends Controller
      */
     public function uploadPicture(Request $request, EntityManagerInterface $em){
 
+
         $this->denyAccessUnlessGranted('ROLE_USER');
+        //Création du formulaire
         $picture = new Picture();
         $pictureForm = $this->createForm(PictureType::class,$picture);
         $pictureForm->handleRequest($request)->getData();
+
         if($pictureForm->isSubmitted()&&$pictureForm->isValid()) {
 
-
-
-
-            // $file stores the uploaded file
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-
             $file = $picture->getImg();
-
-            //Nouvelle méthode. fonctionne-t-elle ?
+            $fileUploader = new FileUploader('uploads/pictures');
             $fileName = $fileUploader->upload($file);
-            $product->setImg($fileName);
-
-
-            //Ancienne méthode qui fonctionne : !!!!!!!
-//            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-//            try {
-//                $file->move(
-//                    $this->getParameter('pictures_directory'),
-//                    $fileName
-//                );
-//            } catch (FileException $e) {
-//                // ... handle exception if something happens during file upload
-//                echo('echec de la mise dans le dossier du picture : ' . $e);
-//            }
-//
-//            // updates the 'picture' property to store the file name
-//            // instead of its contents
-//            $picture->setImg($fileName);
-
-            // ... persist the $product variable or any other work
-
-            dump('test1');
+            $picture->setImg($fileName);
             $em->persist($picture);
             $em->flush();
 
@@ -233,7 +210,6 @@ class UserController extends Controller
         return $this->render('user/picture.html.twig', ["picture" => $picture,
             "pictureForm"=> $pictureForm->createView()
         ]);
-
     }
 
     /**

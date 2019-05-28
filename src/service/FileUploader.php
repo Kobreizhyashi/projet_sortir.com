@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\services;
+namespace App\service;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

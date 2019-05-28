@@ -16,11 +16,14 @@
 
         <div class="container">
 
+            {% if picturePath is not null %}
             <div class="row">
-                <a href="{{ asset('/public/pictures/' ~ app.user.picture) }}">voir photo</a>
-                <img src="" class="photo center-align">
-                <br>
+                <div class="photo center-align">
+                    {{ picturePath }}
+                    <img src="{{ asset(picturePath)}}" alt="test">
+                </div>
             </div>
+            {% endif %}
 
             <div class="row">
                 <h3 class="titre center-align">{{ user.username }}</h3>
