@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
+use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -21,10 +22,7 @@ class OutingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('site', EntityType::class, ['label'=>'Site concerné',
-                'class' => Site::class,
-                'choice_label' => 'nom',
-                'attr'=> ['class'=>'choice']])
+
             ->add('nom', TextType::class,
                 ['label' => 'Nom de la sortie',
                     'attr' => ['placeholder' => 'Aquaponey, Curling..', 'class' => 'input-field']])
