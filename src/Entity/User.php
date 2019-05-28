@@ -80,9 +80,9 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=60)
      * * @Assert\Email(
-     *     message = "l'email '{{ value }}' n'est par valide",
+     *     message = "L'email '{{ value }}' n'est par valide",
      *     checkMX = true
      * )
      */
