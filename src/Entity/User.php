@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Inscription;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Picture;
 
 /**
  * @UniqueEntity(fields={"username"})
@@ -18,7 +20,8 @@ class User implements UserInterface
 {
     public function getRoles()
     {
-        return ["ROLE_USER"];
+        return ["ROLE_USER", "ROLE_ADMIN"];
+
     }
 
     public function getSalt()
@@ -112,6 +115,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Outing", mappedBy="organisateur")
      */
     private $outings;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Picture", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $picture;
 
     public function __construct()
     {
@@ -292,5 +300,27 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?Picture $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPicturePath()
+    {
+        $pictureName = '';
+        $picture = $this->getPicture();
+        if($picture!=null){
+            $pictureName = $picture->getImg();
+        }
+        return 'uploads/pictures/'.$pictureName;
     }
 }
