@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\ModifyPwdType;
 use App\Form\PictureType;
 use App\Form\UserType;
+use App\service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -92,72 +93,45 @@ class UserController extends Controller
     }
 
 
-
     /**
+     * mger OK
      * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
      * routing pour visionnage infos profil
      */
     public function getProfile(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $connectedUser = $this->getUser();
-
-        if($connectedUser->getId()==$id){
-            return $this->redirectToRoute('my_details', [
-                'user'=>$connectedUser
-            ]);
-        } else {
-            return $this->redirectToRoute('their_details', [
-                'id'=>$id
-            ]);
-        }
-
+        $mger = new UserManager($em);
+        $routing = $mger->filterUsersToDetails($id, $this->getUser());
+        return $this->redirectToRoute($routing);
     }
 
 
     /**
+     * mger OK
      * @Route("/myprofile", name="my_details")
      * voir les informations de son propre profil
      */
     public function myDetails(EntityManagerInterface $em)
     {
        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $this->getUser();
-        $picturePath = $user->getPicturePath();
-
-        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = true;
-        if($picturePath == 'uploads/pictures/'){
-            $isPicture = false;
-        }
-
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
     
 
     /**
+     * mger OK
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
      * voir les informations d'un autre profil
      */
     public function theirDetails(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $em->getRepository(User::class)->find($id);
-        $picturePath = $user->getPicturePath();
-
-        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = true;
-        if($picturePath == 'uploads/pictures/'){
-            $isPicture=false;
-        }
-        var_dump($isPicture);
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
 
 
