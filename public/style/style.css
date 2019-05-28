@@ -21,6 +21,8 @@ body {
     }
 }
 
+
+
 @media screen and (max-width: 640px) {
 
     h3 {
@@ -96,14 +98,26 @@ END recherche
 Add :
  */
 
+#validePlaceCreation{
+    background-color: #b2dfdb;
+    align-items: center;
+}
 
-.form {
+.adding-places {
+    background-color: #b2dfdb;
+}
+
+ .form {
     max-width: 30%;
     margin: auto;
     padding: 25px;
     margin-top: 30px;
 
 }
+
+ #buttonAddLieu {
+     margin: 5px 0px;
+ }
 
 form {
     margin: auto;
@@ -172,5 +186,8 @@ Affichage sortie
 .flash-error{
     background-color: #d32f2f ;
 }
-
+.addOutingButton {
+    display: inline-block;
+    position: relative;
+}
 
