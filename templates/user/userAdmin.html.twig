@@ -1,0 +1,58 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+
+
+{% block main %}
+
+<section>
+    <div class="row">
+        <h3 class ="center-align">Gestion des utilisateurs</h3>
+        <div class="col s12 l10 m12 offset-l1">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Téléphone</th>
+                        <th>Username</th>
+                        <th>email</th>
+                        <th>Site</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody class="tableBody">
+                {% for user2 in users %}
+                {% if user.id != user2.id %}
+                    <tr>
+                        <td>{{ user2.nom }}</td>
+                        <td>{{ user2.prenom }}</td>
+                        <td>{{ user2.telephone }}</td>
+                        <td>{{ user2.username }}</td>
+                        <td>{{ user2.email }}</td>
+                        <td>{{ user2.site.nom }}</td>
+                        <td>{% if user2.actif == 1 %}
+                            <a href="{{ path('admin_desactiver',{'id':user2.id})}}">Désactiver</a>
+                            {% else %}
+                            <a href="{{ path('admin_activer',{'id':user2.id})}}">Activer</a>
+                            {% endif %}
+                            <a href="{{ path('admin_supprimer',{'id':user2.id})}}">Supprimer</a></td>
+
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+ {% endblock  %}

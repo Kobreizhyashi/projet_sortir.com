@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Picture;
+use App\Entity\Outing;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
-use App\Form\PictureType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,10 +16,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Bundle\FixturesBundle;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
-use App\service\FileUploader;
 
 class UserController extends Controller
 {
@@ -123,16 +118,8 @@ class UserController extends Controller
        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
-        $picturePath = $user->getPicturePath();
-
-        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = true;
-        if($picturePath == 'uploads/pictures/'){
-            $isPicture = false;
-        }
-
         return $this->render('user/detail.html.twig', [
-            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
+            'user'=>$user
         ]);
     }
     
@@ -146,16 +133,8 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $em->getRepository(User::class)->find($id);
-        $picturePath = $user->getPicturePath();
-
-        //générer un booléen permettant de ne pas afficher l'image si elle n'existe pas
-        $isPicture = true;
-        if($picturePath == 'uploads/pictures/'){
-            $isPicture=false;
-        }
-        var_dump($isPicture);
         return $this->render('user/detail.html.twig', [
-            'user'=>$user, 'picturePath'=>$picturePath, 'picture'=>$isPicture
+            'user'=>$user
         ]);
     }
 
@@ -227,40 +206,77 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @Route("/admin/gestion", name="admin_gestion")
+     * Gestion des utilisateur par un Administrateur
+     */
+    public function userManager(Request $request, EntityManagerInterface $em)
+    {
+        $user = $this->getUser();
 
-    //ITERATION 2
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $repo = $em->getRepository(User::class);
+        $users = $repo->findAll();
+        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
+    }
+
+    /**
+     * @Route("/admin/supprimer/{id}", name="admin_supprimer",requirements={"id"="\d+"})
+     * Suppression des utilisateurs par un Administrateur
+     */
+    public function deleteUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $em->remove($user);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur est effacé !");
+        return $this->redirectToRoute("admin_gestion");
+
+    }
 
 
     /**
-     * @Route("/picture", name="user_picture")
-     * Upload de la photo de profil
+     * @Route("/admin/activer/{id}", name="admin_activer",requirements={"id"="\d+"})
+     * Activation des utilisateurs par un Administrateur
      */
-    public function uploadPicture(Request $request, EntityManagerInterface $em){
+    public function activateUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $user->setActif(1);
+        $em->merge($user);
+        $em->flush();
 
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        //Création du formulaire
-        $picture = new Picture();
-        $pictureForm = $this->createForm(PictureType::class,$picture);
-        $pictureForm->handleRequest($request)->getData();
+        $this->addFlash('success', "L'utilisateur est activé !");
+        return $this->redirectToRoute("admin_gestion");
 
-        if($pictureForm->isSubmitted()&&$pictureForm->isValid()) {
-
-            $file = $picture->getImg();
-            $fileUploader = new FileUploader('uploads/pictures');
-            $fileName = $fileUploader->upload($file);
-            $picture->setImg($fileName);
-            $this->getUser()->setPicture($picture);
-            $em->persist($picture);
-            $em->flush();
-
-            $this->addFlash('success', 'Votre photo a bien été téléchargée');
-            return $this->redirectToRoute("my_details", ['user' => $picture]);
-        }
-
-        return $this->render('user/picture.html.twig', ["picture" => $picture,
-            "pictureForm"=> $pictureForm->createView()
-        ]);
     }
+
+    /**
+     * @Route("/admin/desactiver/{id}", name="admin_desactiver",requirements={"id"="\d+"})
+     * Desactivation des utilisateurs par un Administrateur
+     */
+    public function disableUser(Request $request, EntityManagerInterface $em,$id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $userRepo=$this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        $user->setActif(0);
+        $em->merge($user);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur est desactivé !");
+        return $this->redirectToRoute("admin_gestion");
+
+    }
+
 
 }
