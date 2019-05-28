@@ -8,6 +8,7 @@ use App\Entity\Lieu;
 use App\Entity\Outing;
 use App\Entity\Site;
 use App\Entity\User;
+use App\Entity\Ville;
 use App\Form\OutingDeleteType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;

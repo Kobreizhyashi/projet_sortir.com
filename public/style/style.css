@@ -5,6 +5,37 @@ Navbar
 body {
     font-family: 'Montserrat', sans-serif;
 }
+@media screen and (max-width: 1060px) {
+
+    .button-with-responsive
+    {
+
+        align-content: center;
+    }
+    .form {
+        width: 80%;
+    }
+    .btn {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
+
+
+
+@media screen and (max-width: 640px) {
+
+    h3 {
+
+        font-size: 2.20em;
+
+    }
+    body {
+        box-shadow: none;
+    }
+
+
+}
 .designed-font {
     font-family: 'Pacifico', cursive;
     padding-left: 8px;
@@ -13,7 +44,11 @@ body {
     background-color: #4db6ac;
 
 }
+button, html {
 
+    webkit-appearance: button;
+
+}
 /**
 End Navbar
  */
@@ -21,6 +56,11 @@ End Navbar
 /**
 Recherche :
  */
+ul#mobile-demo.sidenav{
+    opacity: .88;
+    width: 50%;
+    text-align: center;
+}
 
 
 .recherche {
@@ -39,6 +79,8 @@ Recherche :
     padding-top: 10px;
     align-content: center;
     width: 100%;
+    margin: 15px;
+    padding: auto;
 }
 
 section {
@@ -56,14 +98,26 @@ END recherche
 Add :
  */
 
+#validePlaceCreation{
+    background-color: #b2dfdb;
+    align-items: center;
+}
 
-.form {
+.adding-places {
+    background-color: #b2dfdb;
+}
+
+ .form {
     max-width: 30%;
     margin: auto;
     padding: 25px;
     margin-top: 30px;
 
 }
+
+ #buttonAddLieu {
+     margin: 5px 0px;
+ }
 
 form {
     margin: auto;
@@ -72,6 +126,15 @@ form {
 @media screen and (max-width: 640px) {
     .form {
         max-width: 100%;
+    }
+
+}
+
+@media screen and (min-width: 640px) {
+    ul#mobile-demo.sidenav{
+        opacity: .88;
+        width: 25%;
+        text-align: center;
     }
 }
 
@@ -123,3 +186,8 @@ Affichage sortie
 .flash-error{
     background-color: #d32f2f ;
 }
+.addOutingButton {
+    display: inline-block;
+    position: relative;
+}
+

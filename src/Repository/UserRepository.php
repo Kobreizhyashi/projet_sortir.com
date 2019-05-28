@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Inscription;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -20,6 +22,16 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    public function insertUser($user, EntityManagerInterface $em) {
+
+        $newuser = new User();
+        $newuser->setDateInscription(new \DateTime());
+        $newuser->setUser($user);
+        $em->persist($newuser);
+        $em->flush();
+
     }
 
     /**
