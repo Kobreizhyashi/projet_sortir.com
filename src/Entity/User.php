@@ -118,6 +118,11 @@ class User implements UserInterface
      */
     private $outings;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Picture", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -297,5 +302,27 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?Picture $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPicturePath()
+    {
+        $pictureName = '';
+        $picture = $this->getPicture();
+        if($picture!=null){
+            $pictureName = $picture->getImg();
+        }
+        return 'uploads/pictures/'.$pictureName;
     }
 }
