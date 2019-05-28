@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\Picture;
 use App\Entity\Site;
 use App\Entity\Upload;
 use App\Entity\User;
 use App\Form\ModifyPwdType;
+use App\Form\PictureType;
 use App\Form\UploadType;
 use App\Form\UserType;
+use App\service\FileUploader;
+use App\service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,54 +141,44 @@ class UserController extends Controller
 
 
     /**
+     * mger OK
      * @Route("/getprofile/{id}", name="get_profile", requirements={"id"="\d+"})
      * routing pour visionnage infos profil
      */
     public function getProfile(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        $connectedUser = $this->getUser();
-
-        if($connectedUser->getId()==$id){
-            return $this->redirectToRoute('my_details', [
-                'user'=>$connectedUser
-            ]);
-        } else {
-            return $this->redirectToRoute('their_details', [
-                'id'=>$id
-            ]);
-        }
-
+        $mger = new UserManager($em);
+        $routing = $mger->filterUsersToDetails($id, $this->getUser());
+        return $this->redirectToRoute($routing);
     }
 
 
     /**
+     * mger OK
      * @Route("/myprofile", name="my_details")
      * voir les informations de son propre profil
      */
     public function myDetails(EntityManagerInterface $em)
     {
-       $this->denyAccessUnlessGranted('ROLE_USER');
-
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
-    
+
 
     /**
+     * mger OK
      * @Route("/user/{id}", name="their_details", requirements={"id"="\d+"})
      * voir les informations d'un autre profil
      */
     public function theirDetails(EntityManagerInterface $em, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $em->getRepository(User::class)->find($id);
-        return $this->render('user/detail.html.twig', [
-            'user'=>$user
-        ]);
+        $mger = new UserManager($em);
+        return $this->render('user/detail.html.twig', $mger->isPicture($user));
     }
 
 
@@ -327,5 +321,40 @@ class UserController extends Controller
 
     }
 
+
+    //ITERATION 2
+
+
+    /**
+     * @Route("/picture", name="user_picture")
+     * Upload de la photo de profil
+     */
+    public function uploadPicture(Request $request, EntityManagerInterface $em){
+
+
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        //Création du formulaire
+        $picture = new Picture();
+        $pictureForm = $this->createForm(PictureType::class,$picture);
+        $pictureForm->handleRequest($request)->getData();
+
+        if($pictureForm->isSubmitted()&&$pictureForm->isValid()) {
+
+            $file = $picture->getImg();
+            $fileUploader = new FileUploader('uploads/pictures');
+            $fileName = $fileUploader->upload($file);
+            $picture->setImg($fileName);
+            $this->getUser()->setPicture($picture);
+            $em->persist($picture);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre photo a bien été téléchargée');
+            return $this->redirectToRoute("my_details", ['user' => $picture]);
+        }
+
+        return $this->render('user/picture.html.twig', ["picture" => $picture,
+            "pictureForm"=> $pictureForm->createView()
+        ]);
+    }
 
 }
