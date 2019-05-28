@@ -15,6 +15,16 @@
     <section>
 
         <div class="container">
+<br>
+{#            Affichage de la photo#}
+
+            {% if picture %}
+            <div class="row">
+                <div class="photo center-align">
+                    <img src="{{ asset(picturePath)}}" alt="test" width="150" border="rounded">
+                </div>
+            </div>
+            {% endif %}
 
             <div class="row">
                 <h3 class="titre center-align">{{ user.username }}</h3>
