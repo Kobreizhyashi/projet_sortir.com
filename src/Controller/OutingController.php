@@ -93,6 +93,30 @@ class OutingController extends Controller
     }
 
     /**
+     * @Route("/publish/{id}", name="publish")
+     */
+    public function publish(EntityManagerInterface $em, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $outing=$em->getRepository(Outing::class)->find($id);
+
+        $ouverte = $this->getDoctrine()
+            ->getRepository(Etat::class)
+            ->find(2);
+
+        $outing->setEtat($ouverte);
+        $em->persist($outing);
+        $em->flush();
+
+        $this->addFlash('success', 'Votre sortie est publiée !');
+        return $this->redirectToRoute("my_details");
+
+    }
+
+
+
+    /**
      * @Route("/add", name="add")
      */
     public function createOuting(EntityManagerInterface $em, Request $request)
@@ -237,7 +261,7 @@ class OutingController extends Controller
 
         $archiveThreshold = 43200;
 
-        if ($outing->getEtat() != $annulee) {
+        if($outing->getEtat()!=$annulee && $outing->getEtat()!=$creee){
             if ($now > $debut && $now < $fin) {
                 $outing->setEtat($enCours);
                 //ajout er elseif pour cloture

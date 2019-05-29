@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscription;
 use App\Entity\Outing;
 use App\Entity\Picture;
 use App\Entity\Site;
@@ -164,7 +165,15 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         $mger = new UserManager($em);
-        return $this->render('user/detail.html.twig', $mger->isPicture($user));
+
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findBy(['organisateur' => $user]);
+
+
+        $mgerParams = $mger->isPicture($user);
+        $routing = array_merge ($mgerParams, ['outings'=>$outings]);
+
+        return $this->render('user/detail.html.twig', $routing);
     }
 
 
