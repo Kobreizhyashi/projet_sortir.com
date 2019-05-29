@@ -23,6 +23,25 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 class OutingController extends Controller
 {
     /**
+     * @Route("/sortieadmin", name="sortieadmin")
+     *
+     **/
+    public function outingUpdateAdmin(EntityManagerInterface $em) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user = $this->getUser();
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findAll();
+        $repo = $em->getRepository(Site::class);
+        $sites = $repo->findAll();
+
+        return $this->render('sortie/sortieadmin.html.twig', [
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
+        ]);
+    }
+
+
+    /**
      * @Route("/", name="main")
      */
     public function index(EntityManagerInterface $em)
