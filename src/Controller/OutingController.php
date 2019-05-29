@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 
 class OutingController extends Controller
@@ -29,8 +30,7 @@ class OutingController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         $site = $em->getRepository(Site::class)->find($this->getUser()->getSite());
-        if ($user->getActif()==0)
-        {
+        if ($user->getActif() == 0) {
             $this->addFlash('error', "Votre compte est désactivé, veuillez contacter l'administrateur");
             return $this->redirectToRoute("logout");
         }
@@ -49,7 +49,7 @@ class OutingController extends Controller
         $sites = $repo->findAll();
 
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user' => $user
         ]);
     }
 
@@ -61,7 +61,7 @@ class OutingController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $OutingRepo = $this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
 
         $em->getRepository(Inscription::class)->subscribeManager($Outing, $this->getUser(), $em);
@@ -78,10 +78,10 @@ class OutingController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $InscriptionRepo=$this->getDoctrine()->getRepository(Inscription::class);
-        $Inscription= $InscriptionRepo->findOneBy(array('outing'=>$id,'user'=>$this->getUser()->getId()));
+        $InscriptionRepo = $this->getDoctrine()->getRepository(Inscription::class);
+        $Inscription = $InscriptionRepo->findOneBy(array('outing' => $id, 'user' => $this->getUser()->getId()));
 
-        if(empty($Inscription)){
+        if (empty($Inscription)) {
             throw $this->createNotFoundException("This outing do not exists !");
         }
         $em->remove($Inscription);
@@ -103,9 +103,6 @@ class OutingController extends Controller
         // Liste des villes
         $repo = $em->getRepository(Ville::class);
         $villes = $repo->findAll();
-
-
-
 
 
         $outing = new Outing();
@@ -134,33 +131,34 @@ class OutingController extends Controller
     /**
      * @Route("/show/{id}", name="show",requirements={"id":"\d+"})
      */
-    public function showOuting($id) {
+    public function showOuting($id)
+    {
 
 
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userId = $this->getUser()->getId();
 
-        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $OutingRepo = $this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
 
-        $InscriptionRepo=$this->getDoctrine()->getRepository(Inscription::class);
-        $Inscription= $InscriptionRepo->findBy(array('outing'=>$id));
+        $InscriptionRepo = $this->getDoctrine()->getRepository(Inscription::class);
+        $Inscription = $InscriptionRepo->findBy(array('outing' => $id));
 
-        if(empty($Outing)){
+        if (empty($Outing)) {
             throw $this->createNotFoundException("This outing do not exists !");
         }
 
-        return $this->render('sortie/afficher_sortie.html.twig', array("outing"=>$Outing,"users"=>$Inscription,"userId"=>$userId));
+        return $this->render('sortie/afficher_sortie.html.twig', array("outing" => $Outing, "users" => $Inscription, "userId" => $userId));
     }
 
     /**
      * @Route("/update/{id}", name="update",requirements={"id":"\d+"})
      */
-    public function update(Request $request, $id,EntityManagerInterface $em)
+    public function update(Request $request, $id, EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $OutingRepo = $this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
 
         $outingForm = $this->createForm(OutingType::class, $Outing);
@@ -182,24 +180,24 @@ class OutingController extends Controller
     /**
      * @Route("/delete/{id}", name="delete",requirements={"id":"\d+"})
      */
-    public function delete($id,Request $request,EntityManagerInterface $em)
+    public function delete($id, Request $request, EntityManagerInterface $em)
     {
 
-        $OutingRepo=$this->getDoctrine()->getRepository(Outing::class);
+        $OutingRepo = $this->getDoctrine()->getRepository(Outing::class);
         $Outing = $OutingRepo->find($id);
 
-        $EtatRepo=$this->getDoctrine()->getRepository(Etat::class);
+        $EtatRepo = $this->getDoctrine()->getRepository(Etat::class);
         $Etat = $EtatRepo->find(6);
 
-        if(empty($Etat)){
+        if (empty($Etat)) {
             throw $this->createNotFoundException("This etat do not exists !");
         }
 
-        if(empty($Outing)){
+        if (empty($Outing)) {
             throw $this->createNotFoundException("This outing do not exists !");
         }
 
-        $outingForm = $this->createForm(OutingDeleteType::class,$Outing);
+        $outingForm = $this->createForm(OutingDeleteType::class, $Outing);
         $outingForm->handleRequest($request);
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
@@ -212,7 +210,7 @@ class OutingController extends Controller
 
         }
 
-        return $this->render('sortie/annuler_sortie.html.twig',["outing"=>$Outing,'outingForm'=>$outingForm->createView()]);
+        return $this->render('sortie/annuler_sortie.html.twig', ["outing" => $Outing, 'outingForm' => $outingForm->createView()]);
     }
 
     /**
@@ -227,7 +225,7 @@ class OutingController extends Controller
 
         $clone = clone $outing->getDateHeureDebut();
 
-        $fin = $clone->add(new \DateInterval('PT'.$duree.'M'));
+        $fin = $clone->add(new \DateInterval('PT' . $duree . 'M'));
 
         $repoEtat = $this->getDoctrine()->getRepository(Etat::class);
         $creee = $repoEtat->find(1);
@@ -239,20 +237,20 @@ class OutingController extends Controller
 
         $archiveThreshold = 43200;
 
-        if($outing->getEtat()!=$annulee){
+        if ($outing->getEtat() != $annulee) {
             if ($now > $debut && $now < $fin) {
                 $outing->setEtat($enCours);
                 //ajout er elseif pour cloture
-            } elseif ($now > $dateLimiteInscription && $now < $debut){
+            } elseif ($now > $dateLimiteInscription && $now < $debut) {
                 $outing->setEtat($cloturee);
-            } elseif ($now < $debut){
+            } elseif ($now < $debut) {
                 $outing->setEtat($ouverte);
-            } elseif ($now > $fin){
+            } elseif ($now > $fin) {
                 $cloneFin = clone $fin;
-                $cloneFin->add(new \DateInterval('PT'.$archiveThreshold.'M'));
-                if($now>$cloneFin){
+                $cloneFin->add(new \DateInterval('PT' . $archiveThreshold . 'M'));
+                if ($now > $cloneFin) {
                     $this->archive($outing);
-                } else{
+                } else {
                     $outing->setEtat($passee);
                 }
             }
@@ -261,7 +259,8 @@ class OutingController extends Controller
     }
 
     //Attention, la suppression se fait manifestement après l'affichage
-    public function archive($outing){
+    public function archive($outing)
+    {
         echo('suppression');
         var_dump($outing->getNom());
         $outingRepo = $this->getDoctrine()->getRepository(Outing::class);
@@ -298,7 +297,7 @@ class OutingController extends Controller
         $requestedArray['siteValue'] = $request->request->get('siteValue');
         $requestedArray['dateFirst'] = $request->request->get('dateFirst');
         $requestedArray['dateLast'] = $request->request->get('dateLast');
-       $requestedArray['stringSearch'] = $request->request->get('stringSearch');
+        $requestedArray['stringSearch'] = $request->request->get('stringSearch');
         $requestedArray['isOrganizer'] = $request->request->get('isOrganizer');
         $requestedArray['isInscrit'] = $request->request->get('isInscrit');
         $requestedArray['isNotInscrit'] = $request->request->get('isNotInscrit');
@@ -306,7 +305,6 @@ class OutingController extends Controller
         $requestedArray['currentUserID'] = $this->getUser()->getId();
 
         $returned = $em->getRepository(Outing::class)->getPersonalResearch($requestedArray, $em);
-
 
 
         $response = new Response(json_encode($returned));
@@ -318,12 +316,32 @@ class OutingController extends Controller
     /**
      * @Route("/ajaxSiteAdd", name="ajaxSiteAdd")
      */
-    public function ajaxSiteAdd(Request $request, EntityManagerInterface $em)
+    public function ajaxSiteAdd(Request $req, EntityManagerInterface $em)
     {
 
-        $em->getRepository(Lieu::class)->LieuCreationManager($request, $em);
 
-        $response = new Response();
+        if ($req->request->get('ville') != '' && $req->request->get('cpo') != '') {
+            $ville = new Ville();
+            $ville->setNom($req->request->get('ville'));
+            $ville->setCodePostal($req->request->get('cpo'));
+
+            $em->getRepository(Ville::class)->VilleCreationManager($ville, $em);
+            $em->getRepository(Lieu::class)->LieuCreationManagerWithNewCity($ville, $req, $em);
+
+            $ville = $em->getRepository(Ville::class)->find($ville);
+
+            $return = [
+                'id' => $ville->getId(),
+                'nom' => $ville->getNom()
+            ];
+
+            $response = new Response(json_encode($return));
+
+        } else {
+            $em->getRepository(Lieu::class)->LieuCreationManager($req, $em);
+            $response = new Response();
+        }
+
 
         return $response;
 
