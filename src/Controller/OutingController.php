@@ -157,8 +157,6 @@ class OutingController extends Controller
      */
     public function showOuting($id)
     {
-
-
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userId = $this->getUser()->getId();
 
@@ -261,7 +259,7 @@ class OutingController extends Controller
 
         $archiveThreshold = 43200;
 
-        if ($outing->getEtat() != $annulee) {
+        if ($outing->getEtat() != $annulee && $outing->getEtat() != $creee) {
             if ($now > $debut && $now < $fin) {
                 $outing->setEtat($enCours);
                 //ajout er elseif pour cloture
