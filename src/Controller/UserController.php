@@ -71,7 +71,7 @@ class UserController extends Controller
             $file->move($this->getParameter('userdata_directory'),$fileName);
             $upload->setName($fileName);
 
-            $this->addFlash('success', 'Votre fichier a bien été chargé sous le répertoire -uploads- !');
+            $this->addFlash('success', 'Votre fichier a bien été chargé sous le répertoire "var/uploads"');
 
             return $this->redirectToRoute('admin_gestion');
 
