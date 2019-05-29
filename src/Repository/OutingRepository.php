@@ -58,12 +58,10 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
+    //Problème ici ?
     public function removeOuting($idToRemove)
     {
         $em = $this->getEntityManager();
-
-        $idToRemove = $outing->getId();
-
         $dql = "DELETE
                 FROM App\Entity\Outing o
                 WHERE o.id = :idToRemove";
@@ -84,7 +82,7 @@ class OutingRepository extends ServiceEntityRepository
             ->leftJoin('o.site', 's')
             ->leftJoin('o.inscriptions', 'i')
             /// $qb->join('s.users', 'u', 'WITH', 'u.id = :currentUser')
-            ->where('1 = 1');
+            ->where('etat.id != 1');
 
 
         if ($requestedArray['siteValue'] != '' && $requestedArray['siteValue'] != NULL && $requestedArray['siteValue'] != 131) {
@@ -127,12 +125,14 @@ class OutingRepository extends ServiceEntityRepository
         }
 
 
+
         $query = $qb->getQuery();
         $returned = $query->getResult();
 
+
+
+
         /*
-
-
 
         =================== A GARDER ==========================
 
@@ -248,7 +248,5 @@ class OutingRepository extends ServiceEntityRepository
             return false;
         }
     }
-
-
 
 }

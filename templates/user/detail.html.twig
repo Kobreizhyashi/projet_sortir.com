@@ -85,7 +85,7 @@
             </div>
 
 
-            {#section modulaire en fonction de si l'on affiche son propre profil ou un autre profil#}
+            {#section modulaire avec bouton "modifier profil" si l'on affiche son propre profil#}
             <div class="row">
                 {% if user.id == app.user.id %}
                     <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
@@ -108,6 +108,120 @@
                 {% endif %}
             </div>
             {#Fin section modulaire#}
+
+            {#section modulaire avec affichage des sorties organisées par l'utilisateur ou auxquelles il participe si l'on affiche son propre profil#}
+            {% if user.id == app.user.id %}
+                <section>
+                    <div class="row">
+                        <br>
+                        <h5 class="titre center-align">Sorties dont Vous êtes l'organisateur</h5>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col s12 l8 m10 offset-l2">
+
+                            <table class="responsive-table centered">
+                                <thead>
+                                <tr>
+                                    <th>Nom de la sortie</th>
+                                    <th>Debut de la sortie</th>
+                                    <th>Clôture</th>
+                                    <th>Inscrits/places</th>
+                                    <th>Etat</th>
+                                    <th>Inscrit</th>
+                                    <th>Organisateur</th>
+                                    <th>Actions</th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody class="tableBody">
+                                {% for outing in outings %}
+                                    {% set inscrit = false %}
+                                    {% for inscription in  outing.inscriptions %}
+                                        {% if user.inscriptions.contains(inscription) %}
+                                            {% set inscrit = true %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <tr>
+                                        <td>{{ outing.nom }}</td>
+                                        <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</td>
+                                        <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
+                                        <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
+                                        <td>{{ outing.etat.libelle }}</td>
+                                        <td> {% if  inscrit == true %}
+
+                                            <div>Oui</div>
+                                        </td>
+
+                                        {% endif %}
+                                        <td> {% if  outing.organisateur.id != user.id %}
+
+{#                                            GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+                                            <a href="{{ path('their_details',{'id':outing.organisateur.id}) }}">{{ outing.organisateur.username }}</a>
+                                        </td>
+
+                                    {% else %}
+
+                                        <div>{{ outing.organisateur.username }}</div></td>
+
+                                        {% endif %}
+
+                                        <td>
+
+                                            <a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
+
+                                            {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
+
+                                                <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
+
+                                            {% endif %}
+
+                                            {% if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1 %}
+
+                                                <a href="{{ path('subscribe',{'id':outing.id}) }}">S'inscrire</a>
+
+                                            {% endif %}
+
+                                            {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}
+
+                                                <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>
+
+                                            {% endif %}
+                                            {% if  inscrit == true and outing.etat.id == 1 and outing.organisateur.id == user.id %}
+
+                                                <a href="{{ path('publish',{'id':outing.id}) }}">Publier</a>
+
+                                            {% endif %}
+                                        </td>
+{#                                         FIN GESTION DES BOUTONS POUR CHAQUE SORTIE#}
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+
+{#                    <div class="row">#}
+
+{#                        <div class="offset-l2 col l2 m4 s12">#}
+{#                            <a href="{{ path('add') }}">#}
+{#                                <button type="button" id="addOutingButton" class="btn center-align btn-large pulse">Ajouter</button>#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </div>#}
+                </section>
+            {% endif %}
+            {#Fin section modulaire#}
+
+
         </div>
     </section>
 {% endblock %}
