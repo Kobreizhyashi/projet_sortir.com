@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 class OutingController extends Controller
 {
     /**
-     * @Route("/sortieadmin", name="sortieadmin")
+     * @Route("/admin/sortieadmin", name="admin_sortie")
      *
      **/
     public function outingUpdateAdmin(EntityManagerInterface $em) {

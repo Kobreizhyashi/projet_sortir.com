@@ -26,7 +26,7 @@ class Picture
      * @ORM\Column(type="string")
      *
      * @Assert\NotBlank(message="Merci de télécharger un fichier image")
-     * @Assert\File(mimeTypes={ "image/jpeg" , "image/png" })
+     * @Assert\File(mimeTypes={ "image/jpeg" , "image/png", "image/gif" })
      */
     private $img;
 
