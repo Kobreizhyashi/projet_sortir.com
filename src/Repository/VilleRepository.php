@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Lieu;
 use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Ville|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +50,11 @@ class VilleRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function VilleCreationManager(Ville $ville, EntityManagerInterface $em) {
+
+        $em->persist($ville);
+        $em->flush();
+
+    }
+
 }
