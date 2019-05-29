@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Outing;
 use App\Entity\Picture;
 use App\Entity\Site;
 use App\Entity\Upload;
 use App\Entity\User;
+use App\Form\CreateUserManuallyType;
 use App\Form\ModifyPwdType;
 use App\Form\PictureType;
 use App\Form\UploadType;
@@ -33,7 +35,7 @@ class UserController extends Controller
      */
     public function insertFile(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em) {
 
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $upload =new Upload();
         $fileForm = $this->createForm(UploadType::class,$upload);
         $fileForm->handleRequest($request);
@@ -71,11 +73,11 @@ class UserController extends Controller
 
             $this->addFlash('success', 'Votre fichier a bien été chargé sous le répertoire -uploads- !');
 
-            return $this->redirectToRoute('my_details');
+            return $this->redirectToRoute('admin_gestion');
 
         }
 
-        return $this->render('user/insertFile.html.twig',['fileForm'=> $fileForm->createView()]);
+        return $this->render('user/insertfile.html.twig',['fileForm'=> $fileForm->createView()]);
     }
 
 
@@ -136,7 +138,7 @@ class UserController extends Controller
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
             }
         }
-        return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
+        return $this->render('user/modifypwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
     }
 
 
@@ -166,8 +168,12 @@ class UserController extends Controller
         $user = $this->getUser();
         $mger = new UserManager($em);
 
+        $creee = $this->getDoctrine()
+            ->getRepository(Etat::class)
+            ->find(1);
+
         $repo = $em->getRepository(Outing::class);
-        $outings = $repo->findBy(['organisateur' => $user]);
+        $outings = $repo->findBy(['organisateur' => $user, 'etat' => $creee]);
 
 
         $mgerParams = $mger->isPicture($user);
@@ -226,30 +232,31 @@ class UserController extends Controller
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_ANONYMOUSLY');
 
-
         $user = new User();
 
-        $userForm = $this->createForm(UserType::class,$user);
-
-        $user->setAdministrateur(0);
-        $user->setActif(1);
+        $userForm = $this->createForm(CreateUserManuallyType::class,$user);
 
         $userForm->handleRequest($request);
 
-        if ($userForm->isSubmitted() && $userForm->isValid()) {
+        if ($userForm->isSubmitted()) {
 
+
+            //Affectation par défaut sur site de Nantes
+            $repo = $em->getRepository(Site::class);
+            $siteNantes = $repo->find('2');
+            $user->setSite($siteNantes);
 
             $user->setAdministrateur(0);
-
-            $new_pwd = $userForm->get("password")->getData();
-            $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
             $user->setActif(1);
+            $user->setUsername($userForm->get('prenom')->getData().' '.$userForm->get('nom')->getData());
+            $password =$userForm->get('prenom')->getData().$userForm->get('nom')->getData().random_int(1000,9999);
+            $user-> setPassword($passwordEncoder->encodePassword($user, $password));
 
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Votre compte a bien été créer !');
-            return $this->redirectToRoute("login");
+            $this->addFlash('success', 'Le compte a bien été créé !');
+            return $this->redirectToRoute("admin_gestion");
 
         }
 
@@ -270,7 +277,7 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $repo = $em->getRepository(User::class);
         $users = $repo->findAll();
-        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
+        return $this->render('user/useradmin.html.twig',['user'=>$user,'users'=>$users]);
     }
 
     /**
