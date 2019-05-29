@@ -99,7 +99,8 @@
                         {% endfor %}
 
                         <tr>
-                            <td>{{ outing.nom }}</td>
+                            <td><a href="{{ path('show',{'id':outing.id}) }}">
+                                {{ outing.nom }}</a></td>
                             <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
@@ -123,9 +124,6 @@
                             {% endif %}
 
                             <td>
-
-                                <a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
-
                                 {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
 
                                     <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
@@ -193,7 +191,7 @@
                     $('.tableBody').empty();
                     $.each(data, function (key, val) {
                         if (val['nom'] != undefined) {
-                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td>' + val['nom'] + '</td> <td>' + val['dateHeureDebut'] + '</td><td>' + val['dateLimiteInscription'] + '</td> <td>' + val['nbInscriptions'] + ' / ' + val['nbInscriptionsMax'] + '</td> <td>' + val['etat'] + '</td><td class="isInscrit' + key + '"> </td><td class="organizerName' + key + '">' + val['organizerName'] + '</td><td class="links' + key + '" ><a href="show/' + key + '">Afficher</a></td></tr>'
+                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td><a href="show/' + key + '">' + val['nom'] + '</a></td> <td>' + val['dateHeureDebut'] + '</td><td>' + val['dateLimiteInscription'] + '</td> <td>' + val['nbInscriptions'] + ' / ' + val['nbInscriptionsMax'] + '</td> <td>' + val['etat'] + '</td><td class="isInscrit' + key + '"> </td><td class="organizerName' + key + '">' + val['organizerName'] + '</td><td class="links' + key + '" ></td></tr>'
                             ));
                             console.log(val['isInscrit'])
                             if (val['canDelete'] === true) {
@@ -211,6 +209,8 @@
                                 $('.organizerName' + key + '').empty();
                                 $('.organizerName' + key + '').append($('<a href="user/' + val['organizerId'] + '"> ' + val['organizerName'] + ' </a>'));
 
+                            } else {
+                                $('.links' + key + '').append($('<p>-</p>'));
                             }
 
                             if (val['isInscrit'] === true) {
