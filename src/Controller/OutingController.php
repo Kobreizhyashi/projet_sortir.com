@@ -153,8 +153,13 @@ class OutingController extends Controller
         $repo = $em->getRepository(Ville::class);
         $villes = $repo->findAll();
 
+        $dateDebut = new \DateTime('now');
+        $dateDebut->add(new \DateInterval('PT' . 1440 . 'M'));
+        $dateDebut->setTime(18, 0);
 
         $outing = new Outing();
+        $outing->setDateHeureDebut($dateDebut);
+        $outing->setDateLimiteInscription($dateDebut);
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
         $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
         $outing->setSite($em->getRepository(Site::class)->find($this->getUser()->getSite()));
