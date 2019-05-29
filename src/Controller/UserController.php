@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Outing;
 use App\Entity\Picture;
@@ -166,8 +167,12 @@ class UserController extends Controller
         $user = $this->getUser();
         $mger = new UserManager($em);
 
+        $creee = $this->getDoctrine()
+            ->getRepository(Etat::class)
+            ->find(1);
+
         $repo = $em->getRepository(Outing::class);
-        $outings = $repo->findBy(['organisateur' => $user]);
+        $outings = $repo->findBy(['organisateur' => $user, 'etat' => $creee]);
 
 
         $mgerParams = $mger->isPicture($user);

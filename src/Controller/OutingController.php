@@ -141,7 +141,7 @@ class OutingController extends Controller
         $outing->setSite($em->getRepository(Site::class)->find($this->getUser()->getSite()));
         $outingForm = $this->createForm(OutingType::class, $outing);
 
-        $outingForm->handleRequest($request);
+        $outingForm->handleRequest($request)->getData();
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
@@ -149,10 +149,10 @@ class OutingController extends Controller
             $em->flush();
             $em->getRepository(Inscription::class)->subscribeManager($outing, $this->getUser(), $em);
 
-
             $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
-            return $this->redirectToRoute("main");
 
+            //attention aux cas où plusieurs noms sont identiques !
+            return $this->redirectToRoute("show", ['id'=> $outing->getId()]);
         }
         return $this->render('sortie/add.html.twig', ["outingForm" => $outingForm->createView(), "villes" => $villes]);
     }
@@ -197,8 +197,8 @@ class OutingController extends Controller
             $em->persist($Outing);
             $em->flush();
 
-            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
-            return $this->redirectToRoute("main");
+            $this->addFlash('success', 'Votre sortie a bien été modifiée !');
+            return $this->redirectToRoute("show", ['id'=>$id]);
 
         }
 
