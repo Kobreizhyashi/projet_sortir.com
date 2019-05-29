@@ -43,14 +43,12 @@ class OutingController extends Controller
             $this->updateEtats($outing);
         }
 
+        //Gestion des états
         $repoEtat = $em->getRepository(Etat::class);
         $etats = [];
         for ($i=2; $i<=6; $i++){
            $etats[] = $repoEtat->find($i);
-           //$outingsTab[] = $repo->findBy(array('site' => $site, 'etat' => $etat));
         }
-        dump($etats);
-//        die();
         $outings = $repo->findBy(array('site' => $site, 'etat' => $etats));
 
         $repo = $em->getRepository(Site::class);
@@ -323,6 +321,12 @@ class OutingController extends Controller
      */
     public function ajaxFormIndex(Request $request, EntityManagerInterface $em)
     {
+        //Update des états
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findAll();
+        foreach ($outings as $outing) {
+            $this->updateEtats($outing);
+        }
 
         $requestedArray['siteValue'] = $request->request->get('siteValue');
         $requestedArray['dateFirst'] = $request->request->get('dateFirst');
@@ -376,5 +380,6 @@ class OutingController extends Controller
         return $response;
 
     }
+
 
 }
