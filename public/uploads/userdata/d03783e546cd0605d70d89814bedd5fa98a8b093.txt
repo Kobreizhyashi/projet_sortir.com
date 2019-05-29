@@ -1,3 +1,0 @@
-Alain,OULAUTRE,a.oulautre@campus-eni.fr
-Julie,DESLIVRES,j.deslivres@campus-eni.fr
-Jean,FOUSPASUNE,j.fouspasunes@campus-eni.fr
