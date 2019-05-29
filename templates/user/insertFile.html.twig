@@ -1,26 +1,27 @@
-{%  extends ('layout.html.twig') %}
+{% extends ('layout.html.twig') %}
 
 {% block title %}Insertion fichier{% endblock %}
 
 {% block main %}
 
     <div class=" logindiv row container">
-        <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3  z-depth-2" >
+        <div class="col s6 offset-s3 l6 offset-l3 m6 offset-m3  z-depth-2">
 
             <h4 class=" center-align green-text text-teal darken-2">Insertion fichier utilisateurs </h4>
+            <div class="file-field input-field">
+                {{ form_start(fileForm, {'method': 'POST'}) }}
+                <div class="col s6 offset-s3 l6 offset-l3 m6 offset-m3">
+                    {{ form_errors(fileForm) }}
+                    {{ form_widget(fileForm) }}
 
-            {{ form_start(fileForm, {'method': 'POST'}) }}
-            <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3" >
-            {{ form_errors(fileForm) }}
-            {{ form_widget(fileForm) }}
-                <br>
+                </div>
             </div>
             <div class="loginrow row">
                 <br>
-                <div class= "col s6 offset-s3 l6 offset-l3 m6 offset-m3">
+                <div class="col s6 offset-s3 l6 offset-l3 m6 offset-m3">
                     <div class="col">
                         <button type="submit" class="btn s12">Insérer</button>
-                    </div >
+                    </div>
                     <div class="col">
                         <a href="{{ path('admin_gestion') }}" class="btn s12" style="background-color: #FF6347">Annuler</a>
                     </div >

@@ -69,4 +69,18 @@ class LieuRepository extends ServiceEntityRepository
 
     }
 
+    public function LieuCreationManagerWithNewCity(Ville $ville, Request $request, EntityManagerInterface $em) {
+
+        $lieu = new Lieu();
+        $lieu->setNom($request->request->get('nom'));
+        $lieu->setRue($request->request->get('adresse'));
+        $lieu->setLatitude($request->request->get('lat'));
+        $lieu->setLongitude($request->request->get('long'));
+        $lieu->setVille($ville);
+
+        $em->persist($lieu);
+        $em->flush();
+
+    }
+
 }

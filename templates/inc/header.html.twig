@@ -1,16 +1,21 @@
+<ul id="dropdown2" class="dropdown-content">
+    <li><a href="{{ path('admin_gestion') }}">Utilisateurs</a></li>
+    <li><a href="'{#{{ path('sortieadmin') }}#}">Sorties</a></li>
+</ul>
 <nav>
     <div class="nav-wrapper">
         <div class="designed-font brand-logo">Out</div>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <li><a href="{{ path('main') }}">Accueil</a></li>
-            <li><a href="{{ path('my_details') }}">Mon profil</a></li>
+                <li><a href="{{ path('main') }}">Accueil</a></li>
+                <li><a href="{{ path('my_details') }}">Mon profil</a></li>
             {% endif %}
 
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('admin_gestion') }}">Gestion des utilisateurs</a></li>
+                    {# <li class="administrate"><a href="{{ path('admin_gestion') }}">Gestion des utilisateurs</a></li> #}
+                    <li><a class="dropdown-trigger fixed" href="#!" data-target="dropdown2">Administration</a></li>
                 {% endif %}
             {% endif %}
 
@@ -23,20 +28,42 @@
     </div>
 </nav>
 
+
+
+
+
+
+
+
+{#MOBILE#}
+
+<ul id="dropdown1" class="dropdown-content center-align">
+    <li><a href="{{ path('admin_gestion') }}">Utilisateurs</a></li>
+    <li><a href="'{#{{ path('sortieadmin') }}#}">Sorties</a></li>
+</ul>
+
+
 <ul class="sidenav" id="mobile-demo">
     <li><a href="{{ path('main') }}">Accueil</a></li>
     <li><a href="{{ path('my_details') }}">Mon profil</a></li>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% if is_granted('ROLE_ADMIN') %}
+            {# <li class="administrate"><a href="{{ path('admin_gestion') }}">Gestion des utilisateurs</a></li> #}
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Administration</a></li>
+        {% endif %}
+    {% endif %}
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         <li><a href="{{ path('logout') }}" style="color: #ff5252">Déconnexion</a></li>
     {% endif %}
 
 </ul>
 
-
 <script>
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('.sidenav').sidenav();
-    });
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
 
+    });
 </script>

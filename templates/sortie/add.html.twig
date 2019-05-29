@@ -7,20 +7,25 @@
 
 {% block main %}
     <div class="form col s12 l8 m8 xl4  offset-l2 z-depth-2">
+        <label for="choice">Ville concernée :</label>
         <div class="input-field col s12">
-            <label for="choice">Ville concernée :</label>
+
+
             <select class="choice">
                 {% for ville in villes %}
                     <option value="{{ ville.id }}" id="{{ ville.id }}">{{ ville.nom }}</option>
                 {% endfor %}
+
             </select>
+
 
 
         </div>
         {{ form_start(outingForm) }}
         {{ form_widget(outingForm) }}
         <div id="buttonAddLieu" class="center-align">
-            <button class="btn pulse adding-places center-align"><i class="material-icons">add_location</i><span>Ajouter un lieu</span>
+            <button type="button" class="btn pulse adding-places center-align"><i
+                        class="material-icons">add_location</i><span>Ajouter un lieu</span>
             </button>
         </div>
         <section class="place-adder" style="display: none;">
@@ -31,9 +36,23 @@
                         {% for ville in villes %}
                             <option value="{{ ville.id }}" id="{{ ville.id }}">{{ ville.nom }}</option>
                         {% endfor %}
+                        <option value="addCity" id="addCity">Ajouter une ville..</option>
                     </select>
 
                 </div>
+                <div class="hiddenCityCreation" style="display: none;">
+                    <div class="input-field col s10">
+                        <input placeholder="Los Angeles.. Stockholm.. Fais nous rêver !" id="ville" type="text"
+                               class="validate">
+                        <label for="first_name">Ville :</label>
+                    </div>
+                    <div class="input-field col s10">
+                        <input placeholder="Unique, comme toi <3" id="cpo" type="number"
+                               class="validate">
+                        <label for="first_name">Code postal :</label>
+                    </div>
+                </div>
+
 
                 <div class="input-field col s10">
                     <input placeholder="Aux champs Elysées.. Palapalapa" id="nom" type="text" class="validate">
@@ -45,11 +64,11 @@
                     <label for="first_name">Adresse</label>
                 </div>
                 <div class="input-field col s10">
-                    <input placeholder="123" id="long" type="number" class="validate" >
+                    <input placeholder="123" id="long" type="number" class="validate">
                     <label for="first_name">Longitude</label>
                 </div>
                 <div class="input-field col s10">
-                    <input placeholder="456" id="lat" type="number" class="validate" >
+                    <input placeholder="456" id="lat" type="number" class="validate">
                     <label for="first_name">Latitude</label>
                 </div>
                 <button type="button" id="validePlaceCreation" style="margin-bottom: 5px;"
@@ -67,28 +86,43 @@
     </div>
     <script>
 
-
         $(document).ready(function () {
             $('.pulse').click(function () {
                 $('.place-adder').slideToggle("slow");
             });
         });
 
+        $('#siteSelection').change(function () {
+            if ($(this).val() === 'addCity') {
+                $('.hiddenCityCreation').slideToggle("slow");
+            }
+        });
+
+
         $('#validePlaceCreation').click(function (e) {
+
+
             $.ajax({
                 url: '{{ path('ajaxSiteAdd') }}',
                 type: 'POST',
                 data: {
+                    'ville':$('#ville').val(),
+                    'cpo': $('#cpo').val(),
                     'siteSelected': $('#siteSelection').val(),
                     'nom': $('#nom').val(),
                     'adresse': $('#adresse').val(),
                     'long': $('#long').val(),
                     'lat': $('#lat').val(),
                 },
+
                 async: true,
-                success: function () {
+                dataType: 'json',
+                success: function (data) {
+
                     $('#toHide').empty().append($('<p style="color: #4caf50;"> Le lieu a été ajouté à la liste.</p>'));
+                    $('.choice').append($('<option value="'+ data.id +'" id="' + data.id + '">'+ data.nom +'</option>'));
                     $('.choice').change();
+
 
                 },
                 error: function (e) {
@@ -116,6 +150,7 @@
                     $('.ajaxSite').empty();
                     $.each(data, function (id, lieu) {
                         $('.ajaxSite').append($('<option value="' + id + '">' + lieu + '</option>'));
+
                     });
                 }
             });
