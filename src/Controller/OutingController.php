@@ -43,7 +43,15 @@ class OutingController extends Controller
             $this->updateEtats($outing);
         }
 
-        $outings = $repo->findBy(array('site' => $site));
+        $repoEtat = $em->getRepository(Etat::class);
+        $etats = [];
+        for ($i=2; $i<=6; $i++){
+           $etats[] = $repoEtat->find($i);
+           //$outingsTab[] = $repo->findBy(array('site' => $site, 'etat' => $etat));
+        }
+        dump($etats);
+//        die();
+        $outings = $repo->findBy(array('site' => $site, 'etat' => $etats));
 
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
