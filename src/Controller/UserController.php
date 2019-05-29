@@ -104,7 +104,8 @@ class UserController extends Controller
      * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
      * @Route("/logout", name="logout")
      */
-    public function logout(){}
+    public function logout()
+    {}
 
     /**
      * @Route("/modifypwd", name="modifyPwd")
