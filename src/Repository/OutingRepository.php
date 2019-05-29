@@ -58,12 +58,10 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
+    //Problème ici ?
     public function removeOuting($idToRemove)
     {
         $em = $this->getEntityManager();
-
-        $idToRemove = $outing->getId();
-
         $dql = "DELETE
                 FROM App\Entity\Outing o
                 WHERE o.id = :idToRemove";
@@ -84,7 +82,7 @@ class OutingRepository extends ServiceEntityRepository
             ->leftJoin('o.site', 's')
             ->leftJoin('o.inscriptions', 'i')
             /// $qb->join('s.users', 'u', 'WITH', 'u.id = :currentUser')
-            ->where('1 = 1');
+            ->where('etat.id != 1');
 
 
         if ($requestedArray['siteValue'] != '' && $requestedArray['siteValue'] != NULL && $requestedArray['siteValue'] != 131) {
@@ -127,12 +125,14 @@ class OutingRepository extends ServiceEntityRepository
         }
 
 
+
         $query = $qb->getQuery();
         $returned = $query->getResult();
 
+
+
+
         /*
-
-
 
         =================== A GARDER ==========================
 
@@ -248,7 +248,56 @@ class OutingRepository extends ServiceEntityRepository
             return false;
         }
     }
-
-
+//
+//    /**
+//     * @param $requestedArray
+//     * @param EntityManagerInterface $em
+//     * Affichage des sorties de l'utilisateur sur son profil
+//     * @return outings
+//     */
+//    public function findMyOutings($requestedArray, EntityManagerInterface $em){
+//        $qb = $this->createQueryBuilder('o')
+//            ->leftJoin('o.etat', 'etat')
+//            ->leftJoin('o.site', 's')
+//            ->leftJoin('o.inscriptions', 'i')
+//            /// $qb->join('s.users', 'u', 'WITH', 'u.id = :currentUser')
+//            ->where('1 = 1');
+//
+//
+//        //Inclure ici les conditions de recherche
+//
+//        $query = $qb->getQuery();
+//        $returned = $query->getResult();
+//
+//
+//        $currentId = $requestedArray['currentUserID'];
+//
+//        /** @var Outing $outing */
+//        foreach ($returned as $outing) {
+//
+//            $returned[$outing->getId()] = [
+//                'nom' => $outing->getNom(),
+//                'dateHeureDebut' => $outing->getDateHeureDebut()->format('d-m-Y'),
+//                'duree' => $outing->getDuree(),
+//                'dateLimiteInscription' => $outing->getDateLimiteInscription()->format('d-m-Y'),
+//                'nbInscriptions' => $outing->getInscriptions()->count(),
+//                'nbInscriptionsMax' => $outing->getNbInscriptionsMax(),
+//                'infosSortie' => $outing->getInfosSortie(),
+//                'etat' => $outing->getEtat()->getLibelle(),
+//                'etatId' => $outing->getEtat()->getId(),
+//                'organizerName' => $outing->getOrganisateur()->getUsername(),
+//                'organizerId' => $outing->getOrganisateur()->getId(),
+//                'currentUserID' => $currentId,
+//                'canDelete' => $this->canDelete($outing, $currentId),
+//                'canSubscribe' => $this->canSubscribe($outing, $currentId),
+//                'canUnsubscribe' => $this->canUnsubscribe($outing, $currentId),
+//                'isInscrit' => $em->getRepository(Inscription::class)->getInscrit($outing, $currentId)
+//
+//            ];
+//        };
+//        return $returned;
+//
+//
+//    }
 
 }
