@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function insertFile(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em) {
 
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $upload =new Upload();
         $fileForm = $this->createForm(UploadType::class,$upload);
         $fileForm->handleRequest($request);
@@ -74,7 +74,7 @@ class UserController extends Controller
 
         }
 
-        return $this->render('user/insertFile.html.twig',['fileForm'=> $fileForm->createView()]);
+        return $this->render('user/insertfile.html.twig',['fileForm'=> $fileForm->createView()]);
     }
 
 
@@ -135,7 +135,7 @@ class UserController extends Controller
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
             }
         }
-        return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
+        return $this->render('user/modifypwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
     }
 
 
@@ -261,7 +261,7 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $repo = $em->getRepository(User::class);
         $users = $repo->findAll();
-        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
+        return $this->render('user/useradmin.html.twig',['user'=>$user,'users'=>$users]);
     }
 
     /**
