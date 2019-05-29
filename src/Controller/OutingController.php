@@ -23,6 +23,25 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 class OutingController extends Controller
 {
     /**
+     * @Route("/admin/sortieadmin", name="admin_sortie")
+     *
+     **/
+    public function outingUpdateAdmin(EntityManagerInterface $em) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user = $this->getUser();
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findAll();
+        $repo = $em->getRepository(Site::class);
+        $sites = $repo->findAll();
+
+        return $this->render('sortie/sortieadmin.html.twig', [
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user'=>$user
+        ]);
+    }
+
+
+    /**
      * @Route("/", name="main")
      */
     public function index(EntityManagerInterface $em)
@@ -40,7 +59,13 @@ class OutingController extends Controller
             $this->updateEtats($outing);
         }
 
-        $outings = $repo->findBy(array('site' => $site));
+        //Gestion des états
+        $repoEtat = $em->getRepository(Etat::class);
+        $etats = [];
+        for ($i=2; $i<=6; $i++){
+           $etats[] = $repoEtat->find($i);
+        }
+        $outings = $repo->findBy(array('site' => $site, 'etat' => $etats));
 
         $repo = $em->getRepository(Site::class);
         $sites = $repo->findAll();
@@ -132,7 +157,7 @@ class OutingController extends Controller
         $outing->setSite($em->getRepository(Site::class)->find($this->getUser()->getSite()));
         $outingForm = $this->createForm(OutingType::class, $outing);
 
-        $outingForm->handleRequest($request);
+        $outingForm->handleRequest($request)->getData();
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
@@ -140,10 +165,10 @@ class OutingController extends Controller
             $em->flush();
             $em->getRepository(Inscription::class)->subscribeManager($outing, $this->getUser(), $em);
 
-
             $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
-            return $this->redirectToRoute("main");
 
+            //attention aux cas où plusieurs noms sont identiques !
+            return $this->redirectToRoute("show", ['id'=> $outing->getId()]);
         }
         return $this->render('sortie/add.html.twig', ["outingForm" => $outingForm->createView(), "villes" => $villes]);
     }
@@ -188,8 +213,8 @@ class OutingController extends Controller
             $em->persist($Outing);
             $em->flush();
 
-            $this->addFlash('success', 'Votre sortie est en ligne ! Espérons que vous ne serez pas seul !');
-            return $this->redirectToRoute("main");
+            $this->addFlash('success', 'Votre sortie a bien été modifiée !');
+            return $this->redirectToRoute("show", ['id'=>$id]);
 
         }
 
@@ -312,6 +337,12 @@ class OutingController extends Controller
      */
     public function ajaxFormIndex(Request $request, EntityManagerInterface $em)
     {
+        //Update des états
+        $repo = $em->getRepository(Outing::class);
+        $outings = $repo->findAll();
+        foreach ($outings as $outing) {
+            $this->updateEtats($outing);
+        }
 
         $requestedArray['siteValue'] = $request->request->get('siteValue');
         $requestedArray['dateFirst'] = $request->request->get('dateFirst');
@@ -365,5 +396,6 @@ class OutingController extends Controller
         return $response;
 
     }
+
 
 }

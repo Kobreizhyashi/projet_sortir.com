@@ -16,8 +16,9 @@ body {
         width: 80%;
     }
     .btn {
-        width: 100%;
+
         margin-top: 5px;
+        margin-bottom : 3px;
     }
 }
 
@@ -187,5 +188,21 @@ Affichage sortie
 .addOutingButton {
     display: inline-block;
     position: relative;
+}
+
+.btn-small-red {
+    color: white;
+    background-color: #f44336;
+    border: none;
+    border-radius: 2px;
+    display: inline-block;
+    /*height: 16px;*/
+    /*width: 50px;*/
+    horiz-align:center;
+    vertical-align: center;
+    /*padding: 15px 32px;*/
+    text-align: center;
+    /*text-decoration: none;*/
+    font-size: 70%;
 }
 

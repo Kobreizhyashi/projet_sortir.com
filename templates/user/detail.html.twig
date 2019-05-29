@@ -114,7 +114,7 @@
                 <section>
                     <div class="row">
                         <br>
-                        <h5 class="titre center-align">Sorties dont Vous êtes l'organisateur</h5>
+                        <h5 class="titre center-align">Sorties non publiées</h5>
                     </div>
 
                     <div class="row">
@@ -146,7 +146,7 @@
                                     {% endfor %}
 
                                     <tr>
-                                        <td>{{ outing.nom }}</td>
+                                        <td><a href="{{ path('show',{'id':outing.id}) }}">{{ outing.nom }}</a></td>
                                         <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</td>
                                         <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                                         <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
@@ -171,25 +171,17 @@
 
                                         <td>
 
-                                            <a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
-
                                             {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
 
                                                 <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
 
                                             {% endif %}
 
-                                            {% if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1 %}
+{#                                            {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}#}
 
-                                                <a href="{{ path('subscribe',{'id':outing.id}) }}">S'inscrire</a>
+{#                                                <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>#}
 
-                                            {% endif %}
-
-                                            {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}
-
-                                                <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>
-
-                                            {% endif %}
+{#                                            {% endif %}#}
                                             {% if  inscrit == true and outing.etat.id == 1 and outing.organisateur.id == user.id %}
 
                                                 <a href="{{ path('publish',{'id':outing.id}) }}">Publier</a>
@@ -208,15 +200,6 @@
 
                         </div>
                     </div>
-
-{#                    <div class="row">#}
-
-{#                        <div class="offset-l2 col l2 m4 s12">#}
-{#                            <a href="{{ path('add') }}">#}
-{#                                <button type="button" id="addOutingButton" class="btn center-align btn-large pulse">Ajouter</button>#}
-{#                            </a>#}
-{#                        </div>#}
-{#                    </div>#}
                 </section>
             {% endif %}
             {#Fin section modulaire#}

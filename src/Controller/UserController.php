@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Outing;
 use App\Entity\Picture;
@@ -76,7 +77,7 @@ class UserController extends Controller
 
         }
 
-        return $this->render('user/insertFile.html.twig',['fileForm'=> $fileForm->createView()]);
+        return $this->render('user/insertfile.html.twig',['fileForm'=> $fileForm->createView()]);
     }
 
 
@@ -138,7 +139,7 @@ class UserController extends Controller
                 $this->addFlash('error', 'Votre mot de passe actuel est erroné !');
             }
         }
-        return $this->render('user/modifyPwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
+        return $this->render('user/modifypwd.html.twig',['user'=>$user, 'pwdForm'=> $pwdForm->createView()]);
     }
 
 
@@ -168,8 +169,12 @@ class UserController extends Controller
         $user = $this->getUser();
         $mger = new UserManager($em);
 
+        $creee = $this->getDoctrine()
+            ->getRepository(Etat::class)
+            ->find(1);
+
         $repo = $em->getRepository(Outing::class);
-        $outings = $repo->findBy(['organisateur' => $user]);
+        $outings = $repo->findBy(['organisateur' => $user, 'etat' => $creee]);
 
 
         $mgerParams = $mger->isPicture($user);
@@ -273,7 +278,7 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $repo = $em->getRepository(User::class);
         $users = $repo->findAll();
-        return $this->render('user/userAdmin.html.twig',['user'=>$user,'users'=>$users]);
+        return $this->render('user/useradmin.html.twig',['user'=>$user,'users'=>$users]);
     }
 
     /**
