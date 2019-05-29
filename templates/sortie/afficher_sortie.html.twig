@@ -216,5 +216,20 @@
 
         {% endif %}
 
+        {%  if outing.organisateur == app.user and outing.etat.id == 1 %}
+            <div class="row">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
+                    <a href="{{ path('publish',{'id':outing.id}) }}">
+                        <button type="button" id="addOutingButton" class="btn center-align btn-large pulse">Publier</button>
+                    </a>
+                </div>
+                <div class ="col s5 l3 m3">
+                    <a href="{{ path('update',{'id':outing.id}) }}">
+                        <button type="button" id="addOutingButton" class="btn center-align btn-large">Modifier</button>
+                    </a>
+                </div>
+            </div>
+
+        {% endif %}
     </section>
 {% endblock %}
