@@ -34,50 +34,50 @@
 
             <div class="row align-center">
 
-                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                     <label class ="aff_sortie_label">Prénom :</label>
                 </div>
-                <div class ="col s4 l3 m3">
+                <div class ="col s5 l3 m3">
                     <span>{{ user.prenom }}</span>
                 </div>
                 <br>
             </div>
 
             <div class="row">
-                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                     <label class ="aff_sortie_label">Nom :</label>
                 </div>
-                <div class ="col s4 l3 m3">
+                <div class ="col s5 l3 m3">
                     <span><span>{{ user.nom }}</span></span>
                 </div>
                 <br>
             </div>
 
             <div class="row">
-                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                     <label class ="aff_sortie_label">Téléphone :</label>
                 </div>
-                <div class ="col s4 l3 m3">
+                <div class ="col s5 l3 m3">
                     <span>{{ user.telephone }}</span>
                 </div>
                 <br>
             </div>
 
             <div class="row">
-                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                     <label class ="aff_sortie_label">Email :</label><span></span>
                 </div>
-                <div class ="col s4 l3 m3">
+                <div class ="col s5 l3 m3">
                     <span>{{ user.email }}</span>
                 </div>
                 <br>
             </div>
 
             <div class="row">
-                <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                     <label class ="aff_sortie_label">Site :</label>
                 </div>
-                <div class ="col s4 l3 m3">
+                <div class ="col s5 l3 m3">
                     <span>{{ user.site.nom }}</span>
                 </div>
                 <br>
@@ -88,12 +88,12 @@
             {#section modulaire en fonction de si l'on affiche son propre profil ou un autre profil#}
             <div class="row">
                 {% if user.id == app.user.id %}
-                    <div class ="col s4 l3 m3 offset-s3 offset-m4 offset-l4">
+                    <div class ="col s5 l3 m3 offset-s1 offset-m4 offset-l4">
                         <a href="{{ path('user_update') }}">
                             <input type="button" class="btn btn-secondary" name="modifier" value="Modifier">
                         </a>
                     </div>
-                    <div class ="col s4 l3 m3">
+                    <div class ="col s5 l3 m3">
                         <a href="{{ path('main') }}">
                             <input type="button" class="btn btn-secondary" name="retour" value="Retour">
                         </a>
