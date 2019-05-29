@@ -10,14 +10,17 @@
 
     {{ form_start(userForm) }}
 
-    {{ form_widget(userForm) }}
+    {{  form_row(userForm.nom) }}
+    {{  form_row(userForm.prenom) }}
+    {{  form_row(userForm.email) }}
+
 
     <button type="submit" class="btn button-with-responsive waves-effect waves-light left-align">Créer le compte </button>
-    <a href="{{ path('login')}}" class="btn button-with-responsive waves-effect waves-light right-align">Annuler</a>
-
+    <a href="{{ path('admin_gestion')}}" class="btn button-with-responsive waves-effect waves-light right-align">Annuler</a>
+    {{ form_end(userForm) }}
 </div>
 
-    {{ form_end(userForm) }}
+
 
 
 {% endblock %}
