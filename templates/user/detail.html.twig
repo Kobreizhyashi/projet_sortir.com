@@ -171,25 +171,17 @@
 
                                         <td>
 
-                                            <a href="{{ path('show',{'id':outing.id}) }}">Afficher</a>
-
                                             {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
 
                                                 <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
 
                                             {% endif %}
 
-                                            {% if  inscrit == false and outing.etat.id <= 2 and (outing.nbInscriptionsMax - outing.inscriptions.count) >= 1 %}
+{#                                            {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}#}
 
-                                                <a href="{{ path('subscribe',{'id':outing.id}) }}">S'inscrire</a>
+{#                                                <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>#}
 
-                                            {% endif %}
-
-                                            {% if  inscrit == true and outing.etat.id <= 2 and outing.organisateur.id != user.id %}
-
-                                                <a href="{{ path('renounce',{'id':outing.id}) }}">Se désister</a>
-
-                                            {% endif %}
+{#                                            {% endif %}#}
                                             {% if  inscrit == true and outing.etat.id == 1 and outing.organisateur.id == user.id %}
 
                                                 <a href="{{ path('publish',{'id':outing.id}) }}">Publier</a>
