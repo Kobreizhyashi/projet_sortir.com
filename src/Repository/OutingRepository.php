@@ -203,6 +203,7 @@ class OutingRepository extends ServiceEntityRepository
                 'organizerName' => $outing->getOrganisateur()->getUsername(),
                 'organizerId' => $outing->getOrganisateur()->getId(),
                 'currentUserID' => $currentId,
+                'lieu' => $outing->getLieu()->getVille()->getNom(),
                 'canDelete' => $this->canDelete($outing, $currentId),
                 'canSubscribe' => $this->canSubscribe($outing, $currentId),
                 'canUnsubscribe' => $this->canUnsubscribe($outing, $currentId),

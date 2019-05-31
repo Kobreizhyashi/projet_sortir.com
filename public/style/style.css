@@ -20,6 +20,9 @@ body {
         margin-top: 5px;
         margin-bottom : 3px;
     }
+    .btns {
+        box-sizing: content-box;
+    }
 }
 
 @media screen and (max-width: 640px) {
@@ -32,6 +35,11 @@ body {
     body {
         box-shadow: none;
     }
+    .container {
+        margin: auto;
+
+    }
+
 
 
 }
@@ -191,8 +199,8 @@ Affichage sortie
 }
 
 .btn-small-red {
-    color: white;
-    background-color: #f44336;
+    color: #c63124;
+    background-color: white;
     border: none;
     border-radius: 2px;
     display: inline-block;
@@ -204,5 +212,14 @@ Affichage sortie
     text-align: center;
     /*text-decoration: none;*/
     font-size: 70%;
+}
+
+.btn-small-red:hover {
+
+    color: white;
+    background-color: #c63124;
+
+
+
 }
 

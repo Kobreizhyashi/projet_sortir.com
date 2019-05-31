@@ -5,23 +5,24 @@
 {% block main %}
 
     <div class=" logindiv row container">
-        <div class="col s12 l6 offset-l3 m6 offset-m3  z-depth-1">
+        <div class="col s12 l6 offset-l3 m6 offset-m3 z-depth-1">
 
-            <h3 class=" center-align green-text text-teal darken-2">{{ user.username }}</h3>
+            <h3 class="center-align green-text text-teal darken-2">{{ user.username }}</h3>
+
 
             {{ form_start(pwdForm, {'method': 'POST'}) }}
             {{ form_errors(pwdForm) }}
             {{ form_row(pwdForm.currentPassword) }}
             {{ form_row(pwdForm.newPassword) }}
 
-            <div class="loginrow">
+            <div class="loginrow center-align">
                 <br>
-                <div class="col s12 align-center row offset-l3 l6 offset-m2 m8">
-                    <div class="col left-align">
-                        <button type="submit" class="btn s12">Valider</button>
+                <div class="col s12 row center-align offset-l2 l8 m12">
+                    <div class="col">
+                        <button type="submit" class="btn s6 offset-m2 m4 l6">Valider</button>
                     </div>
-                    <div class="col right-align">
-                        <a href="{{ path('main') }}" class="btn s12" style="background-color: #FF6347">Annuler</a>
+                    <div class="col">
+                        <a href="{{ path('main') }}" class="btn m4 l6 s6" style="background-color: #FF6347">Annuler</a>
                     </div>
 
                 </div>

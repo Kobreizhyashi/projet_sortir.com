@@ -6,7 +6,8 @@
 
     <div class="row container center-align">
         <h4 class="titre">Choisir ma photo</h4>
-        <div class="col s12 l4 m6 offset-m3 offset-l4 form">
+        <div class="col s12 l4 m6 offset-m3 offset-l4 form fileinputs" style="position: relative;">
+
             {{ form_start(pictureForm) }}
             {{ form_widget(pictureForm) }}
 
@@ -16,6 +17,7 @@
             <button type="submit" class="btn waves-effect waves-light">Enregistrer</button>
 
             {{ form_end(pictureForm) }}
+
             <a href="{{ path('my_details') }}">
                 <input type="button" class="btn waves-effect waves-light" name="annuler" value="Annuler">
             </a>
@@ -24,14 +26,5 @@
 
     </div>
 
-    <script>
-        $(document).ready(function () {
-
-            $('input#picture_img.gettingHide').empty();
-            $('input#picture_img.gettingHide').append($('<div class="btn">coucou</div>'))
-
-        })
-
-    </script>
 
 {% endblock %}
