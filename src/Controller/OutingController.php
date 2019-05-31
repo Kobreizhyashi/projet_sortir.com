@@ -132,7 +132,7 @@ class OutingController extends Controller
         $em->flush();
 
         $this->addFlash('success', 'Votre sortie est publiée !');
-        return $this->redirectToRoute("my_details");
+        return $this->redirectToRoute("main");
 
     }
 
