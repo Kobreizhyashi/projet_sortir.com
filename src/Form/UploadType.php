@@ -14,7 +14,7 @@ class UploadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', FileType::class, ['label'=>'Fichier CSV à insérer : ', 'class' => 'file']);
+            ->add('name', FileType::class, ['label'=>'Fichier CSV à insérer : ', 'attr' => ['class' => 'file']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
