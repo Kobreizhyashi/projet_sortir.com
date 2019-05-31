@@ -375,7 +375,7 @@ class OutingController extends Controller
     {
 
 
-        if ($req->request->get('ville') != '' && $req->request->get('cpo') != '') {
+        if ($req->request->get('ville') != "" && $req->request->get('cpo') != "") {
             $ville = new Ville();
             $ville->setNom($req->request->get('ville'));
             $ville->setCodePostal($req->request->get('cpo'));
@@ -387,14 +387,20 @@ class OutingController extends Controller
 
             $return = [
                 'id' => $ville->getId(),
-                'nom' => $ville->getNom()
+                'nom' => $ville->getNom(),
+                'backCall' => false
             ];
 
             $response = new Response(json_encode($return));
 
         } else {
             $em->getRepository(Lieu::class)->LieuCreationManager($req, $em);
-            $response = new Response();
+
+            $return = [
+                'backCall' => true
+            ];
+
+            $response = new Response(json_encode($return));
         }
 
 
