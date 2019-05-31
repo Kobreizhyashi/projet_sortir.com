@@ -124,6 +124,11 @@ class User implements AdvancedUserInterface
      */
     private $picture;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $resetpassword;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -327,6 +332,18 @@ class User implements AdvancedUserInterface
         return 'uploads/pictures/'.$pictureName;
     }
 
+    public function getResetpassword(): ?bool
+    {
+        return $this->resetpassword;
+    }
+
+    public function setResetpassword(?bool $resetpassword): self
+    {
+        $this->resetpassword = $resetpassword;
+
+        return $this;
+    }
+
     /**
      * Checks whether the user's account has expired.
      *
@@ -387,8 +404,10 @@ class User implements AdvancedUserInterface
      */
     public function isEnabled()
     {
-        if($this->getActif()==false)
-        {return false;}
+        // TODO: Implement isEnabled() method.
+        if($this->getActif()==false) {
+            return false;
+        }
 
         return true;
     }

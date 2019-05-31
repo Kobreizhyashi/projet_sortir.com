@@ -83,13 +83,16 @@ ul#mobile-demo.sidenav{
 }
 
 .loginrow {
-    padding-top: 10px;
+    padding-top: 50px;
     align-content: center;
     width: 100%;
     margin: 15px;
-    padding: auto;
+
 }
 
+.mdprow {
+    padding-top: 20px;
+}
 section {
     margin-left: auto;
     margin-right: auto;
