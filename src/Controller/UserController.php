@@ -105,7 +105,8 @@ class UserController extends Controller
      * Penser à parametre le fichier security.yaml pour rediriger la déconnexion.
      * @Route("/logout", name="logout")
      */
-    public function logout(){}
+    public function logout()
+    {}
 
     /**
      * @Route("/modifypwd", name="modifyPwd")
@@ -174,6 +175,10 @@ class UserController extends Controller
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findBy(['organisateur' => $user, 'etat' => $creee]);
+
+        //Checker si l'utilisateur est organisateur de sorties non pubiées.
+        //Si oui, on affiche la liste dans le twig
+
 
 
         $mgerParams = $mger->isPicture($user);

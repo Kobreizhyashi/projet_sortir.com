@@ -49,10 +49,7 @@ class OutingController extends Controller
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         $site = $em->getRepository(Site::class)->find($this->getUser()->getSite());
-        if ($user->getActif() == 0) {
-            $this->addFlash('error', "Votre compte est désactivé, veuillez contacter l'administrateur");
-            return $this->redirectToRoute("logout");
-        }
+
 
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findAll();
@@ -74,7 +71,7 @@ class OutingController extends Controller
         $sites = $repo->findAll();
 
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user' => $user
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user' => $user, 'site' => $site
         ]);
     }
 
@@ -153,8 +150,13 @@ class OutingController extends Controller
         $repo = $em->getRepository(Ville::class);
         $villes = $repo->findAll();
 
+        $dateDebut = new \DateTime('now');
+        $dateDebut->add(new \DateInterval('PT' . 1440 . 'M'));
+        $dateDebut->setTime(18, 0);
 
         $outing = new Outing();
+        $outing->setDateHeureDebut($dateDebut);
+        $outing->setDateLimiteInscription($dateDebut);
         $outing->setEtat($em->getRepository(Etat::class)->find(1));
         $outing->setOrganisateur($em->getRepository(User::class)->find($userId));
         $outing->setSite($em->getRepository(Site::class)->find($this->getUser()->getSite()));
@@ -373,7 +375,7 @@ class OutingController extends Controller
     {
 
 
-        if ($req->request->get('ville') != '' && $req->request->get('cpo') != '') {
+        if ($req->request->get('ville') != "" && $req->request->get('cpo') != "") {
             $ville = new Ville();
             $ville->setNom($req->request->get('ville'));
             $ville->setCodePostal($req->request->get('cpo'));
@@ -385,14 +387,20 @@ class OutingController extends Controller
 
             $return = [
                 'id' => $ville->getId(),
-                'nom' => $ville->getNom()
+                'nom' => $ville->getNom(),
+                'backCall' => false
             ];
 
             $response = new Response(json_encode($return));
 
         } else {
             $em->getRepository(Lieu::class)->LieuCreationManager($req, $em);
-            $response = new Response();
+
+            $return = [
+                'backCall' => true
+            ];
+
+            $response = new Response(json_encode($return));
         }
 
 

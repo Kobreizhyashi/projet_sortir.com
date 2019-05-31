@@ -3,17 +3,27 @@
 {% block title %} Accueil {% endblock %}
 
 {% block main %}
+
+    <section>
+<h3 class="center-align">
+    Trouvez votre prochaine sortie
+</h3>
+    </section>
     <section>
         <div class="row">
-            <form class="col s12 l8 m10 offset-l2">
+            <form class="col s12 l10 m10 offset-m1 offset-l1">
                 <div class="col s12 l6">
                     <p> Site : </p>
                     <div class="row">
                         <div class="input-field col s12">
                             <select class="siteSelector" id="siteSelector">
-                                <option value="131" selected>Choisissez un site</option>
-                                {% for site in sites %}
-                                    <option value="{{ site.id }}">{{ site.nom }}</option>
+                                <option value="131" selected>Tous les sites</option>
+                                {% for value in sites %}
+                                    {% if value == site %}
+                                        <option value="{{ value.id }}" selected>{{ value.nom }}</option>
+                                    {% else %}
+                                    <option value="{{ value.id }}">{{ value.nom }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -72,12 +82,13 @@
     <section>
         <div class="row">
 
-            <div class="col s12 l8 m10 offset-l2">
+            <div class="col s12 l10 m10 offset-m1 offset-l1">
 
                 <table class="responsive-table centered">
                     <thead>
                     <tr>
                         <th>Nom de la sortie</th>
+                        <th>Lieu de la sortie</th>
                         <th>Debut de la sortie</th>
                         <th>Clôture</th>
                         <th>Inscrits/places</th>
@@ -101,6 +112,7 @@
                         <tr>
                             <td><a href="{{ path('show',{'id':outing.id}) }}">
                                 {{ outing.nom }}</a></td>
+                            <td>{{ outing.lieu.ville.nom }}</td>
                             <td>{{ outing.dateHeureDebut|date('d-m-Y / H:i') }}</td>
                             <td>{{ outing.dateLimiteInscription|date('d/m/Y') }}</td>
                             <td>{{ outing.inscriptions.count }} / {{ outing.nbInscriptionsMax }}</td>
@@ -191,7 +203,7 @@
                     $('.tableBody').empty();
                     $.each(data, function (key, val) {
                         if (val['nom'] != undefined) {
-                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td><a href="show/' + key + '">' + val['nom'] + '</a></td> <td>' + val['dateHeureDebut'] + '</td><td>' + val['dateLimiteInscription'] + '</td> <td>' + val['nbInscriptions'] + ' / ' + val['nbInscriptionsMax'] + '</td> <td>' + val['etat'] + '</td><td class="isInscrit' + key + '"> </td><td class="organizerName' + key + '">' + val['organizerName'] + '</td><td class="links' + key + '" ></td></tr>'
+                            $('.tableBody').append($('<tr class="align-text" value="' + key + '"><td><a href="show/' + key + '">' + val['nom'] + '</a></td><td> ' + val['lieu'] + '</td><td>' + val['dateHeureDebut'] + '</td><td>' + val['dateLimiteInscription'] + '</td> <td>' + val['nbInscriptions'] + ' / ' + val['nbInscriptionsMax'] + '</td> <td>' + val['etat'] + '</td><td class="isInscrit' + key + '"> </td><td class="organizerName' + key + '">' + val['organizerName'] + '</td><td class="links' + key + '" ></td></tr>'
                             ));
                             console.log(val['isInscrit'])
                             if (val['canDelete'] === true) {

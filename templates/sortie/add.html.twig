@@ -6,7 +6,7 @@
 
 
 {% block main %}
-    <div class="form col s12 l8 m8 xl4  offset-l2 z-depth-2">
+    <div class="form col s12 l8 m10 xl4  offset-m1 offset-xl4 offset-l2 z-depth-2">
         <label for="choice">Ville concernée :</label>
         <div class="input-field col s12">
 
@@ -17,7 +17,6 @@
                 {% endfor %}
 
             </select>
-
 
 
         </div>
@@ -80,7 +79,7 @@
         </section>
 
 
-        <button type="submit" class="btn waves-effect waves-light">Ajouter</button>
+        <button type="submit" class="btn waves-effect waves-light validatorOuting">Ajouter</button>
         <a href="{{ path('main') }}" class="delete-btn btn waves-effect waves-light">Annuler</a>
         {{ form_end(outingForm) }}
     </div>
@@ -88,7 +87,9 @@
 
         $(document).ready(function () {
             $('.pulse').click(function () {
+                $('.validatorOuting').prop('disabled', true);
                 $('.place-adder').slideToggle("slow");
+
             });
         });
 
@@ -106,7 +107,7 @@
                 url: '{{ path('ajaxSiteAdd') }}',
                 type: 'POST',
                 data: {
-                    'ville':$('#ville').val(),
+                    'ville': $('#ville').val(),
                     'cpo': $('#cpo').val(),
                     'siteSelected': $('#siteSelection').val(),
                     'nom': $('#nom').val(),
@@ -118,17 +119,21 @@
                 async: true,
                 dataType: 'json',
                 success: function (data) {
-
-                    $('#toHide').empty().append($('<p style="color: #4caf50;"> Le lieu a été ajouté à la liste.</p>'));
-                    $('.choice').append($('<option value="'+ data.id +'" id="' + data.id + '">'+ data.nom +'</option>'));
-                    $('.choice').change();
-
-
+                    if (data.backCall === false) {
+                        $('.validatorOuting').prop('disabled', false);
+                        $('#toHide').empty().append($('<p style="color: #4caf50;"> Le lieu a été ajouté à la liste.</p>'));
+                        $('.choice').append($('<option value="' + data.id + '" id="' + data.id + '" selected>' + data.nom + '</option>'));
+                        $('.choice').change();
+                    } else {
+                        $('.validatorOuting').prop('disabled', false);
+                        $('#toHide').empty().append($('<p style="color: #4caf50;"> Le lieu a été ajouté à la liste.</p>'));
+                        $('.choice').change();
+                    }
                 },
                 error: function (e) {
 
                     console.log(e);
-                    $('#toHide').append($('<p style="color: #AF2E2B;"> Une erreur s\'est produite..</p>'));
+                    $('#toHide').append($('<p style="color: #AF2E2B;"> Une erreur s\'est produite..Vous avez surement oublié un champ.</p>'));
                 }
             });
             e.preventDefault();
@@ -156,10 +161,6 @@
             });
             e.preventDefault();
         });
-
-
-        // https://openclassrooms.com/forum/sujet/symfony-formulaire-dynamique-cadeau
-
     </script>
 
 
