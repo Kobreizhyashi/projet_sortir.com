@@ -176,6 +176,10 @@ class UserController extends Controller
         $repo = $em->getRepository(Outing::class);
         $outings = $repo->findBy(['organisateur' => $user, 'etat' => $creee]);
 
+        //Checker si l'utilisateur est organisateur de sorties non pubiées.
+        //Si oui, on affiche la liste dans le twig
+
+
 
         $mgerParams = $mger->isPicture($user);
         $routing = array_merge ($mgerParams, ['outings'=>$outings]);
