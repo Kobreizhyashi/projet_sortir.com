@@ -17,9 +17,17 @@
         <div class="container row truncate">
 
             <h3 class="titre center-align">Détails de la sortie</h3>
-
+            <h5 class="center-align"><em>par
+                {% if app.user.id == outing.organisateur.id %}
+                    <a href="{{ path('my_details',{'id':outing.organisateur.id}) }}">
+                {% else %}
+                        <a href="{{ path('their_details',{'id':outing.organisateur.id}) }}">
+                {% endif %}
+                    {{ outing.organisateur.username }}</em>
+                </a>
+            </h5>
+            <br>
             <div class="col s12 l6 m6 xl6">
-
 
                 <div class="row">
                     <div class="responsive-issue col s12 l6 m8">
@@ -171,6 +179,7 @@
                         <tr>
                             <th class="tpTH">Pseudo</th>
                             <th class="tpTH">Nom</th>
+                            <th class="tpTH">Site</th>
                         </tr>
                         </thead>
 
@@ -190,6 +199,7 @@
                                 {% endif %}
 
                                 <td>{{ inscription.user.nom }} {{ inscription.user.prenom }}</td>
+                                <td>{{ inscription.user.site.nom }}</td>
 
                             </tr>
                         {% endfor %}
