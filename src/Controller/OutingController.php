@@ -71,7 +71,7 @@ class OutingController extends Controller
         $sites = $repo->findAll();
 
         return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user' => $user
+            'controller_name' => 'OutingController', 'outings' => $outings, 'sites' => $sites, 'user' => $user, 'site' => $site
         ]);
     }
 

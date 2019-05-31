@@ -5,7 +5,7 @@
 <nav>
     <div class="nav-wrapper">
         <div class="designed-font brand-logo">Out</div>
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <a href="href="{{ path('main') }}"" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <li><a href="{{ path('main') }}">Accueil</a></li>

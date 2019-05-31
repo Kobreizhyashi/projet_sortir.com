@@ -11,9 +11,13 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <select class="siteSelector" id="siteSelector">
-                                <option value="131" selected>Choisissez un site</option>
-                                {% for site in sites %}
-                                    <option value="{{ site.id }}">{{ site.nom }}</option>
+                                <option value="131" selected>Tous les sites</option>
+                                {% for value in sites %}
+                                    {% if value == site %}
+                                        <option value="{{ value.id }}" selected>{{ value.nom }}</option>
+                                    {% else %}
+                                    <option value="{{ value.id }}">{{ value.nom }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
