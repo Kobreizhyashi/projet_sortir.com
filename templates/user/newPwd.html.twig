@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Modification Mot de Passe{% endblock %}
+
+{% block main %}
+
+    <div class=" logindiv row container">
+            <div class= "col s10 offset-s1 l6 offset-l3 m6 offset-m3  z-depth-2" >
+
+                <h3 class=" center-align green-text text-teal darken-2">{{ username }}</h3>
+                <P>Vous pouvez redéfinir un nouveau mot de passe</P>
+                {{ form_start(newpwdForm, {'method': 'POST'}) }}
+                    {{ form_errors(newpwdForm) }}
+                    {{  form_row(newpwdForm.newPassword) }}
+
+                    <div class="loginrow ">
+                            <div class= "col s10 align-center offset-s1 row offset-l3 l6 offset-m2 m8">
+                            <div class="col">
+                                <button type="submit" class="btn s12">Valider</button>
+                            </div >
+                            <div class="col">
+                                <a href="{{ path('main') }}" class="btn s12" style="background-color: #FF6347">Annuler</a>
+                            </div >
+
+                        </div>
+                    </div>
+                {{ form_end(newpwdForm) }}
+            </div>
+    </div>
+
+
+
+{% endblock %}

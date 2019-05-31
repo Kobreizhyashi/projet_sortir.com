@@ -1,0 +1,27 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mot de Passe oublié{% endblock %}
+
+{% block main %}
+
+    <div class=" logindiv row container">
+        <form  action="{{ path('login') }}" method="post">
+            <div class= "col s12 l6 xl6 offset-xl3 offset-l3 m10 offset-m1  z-depth-1 center-align" >
+                <h4 class=" center-align green-text text-teal darken-2">{{ username }}</h4>
+                <div class="center-align">
+                    <h6>Votre nouveau mot de passe : {{ password }}</h6>
+                    <P>Veuillez vous connecter puis redéfinir un nouveau mot de passe</P>
+                    <div class="row mdprow">
+                        <div class ="col s12 l6 xl6 offset-xl3 offset-l3 m10 offset-m1 center-align">
+                            <a href="{{ path('login') }}">
+                                <button type="button" class="btn waves-effect waves-light">Se connecter</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

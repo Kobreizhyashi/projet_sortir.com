@@ -1,0 +1,37 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mot de Passe oublié{% endblock %}
+
+{% block main %}
+
+    <div class=" logindiv row container">
+        <h4 class=" center-align green-text text-teal darken-2">Mot de passe oublié</h4>
+        <form  action="{{ path('forgotpwd') }}" method="post">
+            <div class= "col s12 l6 xl6 offset-xl3 offset-l3 m10 offset-m1  z-depth-1 center-align" >
+                <div class="mdprow center-align">
+                    {{ form_start(forgotForm) }}
+                    {{ form_errors(forgotForm) }}
+                    {{ form_row(forgotForm.email) }}
+                    <P> Un mot de passe provisoire vous y sera envoyé</P>
+
+                    <div class="row mdprow">
+                        <div class ="col s4 l3 m3 offset-s2 offset-m2 offset-l2">
+                            <button type="submit" class="btn waves-effect waves-light">Envoyer</button>
+                        </div>
+                     {{ form_end(forgotForm) }}
+{#                        <div class ="col s4 l3 m3 offset-s2 offset-m2 offset-l2">#}
+{#                            <a href="{{ path('login') }}">#}
+{#                                <input type="button" class="btn s12" style="background-color: #FF6347" name="annuler" value="Annuler">#}
+{#                            </a>#}
+{#                        </div>#}
+
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+
+{% endblock %}
