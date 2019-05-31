@@ -23,8 +23,8 @@ class Outing
 
     /**
      * @Assert\NotBlank(message="Veuillez saisir un nom de sortie")
-     * @Assert\Length(max="30",maxMessage="Le nom ne doit pas dépasser 30 caractères")
-     * @ORM\Column(type="string", length=30)
+     * @Assert\Length(max="60",maxMessage="Le nom ne doit pas dépasser 60 caractères")
+     * @ORM\Column(type="string", length=60)
      */
     private $nom;
 
