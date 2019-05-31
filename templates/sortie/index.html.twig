@@ -140,7 +140,7 @@
                             <td>
                                 {% if  outing.organisateur.id == user.id and outing.etat.id != 6 %}
 
-                                    <a href="{{ path('delete',{'id':outing.id}) }}">Effacer</a>
+                                    <a href="{{ path('delete',{'id':outing.id}) }}">Annuler</a>
 
                                 {% endif %}
 
@@ -209,7 +209,7 @@
                             ));
                             console.log(val['isInscrit'])
                             if (val['canDelete'] === true) {
-                                $('.links' + key + '').append($(' <a href="delete/' + key + '"> Effacer</a>'));
+                                $('.links' + key + '').append($(' <a href="delete/' + key + '"> Annuler</a>'));
 
                             } else if ((val['isInscrit'] === true && val['canUnsubscribe'] === true) && val['canDelete'] === false) {
 
