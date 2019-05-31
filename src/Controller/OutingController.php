@@ -9,6 +9,8 @@ use App\Entity\Outing;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Ville;
+use App\Form\ModifyPwdType;
+use App\Form\NewPwdType;
 use App\Form\OutingDeleteType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
@@ -17,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 
@@ -44,10 +47,27 @@ class OutingController extends Controller
     /**
      * @Route("/", name="main")
      */
-    public function index(EntityManagerInterface $em)
+    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
+
+        if ($user-> getResetPassword()==true) {
+            $newpwdForm = $this->createForm(NewPwdType::class,$user);
+            $newpwdForm->handleRequest($request);
+            $user-> setResetPassword(false);
+
+            if($newpwdForm->isSubmitted() && $newpwdForm->isValid()) {
+              $new_pwd = $newpwdForm->get("newPassword")->getData();
+              $user-> setPassword($passwordEncoder->encodePassword($user, $new_pwd));
+              $em->persist($user);
+              $em->flush();
+              $this->addFlash('success', 'Votre mot de passe a bien été mis à jour !');
+            } else {
+                return $this->render('user/newpwd.html.twig', ['username' => $user-> getUsername(), 'newpwdForm' => $newpwdForm->createView()]);
+            }
+        }
+
         $site = $em->getRepository(Site::class)->find($this->getUser()->getSite());
         if ($user->getActif() == 0) {
             $this->addFlash('error', "Votre compte est désactivé, veuillez contacter l'administrateur");

@@ -10,6 +10,7 @@ use App\Entity\Site;
 use App\Entity\Upload;
 use App\Entity\User;
 use App\Form\CreateUserManuallyType;
+use App\Form\ForgotPasswordType;
 use App\Form\ModifyPwdType;
 use App\Form\PictureType;
 use App\Form\UploadType;
@@ -26,6 +27,46 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
+    /**
+     * @Route ("/sentpwd", name="sentpwd")
+     */
+    public function sentPwd () {
+
+        return $this->render('user/sentPwd.html.twig',[]);
+    }
+
+    /**
+     * @Route("/forgotpwd", name="forgotpwd")
+     */
+    public function forgetPwd(Request $request, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
+    {
+       $forgotForm = $this->createForm(ForgotPasswordType::class);
+       $forgotForm->handleRequest($request);
+
+        if($forgotForm->isSubmitted() && $forgotForm->isValid()) {
+            $email=$forgotForm-> get("email")->getData();
+            $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+            if (!$user) {
+                $this->addFlash('error', "Cet email n'est pas référencé !" );
+                return $this->render('user/forgotPwd.html.twig',['forgotForm'=> $forgotForm->createView()]);
+            } else {
+                $username= $user->getUsername();
+                $password = $user->getprenom().$user->getnom().random_int(1000,9999);
+                echo $password;
+                $user->setResetPassword(true);
+                echo $user->getResetPassword();
+                $user-> setPassword($passwordEncoder->encodePassword($user,$password));
+
+                $em->persist($user);
+                $em->flush();
+
+                $this->addFlash('success', 'Un mot de passe de réinitialisation vous été envoyé !');
+                return $this->render('user/sentPwd.html.twig',['username' =>$username, 'password'=>$password]);
+            }
+        }
+        return $this->render('user/forgotPwd.html.twig',['forgotForm'=> $forgotForm->createView()]);
+    }
 
     /**
      * fichier CSV doit contenir liste de users avec prenom, nom et email
@@ -58,6 +99,7 @@ class UserController extends Controller
                 $user->setEmail(rtrim($userdata[0][2]));
                 $password = $userdata[0][0].$userdata[0][1].random_int(1000,9999);
                 $user-> setPassword($passwordEncoder->encodePassword($user,$password));
+                $user-> setResetpassword(false);
                 unset($userdata);
 
                 $em->persist($user);
@@ -94,6 +136,7 @@ class UserController extends Controller
         }
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
+
         return $this->render("user/login.html.twig",[
             'last_username' => $lastUsername,
             'error'         => $error,

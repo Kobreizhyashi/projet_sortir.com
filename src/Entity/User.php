@@ -123,6 +123,11 @@ class User implements UserInterface
      */
     private $picture;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $resetpassword;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -324,5 +329,17 @@ class User implements UserInterface
             $pictureName = $picture->getImg();
         }
         return 'uploads/pictures/'.$pictureName;
+    }
+
+    public function getResetpassword(): ?bool
+    {
+        return $this->resetpassword;
+    }
+
+    public function setResetpassword(?bool $resetpassword): self
+    {
+        $this->resetpassword = $resetpassword;
+
+        return $this;
     }
 }

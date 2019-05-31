@@ -50,3 +50,5 @@ security:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/profile, roles: ROLE_USER }
          - { path: ^/user/create, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/user/forgotpwd, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/user/sentpwd, roles: IS_AUTHENTICATED_ANONYMOUSLY }
