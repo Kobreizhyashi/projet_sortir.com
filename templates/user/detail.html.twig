@@ -110,7 +110,11 @@
             {#Fin section modulaire#}
 
             {#section modulaire avec affichage des sorties organisées par l'utilisateur ou auxquelles il participe si l'on affiche son propre profil#}
-            {% if user.id == app.user.id %}
+
+
+
+
+            {% if user.id == app.user.id and outings is not empty %}
                 <section>
                     <div class="row">
                         <br>
@@ -200,19 +204,17 @@
 
                         </div>
                     </div>
+                    <div class="row">
 
+                        <div class="offset-l2 col l2 m4 s12">
+                            <a href="{{ path('add') }}">
+                                <button type="button" id="addOutingButton" class="btn center-align btn-medium pulse">Ajouter</button>
+                            </a>
+                        </div>
+                    </div>
                 </section>
             {% endif %}
             {#Fin section modulaire#}
-            <div class="row">
-
-                <div class="offset-l2 col l2 m4 s12">
-                    <a href="{{ path('add') }}">
-                        <button type="button" id="addOutingButton" class="btn center-align btn-medium pulse">Ajouter</button>
-                    </a>
-                </div>
-            </div>
-
 
         </div>
     </section>
